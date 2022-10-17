@@ -16,4 +16,8 @@ public class InternWorkException {
     @NoArgsConstructor
     public static class dataDuplicateException extends RuntimeException {
     }
+
+    @NoArgsConstructor
+    public static class dataSaveException extends RuntimeException {
+    }
 }

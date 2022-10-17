@@ -3,6 +3,7 @@ package kr.ldcc.internwork.model.entity;
 import kr.ldcc.internwork.common.types.MenuType;
 import kr.ldcc.internwork.model.entity.base.BaseEntity;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -16,7 +17,8 @@ public class Menu extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private Long orderId;
-    private Long parentId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Menu parent;
     @Enumerated(EnumType.STRING)
     private MenuType state;
     private String title;
@@ -26,4 +28,14 @@ public class Menu extends BaseEntity {
     @ManyToOne
     @JoinColumn(name = "update_user")
     private User updateUser;
+
+    @Builder
+    public Menu(Long orderId, Menu parent, MenuType state, String title, User registerUser, User updateUser) {
+        this.orderId = orderId;
+        this.parent = parent;
+        this.state = state;
+        this.title = title;
+        this.registerUser = registerUser;
+        this.updateUser = updateUser;
+    }
 }
