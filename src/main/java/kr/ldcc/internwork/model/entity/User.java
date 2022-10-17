@@ -1,6 +1,7 @@
 package kr.ldcc.internwork.model.entity;
 
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -17,4 +18,13 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
+
+    @Builder
+    public User(String name) {
+        this.name = name;
+    }
+
+    public void updateUserName(String name) {
+        this.name = name;
+    }
 }
