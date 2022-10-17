@@ -16,7 +16,7 @@ import java.time.LocalDateTime;
 public class Faq extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long faqId; // faq 번호
+    private Long id; // faq 번호
 
     @ManyToOne
     @JoinColumn
