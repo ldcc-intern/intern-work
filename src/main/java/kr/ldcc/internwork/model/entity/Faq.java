@@ -16,22 +16,30 @@ import java.time.LocalDateTime;
 public class Faq extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long faqId;
-    @Column(length = 5000)
-    private String content;
-    private String reason;
-    private LocalDateTime noticeDate; // 공지 시작일
-    @Enumerated(EnumType.STRING)
-    private FaqType state; // Faq 상태 [SHOW, CLOSE, RESERVE]
-    @Column(length = 40)
-    private String title;
+    private Long faqId; // faq 번호
+
     @ManyToOne
     @JoinColumn
-    private Category category;
+    private Category categoryName; // 카테고리명
+
+    @Column(length = 5000)
+    private String content; // 내용
+
+    private String updateReason; // 수정 이유
+
+    private LocalDateTime noticeDate; // 공지 시작일
+
+    @Enumerated(EnumType.STRING)
+    private FaqType state; // Faq 상태 [SHOW, CLOSE, RESERVE]
+
+    @Column(length = 40)
+    private String title; // faq 제목
+
     @ManyToOne
     @JoinColumn(updatable = false)
     private User registerUser; // 등록자
+
     @ManyToOne
     @JoinColumn
-    private User updateUser; //수정자
+    private User updateUser; // 수정자
 }
