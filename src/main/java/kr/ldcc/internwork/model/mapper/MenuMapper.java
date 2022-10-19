@@ -12,13 +12,11 @@ import java.util.stream.Collectors;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class MenuMapper {
-    public static Response toMenuCreateResponse(Long id) {
-        MenuDto.MenuIdResponse menuIdResponse = new MenuDto.MenuIdResponse();
-        menuIdResponse.setId(id);
-        return Response.ok().setData(menuIdResponse);
+    public static Response toCreateMenuResponse(Long id) {
+        return Response.ok().setData(new MenuDto.CreateMenuResponse().setId(id));
     }
 
-    public static Response toMenuListResponse(List<Menu> menus) {
+    public static Response toGetMenuListResponse(List<Menu> menus) {
         Map<Long, List<MenuDto.MenuListResponse>> groupingByParent = menus.stream().map(menu -> MenuDto.MenuListResponse.builder()
                 .id(menu.getId())
                 .orderId(menu.getOrderId())
@@ -36,16 +34,7 @@ public class MenuMapper {
         return Response.ok().setData(ROOT);
     }
 
-    private static void addChildren(MenuDto.MenuListResponse parent, Map<Long, List<MenuDto.MenuListResponse>> groupingByParentId) {
-        List<MenuDto.MenuListResponse> children = groupingByParentId.get(parent.getId());
-        if (children == null) {
-            return;
-        }
-        parent.setChildren(children);
-        children.forEach(menuListResponse -> addChildren(menuListResponse, groupingByParentId));
-    }
-
-    public static Response toMenuDetailResponse(Menu menu) {
+    public static Response toGetDetailMenuResponse(Menu menu) {
         return Response.ok().setData(new MenuDto.MenuDetailResponse()
                 .setId(menu.getId())
                 .setOrderId(menu.getOrderId())
@@ -61,11 +50,20 @@ public class MenuMapper {
         );
     }
 
-    public static Response toMenuUpdateResponse(Menu menu) {
+    public static Response toUpdateMenuResponse(Menu menu) {
         return Response.ok().setData(ObjectMapperUtils.map(menu, MenuDto.class));
     }
 
-    public static Response toMenuDeleteResponse() {
+    public static Response toDeleteMenuResponse() {
         return Response.ok();
+    }
+
+    private static void addChildren(MenuDto.MenuListResponse parent, Map<Long, List<MenuDto.MenuListResponse>> groupingByParentId) {
+        List<MenuDto.MenuListResponse> children = groupingByParentId.get(parent.getId());
+        if (children == null) {
+            return;
+        }
+        parent.setChildren(children);
+        children.forEach(menuListResponse -> addChildren(menuListResponse, groupingByParentId));
     }
 }
