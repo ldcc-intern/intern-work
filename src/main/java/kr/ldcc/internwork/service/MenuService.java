@@ -34,26 +34,26 @@ public class MenuService {
     }
 
     @Transactional
-    public Response createMenu(@RequestBody @Valid MenuRequest.CreateMenuRequest createUserRequest) {
-        User user = userRepository.findById(createUserRequest.getUser_id()).orElseThrow(() -> {
+    public Response createMenu(@RequestBody @Valid MenuRequest menuRequest) {
+        User user = userRepository.findById(menuRequest.getUser_id()).orElseThrow(() -> {
             log.error("createMenu Exception : [존재하지 않는 User ID]");
             return new InternWorkException.dataDuplicateException();
         });
         Menu parent = null;
-        if (createUserRequest.getParent_id() != null) {
-            parent = menuRepository.findById(createUserRequest.getParent_id()).orElseThrow(() -> {
+        if (menuRequest.getParent_id() != null) {
+            parent = menuRepository.findById(menuRequest.getParent_id()).orElseThrow(() -> {
                 log.error("createMenu Exception : [존재하지 않는 Menu ID]");
                 return new InternWorkException.dataDuplicateException();
             });
         }
         Menu menu = null;
-        if (createUserRequest.getOrder_id() != null) {
-            int orderId = createUserRequest.getOrder_id();
+        if (menuRequest.getOrder_id() != null) {
+            int orderId = menuRequest.getOrder_id();
             menu = Menu.builder()
                     .orderId(orderId)
                     .parent(parent)
-                    .state(createUserRequest.getState())
-                    .title(createUserRequest.getTitle())
+                    .state(menuRequest.getState())
+                    .title(menuRequest.getTitle())
                     .registerUser(user)
                     .build();
             ArrayList<Menu> order = (ArrayList<Menu>) menuRepository.findAllByParentOrderByOrderId(parent);
@@ -72,8 +72,8 @@ public class MenuService {
             menu = Menu.builder()
                     .orderId(orderId)
                     .parent(parent)
-                    .state(createUserRequest.getState())
-                    .title(createUserRequest.getTitle())
+                    .state(menuRequest.getState())
+                    .title(menuRequest.getTitle())
                     .registerUser(user)
                     .build();
             try {
@@ -83,13 +83,13 @@ public class MenuService {
                 throw new InternWorkException.dataDuplicateException();
             }
         }
-        return MenuMapper.toMenuCreateResponse(menu.getId());
+        return MenuMapper.toCreateMenuResponse(menu.getId());
     }
 
     @Transactional
     public Response getMenuList() {
         List<Menu> menus = menuRepository.findAll(Sort.by("orderId"));
-        return MenuMapper.toMenuListResponse(menus);
+        return MenuMapper.toGetMenuListResponse(menus);
     }
 
     @Transactional
@@ -98,31 +98,31 @@ public class MenuService {
             log.error("getDetailMenu Exception : [존재하지 않는 Menu ID]", ExceptionCode.DATA_NOT_FOUND_EXCEPTION);
             return new InternWorkException.dataNotFoundException();
         });
-        return MenuMapper.toMenuDetailResponse(menu);
+        return MenuMapper.toGetDetailMenuResponse(menu);
     }
 
     @Transactional
-    public Response updateMenu(Long menuId, @Valid MenuRequest.UpdateMenuRequest updateUserRequest) {
+    public Response updateMenu(Long menuId, @Valid MenuRequest menuRequest) {
         Menu menu = menuRepository.findById(menuId).orElseThrow(() -> {
             log.error("updateMenu Exception : [존재하지 않는 Menu ID]");
             return new InternWorkException.dataDuplicateException();
         });
-        Menu parent = menuRepository.findById(updateUserRequest.getParent_id()).orElseThrow(() -> {
+        Menu parent = menuRepository.findById(menuRequest.getParent_id()).orElseThrow(() -> {
             log.error("updateMenu Exception : [존재하지 않는 Parent ID]");
             return new InternWorkException.dataDuplicateException();
         });
-        User user = userRepository.findById(updateUserRequest.getUser_id()).orElseThrow(() -> {
+        User user = userRepository.findById(menuRequest.getUser_id()).orElseThrow(() -> {
             log.error("updateMenu Exception : [존재하지 않는 User ID]");
             return new InternWorkException.dataDuplicateException();
         });
         Menu updateMenu = null;
-        if (updateUserRequest.getOrder_id() != null) {
-            int orderId = updateUserRequest.getOrder_id();
+        if (menuRequest.getOrder_id() != null) {
+            int orderId = menuRequest.getOrder_id();
             updateMenu = Menu.builder()
                     .orderId(orderId)
                     .parent((parent != null) ? parent : menu.getParent())
-                    .state((updateUserRequest.getState() != null) ? updateUserRequest.getState() : menu.getState())
-                    .title((updateUserRequest.getTitle() != null) ? updateUserRequest.getTitle() : menu.getTitle())
+                    .state((menuRequest.getState() != null) ? menuRequest.getState() : menu.getState())
+                    .title((menuRequest.getTitle() != null) ? menuRequest.getTitle() : menu.getTitle())
                     .updateUser(user)
                     .build();
             ArrayList<Menu> oldOrder = (ArrayList<Menu>) menuRepository.findAllByParentOrderByOrderId(menu.getParent());
@@ -152,8 +152,8 @@ public class MenuService {
             updateMenu = Menu.builder()
                     .orderId(orderId)
                     .parent((parent != null) ? parent : menu.getParent())
-                    .state((updateUserRequest.getState() != null) ? updateUserRequest.getState() : menu.getState())
-                    .title((updateUserRequest.getTitle() != null) ? updateUserRequest.getTitle() : menu.getTitle())
+                    .state((menuRequest.getState() != null) ? menuRequest.getState() : menu.getState())
+                    .title((menuRequest.getTitle() != null) ? menuRequest.getTitle() : menu.getTitle())
                     .updateUser(user)
                     .build();
             ArrayList<Menu> oldOrder = (ArrayList<Menu>) menuRepository.findAllByParentOrderByOrderId(menu.getParent());
@@ -174,7 +174,7 @@ public class MenuService {
                 throw new InternWorkException.dataDuplicateException();
             }
         }
-        return MenuMapper.toMenuUpdateResponse(updateMenu);
+        return MenuMapper.toUpdateMenuResponse(updateMenu);
     }
 
     @Transactional
@@ -182,7 +182,7 @@ public class MenuService {
         Optional<Menu> menu = menuRepository.findById(menuId);
         if (menu.isPresent()) {
             menuRepository.deleteById(menuId);
-            return MenuMapper.toMenuDeleteResponse();
+            return MenuMapper.toDeleteMenuResponse();
         }
         throw new InternWorkException.dataNotFoundException();
     }

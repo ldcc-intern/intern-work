@@ -33,13 +33,13 @@ public class UserService {
             log.error("createUser Exception : {}", e.getMessage());
             throw new InternWorkException.dataDuplicateException();
         }
-        return UserMapper.toUserCreateResponse(user.getId());
+        return UserMapper.toCreateUserResponse(user.getId());
     }
 
     @Transactional
     public Response getUserList() {
         List<User> users = userRepository.findAll();
-        return UserMapper.toUserListResponse(users);
+        return UserMapper.toGetUserListResponse(users);
     }
 
     @Transactional
@@ -55,7 +55,7 @@ public class UserService {
             log.error("updateUser Exception : {}", e.getMessage());
             throw new InternWorkException.dataUpdateException();
         }
-        return UserMapper.toUserUpdateResponse(user);
+        return UserMapper.toUpdateUserResponse(user);
     }
 
     @Transactional
@@ -63,7 +63,7 @@ public class UserService {
         Optional<User> user = userRepository.findById(userId);
         if (user.isPresent()) {
             userRepository.deleteById(userId);
-            return UserMapper.toUserDeleteResponse();
+            return UserMapper.toDeleteUserResponse();
         }
         throw new InternWorkException.dataNotFoundException();
     }
