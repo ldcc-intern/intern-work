@@ -26,6 +26,17 @@ public class UserDto {
     @Accessors(chain = true)
     @JsonIgnoreProperties(ignoreUnknown = true)
     @JsonInclude(value = JsonInclude.Include.NON_NULL)
+    public static class UserIdResponse {
+        private Long id;
+    }
+
+    @Getter
+    @Setter
+    @NoArgsConstructor
+    @ToString
+    @Accessors(chain = true)
+    @JsonIgnoreProperties(ignoreUnknown = true)
+    @JsonInclude(value = JsonInclude.Include.NON_NULL)
     public static class UserListResponse {
         private Long id;
         private String name;

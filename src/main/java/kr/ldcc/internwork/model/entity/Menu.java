@@ -16,7 +16,7 @@ public class Menu extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private Long orderId;
+    private Integer orderId;
     @ManyToOne(fetch = FetchType.LAZY)
     private Menu parent;
     @Enumerated(EnumType.STRING)
@@ -30,12 +30,16 @@ public class Menu extends BaseEntity {
     private User updateUser;
 
     @Builder
-    public Menu(Long orderId, Menu parent, MenuType state, String title, User registerUser, User updateUser) {
+    public Menu(Integer orderId, Menu parent, MenuType state, String title, User registerUser, User updateUser) {
         this.orderId = orderId;
         this.parent = parent;
         this.state = state;
         this.title = title;
         this.registerUser = registerUser;
         this.updateUser = updateUser;
+    }
+
+    public void updateMenuOrderId(int orderId) {
+        this.orderId = orderId;
     }
 }
