@@ -16,10 +16,7 @@ public class Category extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    @ManyToOne
-    @JoinColumn(name = "category_name")
-    private Category categoryName; // 카테고리명
+    private String categoryName; // 카테고리명
 
     private String mainCategory; // 대분류
 
@@ -30,13 +27,13 @@ public class Category extends BaseEntity {
 
     @ManyToOne
     @JoinColumn(updatable = false)
-    private User resisterUser;
+    private User resisterUser; // 등록자
 
     @ManyToOne
     @JoinColumn
-    private User updateUser;
+    private User updateUser; // 수정자
 
-    public void setCategoryName(Category categoryName) {
+    public void setCategoryName(String categoryName) {
         this.categoryName = categoryName;
     }
 }
