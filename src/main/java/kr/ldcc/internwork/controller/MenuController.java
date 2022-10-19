@@ -19,8 +19,8 @@ public class MenuController {
     }
 
     @PostMapping("/menu")
-    public Response createMenu(@RequestBody @Valid MenuRequest.CreateMenuRequest createMenuRequest) {
-        return menuService.createMenu(createMenuRequest);
+    public Response createMenu(@RequestBody @Valid MenuRequest menuRequest) {
+        return menuService.createMenu(menuRequest);
     }
 
     @GetMapping("/menu")
@@ -34,8 +34,8 @@ public class MenuController {
     }
 
     @PutMapping("/menu/{menuId}")
-    public Response updateMenu(@PathVariable("menuId") Long menuId, @RequestBody @Valid MenuRequest.UpdateMenuRequest updateMenuRequest) {
-        return menuService.updateMenu(menuId, updateMenuRequest);
+    public Response updateMenu(@PathVariable("menuId") Long menuId, @RequestBody @Valid MenuRequest menuRequest) {
+        return menuService.updateMenu(menuId, menuRequest);
     }
 
     @DeleteMapping("/menu/{menuId}")

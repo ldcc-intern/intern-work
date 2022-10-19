@@ -36,7 +36,7 @@ public class MenuDto {
     @Accessors(chain = true)
     @JsonIgnoreProperties(ignoreUnknown = true)
     @JsonInclude(value = JsonInclude.Include.NON_NULL)
-    public static class MenuIdResponse {
+    public static class CreateMenuResponse {
         private Long id;
     }
 
@@ -61,7 +61,6 @@ public class MenuDto {
             this.parentId = parentId;
             this.title = title;
         }
-
     }
 
     @Getter
