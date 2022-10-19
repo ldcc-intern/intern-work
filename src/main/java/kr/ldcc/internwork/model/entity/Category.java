@@ -3,10 +3,12 @@ package kr.ldcc.internwork.model.entity;
 import kr.ldcc.internwork.common.types.CategoryType;
 import kr.ldcc.internwork.model.entity.base.BaseEntity;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
@@ -32,6 +34,19 @@ public class Category extends BaseEntity {
     @ManyToOne
     @JoinColumn
     private User updateUser; // 수정자
+
+    private LocalDateTime registerDate;
+
+    private LocalDateTime updateDate;
+
+    @Builder
+    public Category(String mainCategory, String categoryName, CategoryType useState, User registerUser, LocalDateTime registerDate){
+        this.mainCategory = mainCategory;
+        this.categoryName = categoryName;
+        this.useState = useState;
+        this.resisterUser = registerUser;
+        this.registerDate = registerDate;
+    }
 
     public void setCategoryName(String categoryName) {
         this.categoryName = categoryName;

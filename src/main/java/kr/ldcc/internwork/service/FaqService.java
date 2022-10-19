@@ -10,6 +10,7 @@ import kr.ldcc.internwork.model.mapper.FaqMapper;
 import kr.ldcc.internwork.repository.FaqRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,7 +18,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Slf4j
-@Service
+@Component
 public class FaqService {
 
     private final FaqRepository faqRepository;

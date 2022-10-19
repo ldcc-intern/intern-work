@@ -17,15 +17,19 @@ public class CategoryRequest {
     @Setter
     @Accessors(chain = true)
     @JsonIgnoreProperties(ignoreUnknown = true)
-    public static class RegisterCategoryRequest {
+    public static class CreateCategoryRequest {
 
-        private String categoryName;
+        private String mainCategory; // 대분류
 
-        private CategoryType categoryType;
+        private String categoryName; // 카테고리명
+
+        private CategoryType useState; // 사용 여부
 
         private Integer orderId; // 카테고리 순서
 
-        private User userId;
+        private User registerUser; // 등록자
+
+        private LocalDateTime registerDate; // 등록일
 
     }
 
@@ -33,7 +37,7 @@ public class CategoryRequest {
     @Setter
     @Accessors(chain = true)
     @JsonIgnoreProperties(ignoreUnknown = true)
-    public static class SearchCategoryRequest {
+    public static class GetCategoryRequest {
 
     }
 
@@ -43,15 +47,23 @@ public class CategoryRequest {
     @JsonIgnoreProperties(ignoreUnknown = true)
     public static class UpdateCategoryRequest {
 
-        private Long categoryId;
+        private Long categoryId; // 카테고리 ID
 
-        private String categoryName;
+        private String mainCategory; // 대분류
 
-        private CategoryType categoryType;
+        private String categoryName; // 카테고리명
 
-        private Integer orderId;
+        private CategoryType useState; // 사용 여부
 
-        private User userId;
+        private Integer orderId; // 카테고리 순서
+
+        private User registerUser; // 등록자
+
+        private LocalDateTime registerDate; // 등록일
+
+        private User updateUser; // 수정자
+
+        private LocalDateTime updateDate; // 수정일
 
     }
 }
