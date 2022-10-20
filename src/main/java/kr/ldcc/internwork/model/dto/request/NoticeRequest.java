@@ -7,8 +7,6 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 
-import java.time.LocalDateTime;
-
 public class NoticeRequest {
     @Getter
     @Setter
@@ -16,22 +14,24 @@ public class NoticeRequest {
     @JsonIgnoreProperties(ignoreUnknown = true)
     public static class CreateNoticeRequest {
         private String title;
-        private LocalDateTime notice_start;
+        private String startDate;
+        private String startTime;
         private String content;
-        private Long user;
+        private Long userId;
     }
 
     @Getter
     @Setter
     @Accessors(chain = true)
     @JsonIgnoreProperties(ignoreUnknown = true)
-    public class UpdateNoticeRequest {
+    public static class UpdateNoticeRequest {
         private String title;
         @Enum(enumClass = NoticeType.class)
         private NoticeType state;
-        private LocalDateTime notice_start;
-        private String update_reason;
+        private String startDate;
+        private String startTime;
+        private String reason;
         private String content;
-        private String user;
+        private Long userId;
     }
 }

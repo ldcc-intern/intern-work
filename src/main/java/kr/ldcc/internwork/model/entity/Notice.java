@@ -3,6 +3,7 @@ package kr.ldcc.internwork.model.entity;
 import kr.ldcc.internwork.common.types.NoticeType;
 import kr.ldcc.internwork.model.entity.base.BaseEntity;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -21,7 +22,7 @@ public class Notice extends BaseEntity {
     @Column(nullable = false)
     private String reason;
     @Column(nullable = false)
-    private LocalDateTime startDate;
+    private LocalDateTime startDateTime;
     @Enumerated(EnumType.STRING)
     private NoticeType state;
     @Column(length = 40, nullable = false)
@@ -33,4 +34,40 @@ public class Notice extends BaseEntity {
     @ManyToOne
     @JoinColumn(name = "update_user")
     private User updateUser;
+
+    @Builder
+    public Notice(String content, String reason, LocalDateTime startDateTime, NoticeType state, String title, Integer view, User registerUser, User updateUser) {
+        this.content = content;
+        this.reason = reason;
+        this.startDateTime = startDateTime;
+        this.state = state;
+        this.title = title;
+        this.view = view;
+        this.registerUser = registerUser;
+        this.updateUser = updateUser;
+    }
+
+    public void updateContent(String content) {
+        this.content = content;
+    }
+
+    public void updateReason(String reason) {
+        this.reason = reason;
+    }
+
+    public void updateStartDate(LocalDateTime startDate) {
+        this.startDateTime = startDate;
+    }
+
+    public void updateState(NoticeType state) {
+        this.state = state;
+    }
+
+    public void updateTitle(String title) {
+        this.title = title;
+    }
+
+    public void updateUpdateUser(User updateUser) {
+        this.updateUser = updateUser;
+    }
 }
