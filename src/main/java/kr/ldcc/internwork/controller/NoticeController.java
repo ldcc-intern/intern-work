@@ -4,6 +4,7 @@ import kr.ldcc.internwork.model.dto.request.NoticeRequest;
 import kr.ldcc.internwork.model.dto.response.Response;
 import kr.ldcc.internwork.service.NoticeService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -25,17 +26,16 @@ public class NoticeController {
 
     @GetMapping("/notice")
     public Response getNoticeList(
-            @RequestParam(value = "reg_start") String reg_start,
-            @RequestParam(value = "reg_end") String reg_end,
-            @RequestParam(value = "notice_start") String notice_start,
-            @RequestParam(value = "notice_end") String notice_end,
-            @RequestParam(value = "user") Long user_id,
-            @RequestParam(value = "title") String title,
-            @RequestParam(value = "page") int page,
-            @RequestParam(value = "size") int size,
-            @RequestParam(value = "sort") String sort
+            Pageable pageable,
+            @RequestParam(required = false) String state,
+            @RequestParam(required = false) String regStart,
+            @RequestParam(required = false) String regEnd,
+            @RequestParam(required = false) String noticeStart,
+            @RequestParam(required = false) String noticeEnd,
+            @RequestParam(required = false) String user,
+            @RequestParam(required = false) String title
     ) {
-        return noticeService.getNoticeList(reg_start, reg_end, notice_start, notice_end, user_id, title, page, size, sort);
+        return noticeService.getNoticeList(pageable, state, regStart, regEnd, noticeStart, noticeEnd, user, title);
     }
 
     @GetMapping("/notice/{notice_id}")

@@ -35,23 +35,29 @@ public class MenuMapper {
     }
 
     public static Response toGetDetailMenuResponse(Menu menu) {
-        return Response.ok().setData(new MenuDto.MenuDetailResponse()
+        return Response.ok().setData(new MenuDto.GetDetailMenuResponse()
                 .setId(menu.getId())
-                .setOrderId(menu.getOrderId())
-                .setUpdateDate(menu.getUpdateDate())
-                .setRegisterDate(menu.getRegisterDate())
-                .setParentId((menu.getParent() != null) ? menu.getParent().getId() : null)
-                .setState(menu.getState())
+                .setMain(menu.getParent() != null ? (menu.getParent().getParent() != null ? menu.getParent().getParent().getTitle() : menu.getParent().getTitle()) : null)
+                .setSmall(menu.getParent() != null ? (menu.getParent().getParent() != null ? menu.getParent().getTitle() : null) : null)
                 .setTitle(menu.getTitle())
+                .setState(menu.getState())
                 .setRegisterUser(menu.getRegisterUser().getName())
                 .setUpdateUser((menu.getUpdateUser() != null) ? menu.getUpdateUser().getName() : null)
-                .setMain((menu.getParent().getParent() != null) ? menu.getParent().getParent().getTitle() : menu.getParent().getTitle())
-                .setSmall((menu.getParent().getParent() != null) ? menu.getParent().getTitle() : null)
+                .setRegisterDate(menu.getRegisterDate())
+                .setUpdateDate(menu.getUpdateDate())
         );
     }
 
     public static Response toUpdateMenuResponse(Menu menu) {
-        return Response.ok().setData(ObjectMapperUtils.map(menu, MenuDto.class));
+        return Response.ok().setData(new MenuDto.UpdateMenuResponse()
+                .setId(menu.getId())
+                .setOrderId(menu.getOrderId())
+                .setParent(menu.getParent().getId())
+                .setState(menu.getState())
+                .setTitle(menu.getTitle())
+                .setRegisterUser(menu.getRegisterUser())
+                .setUpdateUser(menu.getUpdateUser())
+        );
     }
 
     public static Response toDeleteMenuResponse() {
