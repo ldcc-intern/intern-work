@@ -7,6 +7,6 @@ import lombok.Getter;
 @AllArgsConstructor
 @Getter
 public enum NoticeType implements BaseEnum<String> {
-    RESERVATION("RESERVATION"), OPEN("OPEN"), CLOSE("CLOSE");
+    OPEN("OPEN"), CLOSE("CLOSE"), RESERVATION("RESERVATION");
     private final String value;
 }

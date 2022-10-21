@@ -14,8 +14,8 @@ public class NoticeRequest {
     @JsonIgnoreProperties(ignoreUnknown = true)
     public static class CreateNoticeRequest {
         private String title;
-        private String startDate;
-        private String startTime;
+        private String date;
+        private String time;
         private String content;
         private Long userId;
     }
