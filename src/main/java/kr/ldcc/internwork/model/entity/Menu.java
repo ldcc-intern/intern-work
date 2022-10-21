@@ -23,7 +23,7 @@ public class Menu extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     private Menu parent;
     @ManyToOne
-    @JoinColumn(name = "register_user", updatable = false)
+    @JoinColumn(name = "register_user")
     private User registerUser;
     @ManyToOne
     @JoinColumn(name = "update_user")

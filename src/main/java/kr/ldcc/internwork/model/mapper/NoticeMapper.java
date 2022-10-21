@@ -6,8 +6,8 @@ import kr.ldcc.internwork.model.entity.Notice;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class NoticeMapper {
@@ -16,33 +16,20 @@ public class NoticeMapper {
     }
 
     public static Response toGetNoticeListResponse(List<Notice> notices) {
-        List<NoticeDto.NoticeListResponse> noticeListResponses = new ArrayList<>();
-        notices.forEach(notice -> noticeListResponses.add(new NoticeDto.NoticeListResponse()
-                .setId(notice.getId())
-                .setTitle(notice.getTitle())
-                .setRegisterUser(notice.getRegisterUser())
-                .setRegisterDate(notice.getRegisterDate())
-                .setStartDate(notice.getStartDateTime())
-                .setState(notice.getState())
-                .setView(notice.getView())
-        ));
+        List<NoticeDto.GetNoticeListResponse> noticeListResponses = notices.stream().map(notice -> NoticeDto.GetNoticeListResponse.builder()
+                .no(notices.indexOf(notice))
+                .title(notice.getTitle())
+                .registerUser(notice.getRegisterUser().getName())
+                .registerDate(notice.getRegisterDate())
+                .noticeDate(notice.getNoticeDate())
+                .state(notice.getState())
+                .view(notice.getView())
+                .build()).collect(Collectors.toList());
         return Response.ok().setData(noticeListResponses);
     }
 
     public static Response toGetDetailNoticeResponse(Notice notice) {
-        return Response.ok().setData(new NoticeDto.GetDetailNoticeResponse()
-                .setId(notice.getId())
-                .setUpdateDate(notice.getUpdateDate())
-                .setRegisterDate(notice.getRegisterDate())
-                .setContent(notice.getContent())
-                .setReason(notice.getReason())
-                .setStartDate(notice.getStartDateTime())
-                .setState(notice.getState())
-                .setTitle(notice.getTitle())
-                .setView(notice.getView())
-                .setRegisterUser(notice.getRegisterUser())
-                .setUpdateUser(notice.getUpdateUser())
-        );
+        return Response.ok();
     }
 
     public static Response toUpdateNoticeResponse(Notice notice) {

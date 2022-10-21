@@ -20,9 +20,8 @@ public class Notice extends BaseEntity {
     @Column(nullable = false, length = 5000)
     private String content;
     @Column(nullable = false)
+    private LocalDateTime noticeDate;
     private String reason;
-    @Column(nullable = false)
-    private LocalDateTime startDateTime;
     @Enumerated(EnumType.STRING)
     private NoticeType state;
     @Column(length = 40, nullable = false)
@@ -36,10 +35,10 @@ public class Notice extends BaseEntity {
     private User updateUser;
 
     @Builder
-    public Notice(String content, String reason, LocalDateTime startDateTime, NoticeType state, String title, Integer view, User registerUser, User updateUser) {
+    public Notice(String content, String reason, LocalDateTime noticeDate, NoticeType state, String title, Integer view, User registerUser, User updateUser) {
         this.content = content;
         this.reason = reason;
-        this.startDateTime = startDateTime;
+        this.noticeDate = noticeDate;
         this.state = state;
         this.title = title;
         this.view = view;
@@ -56,7 +55,7 @@ public class Notice extends BaseEntity {
     }
 
     public void updateStartDate(LocalDateTime startDate) {
-        this.startDateTime = startDate;
+        this.noticeDate = startDate;
     }
 
     public void updateState(NoticeType state) {
