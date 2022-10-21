@@ -1,6 +1,5 @@
 package kr.ldcc.internwork.model.entity;
 
-
 import kr.ldcc.internwork.common.types.MenuType;
 import kr.ldcc.internwork.model.entity.base.BaseEntity;
 import lombok.AccessLevel;
