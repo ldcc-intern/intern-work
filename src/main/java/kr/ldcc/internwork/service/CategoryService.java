@@ -3,19 +3,21 @@ package kr.ldcc.internwork.service;
 import kr.ldcc.internwork.common.exception.ExceptionCode;
 import kr.ldcc.internwork.common.exception.InternWorkException;
 import kr.ldcc.internwork.common.types.CategoryType;
+import kr.ldcc.internwork.model.dto.CategoryDto;
 import kr.ldcc.internwork.model.dto.request.CategoryRequest;
 import kr.ldcc.internwork.model.dto.response.Response;
 import kr.ldcc.internwork.model.entity.Category;
+import kr.ldcc.internwork.model.entity.Faq;
 import kr.ldcc.internwork.model.mapper.CategoryMapper;
 import kr.ldcc.internwork.repository.CategoryRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Slf4j
 @Component
@@ -28,7 +30,11 @@ public class CategoryService {
         this.categoryRepository = categoryRepository;
     }
 
-    // category 등록
+    /** * * * * * * *  *
+     *                 *
+     *  category 등록   *
+     *                 *
+     * * * * * * * * * */
     @Transactional
     public Response createCategory(CategoryRequest.CreateCategoryRequest createCategoryRequest) {
         Category category = Category.builder()
@@ -36,7 +42,7 @@ public class CategoryService {
                 .categoryName(createCategoryRequest.getCategoryName())
                 .useState(createCategoryRequest.getUseState())
                 .registerUser(createCategoryRequest.getRegisterUser())
-                .registerDate(createCategoryRequest.getRegisterDate())
+                .authInfo(createCategoryRequest.getAuthInfo())
                 .build();
 
         try{
@@ -52,7 +58,11 @@ public class CategoryService {
         return Response.ok().setData(category.getId());
     }
 
-    // category 리스트 조회
+    /** * * * * * * *  * * * *
+     *                       *
+     *  category 리스트 조회   *
+     *                       *
+     * * * * * * * * * * * * */
     @Transactional
     public Object getCategoryList(){
 
@@ -60,7 +70,11 @@ public class CategoryService {
         return CategoryMapper.toGetCategoryListResponse(categories);
     }
 
-    // category 상세 조회
+    /** * * * * * * *  * * *
+     *                     *
+     *  category 상세 조회   *
+     *                     *
+     * * * * * * * * * * * */
     @Transactional
     public Object getCategoryDetail(Long categoryId) {
         Category category = categoryRepository.findById(categoryId).orElseThrow(() ->{
@@ -70,12 +84,78 @@ public class CategoryService {
         return CategoryMapper.toGetCategoryDetailResponse(category);
     }
 
-    // category 중복 체크
+
+    /** * * * * * * *  * * *
+     *                     *
+     *  category 중복 체크   *
+     *                     *
+     * * * * * * * * * * * */
+    public Response getDuplicateCategory(String categoryName) {
+
+        Optional<Category> byCategoryName = Optional.ofNullable(categoryRepository.findByCategoryName(categoryName));
+        if(byCategoryName.isPresent()) {
+            log.error("getDuplicateCctv Exception : {}", ExceptionCode.DATA_DUPLICATE_EXCEPTION);
+            return Response.ok().setData(new CategoryDto.CategoryDuplicateResponse().setResult(true));
+        }
+        return Response.ok().setData(new CategoryDto.CategoryDuplicateResponse().setResult(false));
+    }
 
 
-    // category 삭제
+
+    /** * * * * * * * * *
+     *                  *
+     *   category 수정   *
+     *                  *
+     * * * * * * * * * **/
     @Transactional
-    public Response deleteCategory() {
-        return CategoryMapper.toDeleteCategoryResponse();
+    public Response updateCategory(Long categoryId, CategoryRequest.UpdateCategoryRequest updateCategoryRequest){
+
+        // Null 일 경우 , ERROR  발생
+        Category category = categoryRepository.findById(categoryId).orElseThrow(() -> {log.error("updateCategory Exception : [존재하지 않는 Category ID]");
+                                                                                    return new InternWorkException.dataUpdateException();});
+
+        // Null 이 아니면
+        category.updateCategoryName(updateCategoryRequest.getCategoryName() !=null ? updateCategoryRequest.getCategoryName():category.getCategoryName());
+        category.updateCategoryType(updateCategoryRequest.getUseState() !=null? updateCategoryRequest.getUseState():category.getUseState());
+
+        try{
+            categoryRepository.save(category);
+        } catch(Exception e) {
+            log.error("updateCategory Exception : {}", e.getMessage());
+            throw new InternWorkException.dataUpdateException();
+        }
+
+        return CategoryMapper.toUpdateCategoryResponse();
+
+    }
+
+    /** * * * * * * *  *
+     *                 *
+     *  category 삭제   *
+     *                 *
+     * * * * * * * * * */
+    @Transactional
+    public Response deleteCategory(Long categoryId) {
+        Optional<Category> category = categoryRepository.findById(categoryId);
+
+        if(category.isPresent()){
+            try{
+                categoryRepository.deleteById(categoryId);
+            } catch (Exception e){
+                log.error("deleteCategory Exception : {}", e.getMessage());
+                throw new InternWorkException.dataDeleteException();
+            }
+
+            return Response.ok();
+        }
+        log.error("deleteCategory Exception : {}", ExceptionCode.DATA_NOT_FOUND_EXCEPTION);
+        throw new InternWorkException.dataNotFoundException();
+
+    }
+
+    public Object getCategoryTypes() {
+        CategoryType[] categoryTypes = CategoryType.values();
+
+        return categoryTypes;
     }
 }

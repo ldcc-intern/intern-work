@@ -31,6 +31,8 @@ public class CategoryRequest {
 
         private LocalDateTime registerDate; // 등록일
 
+        private String authInfo;
+
     }
 
     @Getter

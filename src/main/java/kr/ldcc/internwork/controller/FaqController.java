@@ -27,16 +27,24 @@ public class FaqController {
 
     }
 
-    // faq 등록
+    /** * * * * * *
+     *            *
+     *  faq 등록   *
+     *            *
+     * * * * * * **/
     @PostMapping("/faq")
     public Response registerFaq(@RequestBody @Valid FaqRequest.RegisterFaqRequest registerFaqRequest) {
         return faqService.registerFaq(registerFaqRequest);
 
     }
 
-    // faq 리스트 조회
+    /** * * * * * * * * *
+     *                  *
+     *  faq 리스트 조회   *
+     *                  *
+     * * * * * * * * * **/
     @GetMapping("/faq")
-    public Response searchFaqList(
+    public Object searchFaqList(
             @RequestParam(value = "categoryName") String categoryName,
             @RequestParam(value = "registerDateStart") LocalDateTime registerDateStart,
             @RequestParam(value = "registerDateEnd") LocalDateTime registerDateEnd,
@@ -49,27 +57,27 @@ public class FaqController {
 
         return faqService.searchFaqList(categoryName, registerDateStart,
                 registerDateEnd, noticeDateStart, noticeDateEnd, state,
-                title, registerUserName);
+                registerUserName, title);
 
     }
 
 
     // faq 상세 조회
     @GetMapping("/faq/{faqId}")
-    public Response searchFaqDetail(@PathVariable Long faqId) {
+    public Response searchFaqDetail(@PathVariable("faqId") Long faqId) {
 
         return faqService.searchFaqDetail(faqId);
     }
 
     // faq 수정
     @PutMapping("/faq/{faqId}")
-    public Response updateFaq(@PathVariable Long faqId, @RequestBody @Valid FaqRequest.UpdateFaqRequest updateFaqRequest) {
+    public Response updateFaq(@PathVariable("faqId") Long faqId, @RequestBody @Valid FaqRequest.UpdateFaqRequest updateFaqRequest) {
         return faqService.updateFaq(faqId, updateFaqRequest);
     }
 
     // faq 삭제
     @DeleteMapping("/faq/{faqId}")
-    public Response deleteFaq(@PathVariable Long faqId){
+    public Response deleteFaq(@PathVariable("faqId") Long faqId){
         return faqService.deleteFaq(faqId);
     }
 }

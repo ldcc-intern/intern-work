@@ -39,16 +39,31 @@ public class Category extends BaseEntity {
 
     private LocalDateTime updateDate;
 
+    private String authInfo;
+
     @Builder
-    public Category(String mainCategory, String categoryName, CategoryType useState, User registerUser, LocalDateTime registerDate){
+    public Category(String mainCategory, String categoryName, CategoryType useState, User registerUser, String authInfo){
         this.mainCategory = mainCategory;
         this.categoryName = categoryName;
         this.useState = useState;
         this.resisterUser = registerUser;
-        this.registerDate = registerDate;
+        this.authInfo = authInfo;
     }
 
     public void setCategoryName(String categoryName) {
         this.categoryName = categoryName;
     }
+
+
+    /** * * * * * * * * * * * * * * * * * *
+     *                                    *
+     *  category 수정을 위한 update method  *
+     *                                    *
+     * * * * * * * * * * * * * * * * * * **/
+
+    public void updateCategoryName(String categoryName) {this.categoryName = categoryName ;}
+
+    public void updateCategoryType(CategoryType categoryType) {this.useState = useState ;}
+
+    public void updateAuthInfo(String authInfo) {this.authInfo = authInfo;}
 }
