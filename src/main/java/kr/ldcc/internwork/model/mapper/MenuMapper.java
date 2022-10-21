@@ -20,18 +20,13 @@ public class MenuMapper {
         Map<Long, List<MenuDto.MenuListResponse>> groupingByParent = menus.stream().map(menu -> MenuDto.MenuListResponse.builder()
                 .id(menu.getId())
                 .orderId(menu.getOrderId())
-                .parentId((menu.getParent() != null) ? menu.getParent().getId() : 0)
+                .parentId(menu.getParent() != null ? menu.getParent().getId() : 0)
                 .title(menu.getTitle())
                 .build()
         ).collect(Collectors.groupingBy(menuListResponse -> menuListResponse.getParentId()));
-        MenuDto.MenuListResponse ROOT = MenuDto.MenuListResponse.builder()
-                .id(0L)
-                .orderId(0)
-                .parentId(0L)
-                .title("ROOT")
-                .build();
-        addChildren(ROOT, groupingByParent);
-        return Response.ok().setData(ROOT);
+        MenuDto.MenuListResponse menuListResponse = MenuDto.MenuListResponse.builder().id(0L).build();
+        addChildren(menuListResponse, groupingByParent);
+        return Response.ok().setData(menuListResponse);
     }
 
     public static Response toGetDetailMenuResponse(Menu menu) {
