@@ -43,6 +43,12 @@ public class FaqRequest {
 
     }
 
+
+    /** * * * * * *
+     *            *
+     *  faq 등록   *
+     *            *
+     * * * * * * **/
     @Getter
     @Setter
     @Accessors(chain = true)
@@ -59,11 +65,17 @@ public class FaqRequest {
 
         private String content;
 
-        private User userId;
+        private User registerUser;
 
 
     }
 
+
+    /** * * * * * *
+     *            *
+     *  faq 수정   *
+     *            *
+     * * * * * * **/
     @Getter
     @Setter
     @Accessors(chain = true)

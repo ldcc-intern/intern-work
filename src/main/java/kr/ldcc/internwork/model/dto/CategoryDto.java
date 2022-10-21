@@ -26,6 +26,7 @@ public class CategoryDto {
     private String mainCategory;
     private Long orderId;
     private CategoryType useState;
+    private String authInfo;
 
     @Getter
     @Setter
@@ -59,6 +60,16 @@ public class CategoryDto {
         private LocalDateTime registerDate;
         private LocalDateTime updateDate;
 
+    }
+
+    @Getter
+    @Setter
+    @NoArgsConstructor
+    @Accessors(chain = true)
+    @JsonIgnoreProperties(ignoreUnknown = true)
+    @JsonInclude(value = JsonInclude.Include.NON_NULL)
+    public static class CategoryDuplicateResponse{
+        private boolean result;
     }
 
 

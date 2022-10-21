@@ -10,6 +10,11 @@ public class InternWorkException {
     }
 
     @NoArgsConstructor
+    public static class dataDeleteException extends RuntimeException{
+
+    }
+
+    @NoArgsConstructor
     public static class dataNotFoundException extends RuntimeException {
     }
 
