@@ -26,7 +26,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
 @AutoConfigureMockMvc
-@Transactional
+//@Transactional
 class FaqTest {
 
     @Autowired FaqRepository faqRepository;
@@ -39,9 +39,12 @@ class FaqTest {
     public void before() {
         Faq faq = Faq.builder()
                 .faqType(FaqType.RESERVE)
-                .faqTitle("제목테스트")
-                .content("Faq내용")
+                .categoryName("Test")
+                .faqTitle("Test")
+                .content("Test")
+                .registerDate(LocalDateTime.now())
                 .noticeDate(LocalDateTime.now())
+                .authInfo("Test")
                 .build();
         faqRepository.save(faq);
     }
@@ -52,13 +55,15 @@ class FaqTest {
 
         registerFaqRequest.setFaqType(FaqType.RESERVE);
         registerFaqRequest.setCategoryName("우리동네");
-        registerFaqRequest.setFaqTitle("질문");
+        registerFaqRequest.setFaqTitle("제목");
         registerFaqRequest.setContent("내용은");
         registerFaqRequest.setRegisterDate(LocalDateTime.now());
+        registerFaqRequest.setNoticeDate(LocalDateTime.now());
+        registerFaqRequest.setAuthInfo("인증");
 
         Response faq = faqController.registerFaq(registerFaqRequest);
 
-        assertEquals(faqRepository.findByFaqTitle("질문").getAuthInfo(),"인증");
+        assertEquals(faqRepository.findByFaqTitle("제목").getAuthInfo(),"인증");
     }
 
     @Test
@@ -69,7 +74,7 @@ class FaqTest {
 
     @Test
     public void 자주묻는질문상세조회() throws Exception {
-        Faq findFaq = faqRepository.findByFaqTitle("제목테스트");
+        Faq findFaq = faqRepository.findByFaqTitle("제목");
 
         Optional<Faq> faq = faqRepository.findById(findFaq.getId());
 
@@ -79,10 +84,13 @@ class FaqTest {
 
     @Test
     public void 자주묻는질문제목수정() throws Exception {
-        Faq findFaq = faqRepository.findByFaqTitle("안녕하세요");
+        Faq findFaq = faqRepository.findByFaqTitle("제목");
 
         FaqRequest.UpdateFaqRequest updateFaqRequest = new FaqRequest.UpdateFaqRequest();
         updateFaqRequest.setFaqTitle("제목수정확인");
+        updateFaqRequest.setUpdateDate(LocalDateTime.now());
+        updateFaqRequest.setFaqType(FaqType.SHOW);
+        updateFaqRequest.setUpdateReason("수정이유입니다");
 
         faqController.updateFaq(findFaq.getId(), updateFaqRequest);
 
@@ -93,13 +101,13 @@ class FaqTest {
 
     @Test
     public void 자주묻는질문삭제() throws Exception {
-        Faq findFaq = faqRepository.findByFaqTitle("안녕하세요");
+        Faq findFaq = faqRepository.findByFaqTitle("제목수정확인");
 
         faqController.deleteFaq(findFaq.getId());
 
         Optional<Faq> faq = faqRepository.findById(findFaq.getId());
 
-        // false
+        // False 여야 한다.
         assertFalse(faq.isPresent());
     }
 }

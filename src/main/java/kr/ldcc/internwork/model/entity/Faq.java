@@ -85,4 +85,6 @@ public class Faq extends BaseEntity {
 
     public void updateContent(String content) {this.content = content;}
 
+    public void updateUpdateDate(LocalDateTime updateDate) {this.updateDate = updateDate;}
+
 }

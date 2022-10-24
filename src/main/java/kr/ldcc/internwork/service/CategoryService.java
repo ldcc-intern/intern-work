@@ -43,6 +43,8 @@ public class CategoryService {
                 .categoryType(createCategoryRequest.getCategoryType())
                 .registerUser(createCategoryRequest.getRegisterUser())
                 .authInfo(createCategoryRequest.getAuthInfo())
+                .registerDate(createCategoryRequest.getRegisterDate())
+                .orderId(createCategoryRequest.getOrderId())
                 .build();
 
         try{
@@ -117,6 +119,7 @@ public class CategoryService {
         // Null 이 아니면
         category.updateCategoryName(updateCategoryRequest.getCategoryName() !=null ? updateCategoryRequest.getCategoryName():category.getCategoryName());
         category.updateCategoryType(updateCategoryRequest.getCategoryType() !=null? updateCategoryRequest.getCategoryType():category.getCategoryType());
+        category.updateUpdatedate(updateCategoryRequest.getUpdateDate() !=null? updateCategoryRequest.getUpdateDate():category.getUpdateDate());
 
         try{
             categoryRepository.save(category);
