@@ -26,6 +26,7 @@ public class Notice extends BaseEntity {
     private NoticeType state;
     @Column(length = 40, nullable = false)
     private String title;
+    @Column(columnDefinition = "Integer DEFAULT 0", nullable = false)
     private Integer view;
     @ManyToOne
     @JoinColumn(name = "register_user", updatable = false)
@@ -54,8 +55,8 @@ public class Notice extends BaseEntity {
         this.reason = reason;
     }
 
-    public void updateStartDate(LocalDateTime startDate) {
-        this.noticeDate = startDate;
+    public void updateNoticeDate(LocalDateTime noticeDate) {
+        this.noticeDate = noticeDate;
     }
 
     public void updateState(NoticeType state) {
@@ -68,5 +69,9 @@ public class Notice extends BaseEntity {
 
     public void updateUpdateUser(User updateUser) {
         this.updateUser = updateUser;
+    }
+
+    public void updateView(Integer view) {
+        this.view = view + 1;
     }
 }

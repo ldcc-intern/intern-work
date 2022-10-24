@@ -28,8 +28,8 @@ public class NoticeRequest {
         private String title;
         @Enum(enumClass = NoticeType.class)
         private NoticeType state;
-        private String startDate;
-        private String startTime;
+        private String date;
+        private String time;
         private String reason;
         private String content;
         private Long userId;

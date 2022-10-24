@@ -101,11 +101,11 @@ public class MenuService {
     @Transactional
     public Response updateMenu(Long menuId, MenuRequest.updateMenuRequest updateMenuRequest) {
         Menu menu = menuRepository.findById(menuId).orElseThrow(() -> {
-            log.error("getDetailMenu Exception : [root, 존재하지 않는 Menu ID]", ExceptionCode.DATA_NOT_FOUND_EXCEPTION);
+            log.error("getDetailMenu Exception : [존재하지 않는 Menu ID]", ExceptionCode.DATA_NOT_FOUND_EXCEPTION);
             return new InternWorkException.dataNotFoundException();
         });
         User user = userRepository.findById(updateMenuRequest.getUserId()).orElseThrow(() -> {
-            log.error("getDetailMenu Exception : [root, 존재하지 않는 User ID]", ExceptionCode.DATA_NOT_FOUND_EXCEPTION);
+            log.error("getDetailMenu Exception : [존재하지 않는 User ID]", ExceptionCode.DATA_NOT_FOUND_EXCEPTION);
             return new InternWorkException.dataNotFoundException();
         });
         menu.updateMenuTitle(updateMenuRequest.getTitle() != null ? updateMenuRequest.getTitle() : menu.getTitle());
@@ -134,7 +134,7 @@ public class MenuService {
             }
 //            Parent 변경, 새로운 Parent Order 맨 뒤에 추가, save
             Menu parent = menuRepository.findById(updateMenuRequest.getParentId()).orElseThrow(() -> {
-                log.error("getDetailMenu Exception : [1번 존재하지 않는 Parent ID]", ExceptionCode.DATA_NOT_FOUND_EXCEPTION);
+                log.error("getDetailMenu Exception : [존재하지 않는 Parent ID]", ExceptionCode.DATA_NOT_FOUND_EXCEPTION);
                 return new InternWorkException.dataNotFoundException();
             });
             Integer orderId = menuRepository.findAllByParent(parent).size();
@@ -161,7 +161,7 @@ public class MenuService {
             }
 //            Parent 변경, 새로운 Parent Order OrderId에 추가, save all
             Menu parent = menuRepository.findById(updateMenuRequest.getParentId()).orElseThrow(() -> {
-                log.error("getDetailMenu Exception : [3번 존재하지 않는 Parent ID]", ExceptionCode.DATA_NOT_FOUND_EXCEPTION);
+                log.error("getDetailMenu Exception : [존재하지 않는 Parent ID]", ExceptionCode.DATA_NOT_FOUND_EXCEPTION);
                 return new InternWorkException.dataNotFoundException();
             });
             menu.updateMenuParent(parent);
@@ -194,7 +194,7 @@ public class MenuService {
         }
 //        "Parent 변경, 새로운 Parent Order OrderId에 추가, save all"
         Menu parent = menuRepository.findById(updateMenuRequest.getParentId()).orElseThrow(() -> {
-            log.error("getDetailMenu Exception : [3번 존재하지 않는 Parent ID]", ExceptionCode.DATA_NOT_FOUND_EXCEPTION);
+            log.error("getDetailMenu Exception : [존재하지 않는 Parent ID]", ExceptionCode.DATA_NOT_FOUND_EXCEPTION);
             return new InternWorkException.dataNotFoundException();
         });
         menu.updateMenuParent(parent);

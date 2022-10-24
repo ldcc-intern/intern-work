@@ -1,5 +1,7 @@
 package kr.ldcc.internwork.controller;
 
+import kr.ldcc.internwork.common.types.NoticeType;
+import kr.ldcc.internwork.common.types.validation.Enum;
 import kr.ldcc.internwork.model.dto.request.NoticeRequest;
 import kr.ldcc.internwork.model.dto.response.Response;
 import kr.ldcc.internwork.service.NoticeService;
@@ -27,7 +29,7 @@ public class NoticeController {
     @GetMapping("/notice")
     public Response getNoticeList(
             Pageable pageable,
-            @RequestParam(required = false) String state,
+            @RequestParam(required = false) @Enum(enumClass = NoticeType.class) NoticeType state,
             @RequestParam(required = false) String regStart,
             @RequestParam(required = false) String regEnd,
             @RequestParam(required = false) String noticeStart,
@@ -35,21 +37,21 @@ public class NoticeController {
             @RequestParam(required = false) String user,
             @RequestParam(required = false) String title
     ) {
-        return noticeService.getNoticeList(pageable, state, regStart, regEnd, noticeStart, noticeEnd, user, title);
+        return noticeService.getNoticeList(pageable, regStart, regEnd, state, noticeStart, noticeEnd, user, title);
     }
 
-    @GetMapping("/notice/{notice_id}")
-    public Response getDetailNotice(@PathVariable Long noticeId) {
+    @GetMapping("/notice/{noticeId}")
+    public Response getDetailNotice(@PathVariable("noticeId") Long noticeId) {
         return noticeService.getDetailNotice(noticeId);
     }
 
     @PutMapping("/notice/{noticeId}")
-    public Response updateNotice(@PathVariable Long noticeId, @RequestBody @Valid NoticeRequest.UpdateNoticeRequest updateNoticeRequest) {
+    public Response updateNotice(@PathVariable("noticeId") Long noticeId, @RequestBody @Valid NoticeRequest.UpdateNoticeRequest updateNoticeRequest) {
         return noticeService.updateNotice(noticeId, updateNoticeRequest);
     }
 
     @DeleteMapping("/notice/{noticeId}")
-    public Response deleteNotice(@PathVariable Long noticeId) {
+    public Response deleteNotice(@PathVariable("noticeId") Long noticeId) {
         return noticeService.deleteNotice(noticeId);
     }
 }
