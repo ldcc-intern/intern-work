@@ -72,7 +72,7 @@ class CategoryTest {
         createCategoryRequest.setCategoryName("카테고리명1");
         createCategoryRequest.setMainCategory("메인 카테고리");
         createCategoryRequest.setRegisterDate(LocalDateTime.now());
-        createCategoryRequest.setCategoryType(CategoryType.OFF);
+        createCategoryRequest.setCategoryType(CategoryType.ON);
         createCategoryRequest.setAuthInfo("인증12");
         createCategoryRequest.setOrderId(2);
 
@@ -126,6 +126,7 @@ class CategoryTest {
 
         CategoryRequest.UpdateCategoryRequest updateCategoryRequest = new CategoryRequest.UpdateCategoryRequest();
         updateCategoryRequest.setCategoryName("카테고리수정확인");
+        updateCategoryRequest.setCategoryType(CategoryType.OFF);
         updateCategoryRequest.setUpdateDate(LocalDateTime.now());
 
         categoryController.updateCategory(findCategory.getId(), updateCategoryRequest);

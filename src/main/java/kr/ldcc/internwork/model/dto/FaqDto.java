@@ -40,11 +40,12 @@ public class FaqDto {
     public static class FaqListResponse {
 
         private Long FaqId;
-        private Category categoryName;
+        private String categoryName;
         private String title;
         private LocalDateTime registerDate;
         private User registerUserName;
         private FaqType faqType;
+        private LocalDateTime noticeDate;
 
     }
 
@@ -57,7 +58,7 @@ public class FaqDto {
     @JsonInclude(value = JsonInclude.Include.NON_NULL)
     public static class FaqDetailResponse {
 
-        private Category categoryName;
+        private String categoryName;
         private String  title;
         private User registerUser;
         private User updateUser;

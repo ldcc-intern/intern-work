@@ -69,6 +69,8 @@ public class FaqRequest {
 
         private LocalDateTime registerDate;
 
+        private String authInfo;
+
 
     }
 
@@ -96,8 +98,10 @@ public class FaqRequest {
 
         private String content;
 
-        private String reason;
+        private String updateReason;
 
         private User userId;
+
+        private LocalDateTime updateDate;
     }
 }

@@ -14,17 +14,45 @@ import java.util.List;
 public class FaqMapper {
 
     // Faq 등록 Response
-    public static Response toRegisterFaqResponse() {return Response.ok();}
+    public static Response toRegisterFaqResponse(Long id) {
+        return Response.ok();
+    }
 
     // faq 리스트 조회 Response
-    public static Response toSearchFaqListResponse() {return Response.ok();}
+    public static Object toSearchFaqListResponse(List<Faq> faqs) {
+        List<FaqDto.FaqListResponse> faqListResponses = new ArrayList<>();
+
+        faqs.stream().forEach(faq -> faqListResponses.add(new FaqDto.FaqListResponse()
+                .setFaqId(faq.getId())
+                .setCategoryName(faq.getCategoryName())
+                .setTitle(faq.getFaqTitle())
+                .setRegisterDate(faq.getRegisterDate())
+                .setNoticeDate(faq.getNoticeDate())
+                .setFaqType(faq.getFaqType())));
+
+        return faqListResponses;
+    }
 
     // faq 상세 조회 Response
-    public static Response toSearchFaqDetailResponse() {return Response.ok();}
+    public static Object toSearchFaqDetailResponse(Faq faq) {
+        return new FaqDto.FaqDetailResponse()
+                .setCategoryName(faq.getCategoryName())
+                .setTitle(faq.getFaqTitle())
+                .setRegisterUser(faq.getRegisterUser())
+                .setRegisterDate(faq.getRegisterDate())
+                .setUpdateUser(faq.getUpdateUser())
+                .setUpdateDate(faq.getUpdateDate())
+                .setNoticeDate(faq.getNoticeDate())
+                .setFaqType(faq.getFaqType())
+                .setUpdateReason(faq.getUpdateReason())
+                .setContent(faq.getContent());
+    }
 
     // faq 수정 Response
-    public static Response toUpdateFaqResponse() {return Response.ok();}
+    public static FaqDto toUpdateFaqResponse(Faq faq) {
+        return ObjectMapperUtils.map(faq, FaqDto.class);
+    }
 
     // faq 삭제 Response
-    public static Response toDeleteFaqResponse() {return Response.ok();}
+    public static FaqDto toDeleteFaqResponse(Faq faq) {return ObjectMapperUtils.map(faq, FaqDto.class);}
 }

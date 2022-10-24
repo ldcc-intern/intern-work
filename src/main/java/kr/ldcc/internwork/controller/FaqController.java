@@ -2,6 +2,7 @@ package kr.ldcc.internwork.controller;
 
 
 import kr.ldcc.internwork.common.types.FaqType;
+import kr.ldcc.internwork.model.dto.FaqDto;
 import kr.ldcc.internwork.model.dto.request.FaqRequest;
 import kr.ldcc.internwork.model.dto.response.Response;
 import kr.ldcc.internwork.model.entity.Faq;
@@ -14,6 +15,9 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.time.LocalDateTime;
+import java.util.Optional;
+
+
 
 @RestController
 @RequestMapping("/api")
@@ -38,11 +42,39 @@ public class FaqController {
 
     }
 
-    /** * * * * * * * * *
-     *                  *
-     *  faq 리스트 조회   *
-     *                  *
-     * * * * * * * * * **/
+
+    /** * * * * * * * * * **
+     *                     *
+     *  faq 리스트 Type 조회 *
+     *                     *
+     * * * * * * * * * * * */
+
+    @GetMapping("/faq/{faqType}")
+    public Response getFaqTypeList(@PathVariable("faqType") FaqType faqType) {
+        return Response.ok().setData(faqService.searchFaqTypeList(faqType));
+    }
+
+
+    /** * * * * * * * * * **
+     *                     *
+     *  faq 리스트 전체 조회  *
+     *                     *
+     * * * * * * * * * * * */
+
+    @GetMapping("/faq")
+    public Response searchFaqAllList() {
+        return Response.ok().setData(faqService.searchFaqAllList());
+    }
+
+
+
+    /** * * * * * * * * * * *
+     *                      *
+     *  faq 리스트 조건 조회   *
+     *                      *
+     * * * * * * * * * * * */
+
+    /**
     @GetMapping("/faq")
     public Object searchFaqList(
             @RequestParam(value = "categoryName") String categoryName,
@@ -61,18 +93,29 @@ public class FaqController {
 
     }
 
+    */
+
 
     // faq 상세 조회
     @GetMapping("/faq/{faqId}")
     public Response searchFaqDetail(@PathVariable("faqId") Long faqId) {
 
-        return faqService.searchFaqDetail(faqId);
+        return Response.ok().setData(faqService.searchFaqDetail(faqId));
     }
 
     // faq 수정
     @PutMapping("/faq/{faqId}")
     public Response updateFaq(@PathVariable("faqId") Long faqId, @RequestBody @Valid FaqRequest.UpdateFaqRequest updateFaqRequest) {
-        return faqService.updateFaq(faqId, updateFaqRequest);
+
+        Optional<FaqDto> FaqDto = Optional.ofNullable(faqService.updateFaq(faqId, updateFaqRequest));
+
+        if (FaqDto.isPresent()) {
+            // Response 설정
+            return Response.ok();
+        }
+
+
+        return Response.dataNotFoundException();
     }
 
     // faq 삭제
