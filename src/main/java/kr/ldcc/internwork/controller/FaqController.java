@@ -50,13 +50,13 @@ public class FaqController {
             @RequestParam(value = "registerDateEnd") LocalDateTime registerDateEnd,
             @RequestParam(value = "noticeDateStart") LocalDateTime noticeDateStart,
             @RequestParam(value = "noticeDateEnd") LocalDateTime noticeDateEnd,
-            @RequestParam(value = "state") FaqType state,
+            @RequestParam(value = "faqType") FaqType faqType,
             @RequestParam(value = "title") String title,
             @RequestParam(value = "registerUserName") String registerUserName
             ) {
 
         return faqService.searchFaqList(categoryName, registerDateStart,
-                registerDateEnd, noticeDateStart, noticeDateEnd, state,
+                registerDateEnd, noticeDateStart, noticeDateEnd, faqType,
                 registerUserName, title);
 
     }

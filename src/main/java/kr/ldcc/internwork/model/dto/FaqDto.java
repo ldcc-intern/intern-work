@@ -26,7 +26,7 @@ public class FaqDto {
     private String Content;
     private String updateReason;
     private LocalDateTime noticeDate;
-    private FaqType state;
+    private FaqType faqType;
     private String title;
 
 
@@ -44,7 +44,7 @@ public class FaqDto {
         private String title;
         private LocalDateTime registerDate;
         private User registerUserName;
-        private FaqType state;
+        private FaqType faqType;
 
     }
 
@@ -64,7 +64,7 @@ public class FaqDto {
         private LocalDateTime registerDate;
         private LocalDateTime updateDate;
         private LocalDateTime noticeDate;
-        private FaqType state;
+        private FaqType faqType;
         private String updateReason;
         private String content;
 

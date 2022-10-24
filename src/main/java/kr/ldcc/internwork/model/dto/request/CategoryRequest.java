@@ -23,7 +23,7 @@ public class CategoryRequest {
 
         private String categoryName; // 카테고리명
 
-        private CategoryType useState; // 사용 여부
+        private CategoryType categoryType; // 사용 여부
 
         private Integer orderId; // 카테고리 순서
 
@@ -35,13 +35,6 @@ public class CategoryRequest {
 
     }
 
-    @Getter
-    @Setter
-    @Accessors(chain = true)
-    @JsonIgnoreProperties(ignoreUnknown = true)
-    public static class GetCategoryRequest {
-
-    }
 
     @Getter
     @Setter
@@ -55,7 +48,7 @@ public class CategoryRequest {
 
         private String categoryName; // 카테고리명
 
-        private CategoryType useState; // 사용 여부
+        private CategoryType categoryType; // 사용 여부
 
         private Integer orderId; // 카테고리 순서
 

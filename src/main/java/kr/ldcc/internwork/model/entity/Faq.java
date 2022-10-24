@@ -19,9 +19,9 @@ public class Faq extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id; // faq 번호
 
-    @ManyToOne
-    @JoinColumn(name = "category_name")
-    private Category categoryName; // 카테고리명
+    // @ManyToOne
+    // @JoinColumn(name = "category_name")
+    private String categoryName; // 카테고리명
 
     @Column(length = 5000)
     private String content; // 내용
@@ -30,44 +30,56 @@ public class Faq extends BaseEntity {
 
     private LocalDateTime noticeDate; // 공지 시작일
 
+    private LocalDateTime registerDate; // 등록일
+
+    private LocalDateTime updateDate; // 수정일
+
     @Enumerated(EnumType.STRING)
-    private FaqType state; // Faq 상태 [SHOW, CLOSE, RESERVE]
+    private FaqType faqType; // Faq 상태 [SHOW, CLOSE, RESERVE]
 
     @Column(length = 40)
-    private String title; // faq 제목
+    private String faqTitle; // faq 제목
 
-    @ManyToOne
+    private String authInfo;
+
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(updatable = false)
     private User registerUser; // 등록자
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn
     private User updateUser; // 수정자
 
     @Builder
-    public Faq(FaqType state, Category categoryName, String content, String updateReason, LocalDateTime noticeDate, String title, User updateUser, User registerUser){
+    public Faq(FaqType faqType, String categoryName, String content, String updateReason, LocalDateTime noticeDate, LocalDateTime registerDate, String faqTitle, User updateUser, User registerUser, String authInfo){
 
-        this.state = state;
-        this.title = title;
+        this.faqType = faqType;
+        this.faqTitle = faqTitle;
         this.categoryName = categoryName;
         this.updateReason = updateReason;
         this.updateUser = updateUser;
         this.registerUser = registerUser;
         this.content = content;
         this.noticeDate = noticeDate;
+        this.registerDate = registerDate;
+        this.authInfo = authInfo;
     }
 
+
+    public void setFaqTitle(String faqTitle) {
+        this.faqTitle = faqTitle;
+    }
 
     // Faq 수정을 위한 update method
     // 카테고리, 제목, 공지시작일, 공개상태, 수정사유, 내용
 
-    public void updateCategoryName(Category categoryName) {this.categoryName = categoryName;}
+    public void updateCategoryName(String categoryName) {this.categoryName = categoryName;}
 
-    public void updateTitle(String title) {this.title = title;}
+    public void updateTitle(String faqTitle) {this.faqTitle = faqTitle;}
 
     public void updateNoticeDate(LocalDateTime noticeDate) {this.noticeDate = noticeDate;}
 
-    public void updateState(FaqType state) {this.state = state;}
+    public void updateFaqType(FaqType faqType) {this.faqType = faqType;}
 
     public void updateUpdateReason(String updateReason) {this.updateReason = updateReason;}
 
