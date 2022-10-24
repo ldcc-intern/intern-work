@@ -22,16 +22,16 @@ public class Category extends BaseEntity {
 
     private String mainCategory; // 대분류
 
-    private Long orderId; // 카테고리 순서
+    private Integer orderId; // 카테고리 순서
 
     @Enumerated(EnumType.STRING)
-    private CategoryType useState; // 사용여부
+    private CategoryType categoryType; // 사용여부
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(updatable = false)
     private User resisterUser; // 등록자
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn
     private User updateUser; // 수정자
 
@@ -42,16 +42,26 @@ public class Category extends BaseEntity {
     private String authInfo;
 
     @Builder
-    public Category(String mainCategory, String categoryName, CategoryType useState, User registerUser, String authInfo){
+    public Category(String mainCategory, String categoryName, CategoryType categoryType, LocalDateTime registerDate, User registerUser, String authInfo, Integer orderId){
         this.mainCategory = mainCategory;
         this.categoryName = categoryName;
-        this.useState = useState;
+        this.categoryType = categoryType;
         this.resisterUser = registerUser;
+        this.registerDate = registerDate;
         this.authInfo = authInfo;
+        this.orderId = orderId;
     }
 
     public void setCategoryName(String categoryName) {
         this.categoryName = categoryName;
+    }
+
+    public void setUpdateDate(LocalDateTime updateDate) {
+        this.updateDate = updateDate;
+    }
+
+    public void setResisterDate(LocalDateTime registerDate) {
+        this.registerDate = registerDate;
     }
 
 
@@ -63,7 +73,9 @@ public class Category extends BaseEntity {
 
     public void updateCategoryName(String categoryName) {this.categoryName = categoryName ;}
 
-    public void updateCategoryType(CategoryType categoryType) {this.useState = useState ;}
+    public void updateCategoryType(CategoryType categoryType) {this.categoryType = categoryType ;}
 
     public void updateAuthInfo(String authInfo) {this.authInfo = authInfo;}
+
+    public void updateUpdatedate(LocalDateTime updateDate) {this.updateDate = updateDate;}
 }

@@ -27,4 +27,12 @@ public class Response<T> {
         response.setMessage(ExceptionCode.SUCCESS.getMessage());
         return response;
     }
+
+    public static <T> Response<T> dataNotFoundException() {
+        Response<T> response = new Response<>();
+        response.setCode(ExceptionCode.DATA_NOT_FOUND_EXCEPTION.getCode());
+        response.setMessage(ExceptionCode.DATA_NOT_FOUND_EXCEPTION.getMessage());
+        log.info("[dataNotFoundException] code : {}, message : {}", response.getCode(), response.getMessage());
+        return response;
+    }
 }

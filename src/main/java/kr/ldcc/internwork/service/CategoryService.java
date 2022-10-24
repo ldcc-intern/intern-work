@@ -40,7 +40,7 @@ public class CategoryService {
         Category category = Category.builder()
                 .mainCategory(createCategoryRequest.getMainCategory())
                 .categoryName(createCategoryRequest.getCategoryName())
-                .useState(createCategoryRequest.getUseState())
+                .categoryType(createCategoryRequest.getCategoryType())
                 .registerUser(createCategoryRequest.getRegisterUser())
                 .authInfo(createCategoryRequest.getAuthInfo())
                 .build();
@@ -108,7 +108,7 @@ public class CategoryService {
      *                  *
      * * * * * * * * * **/
     @Transactional
-    public Response updateCategory(Long categoryId, CategoryRequest.UpdateCategoryRequest updateCategoryRequest){
+    public CategoryDto updateCategory(Long categoryId, CategoryRequest.UpdateCategoryRequest updateCategoryRequest){
 
         // Null 일 경우 , ERROR  발생
         Category category = categoryRepository.findById(categoryId).orElseThrow(() -> {log.error("updateCategory Exception : [존재하지 않는 Category ID]");
@@ -116,7 +116,7 @@ public class CategoryService {
 
         // Null 이 아니면
         category.updateCategoryName(updateCategoryRequest.getCategoryName() !=null ? updateCategoryRequest.getCategoryName():category.getCategoryName());
-        category.updateCategoryType(updateCategoryRequest.getUseState() !=null? updateCategoryRequest.getUseState():category.getUseState());
+        category.updateCategoryType(updateCategoryRequest.getCategoryType() !=null? updateCategoryRequest.getCategoryType():category.getCategoryType());
 
         try{
             categoryRepository.save(category);
@@ -125,7 +125,7 @@ public class CategoryService {
             throw new InternWorkException.dataUpdateException();
         }
 
-        return CategoryMapper.toUpdateCategoryResponse();
+        return CategoryMapper.toUpdateCategoryResponse(category);
 
     }
 

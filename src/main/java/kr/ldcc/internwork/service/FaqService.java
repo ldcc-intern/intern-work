@@ -43,15 +43,9 @@ public class FaqService {
                 .content(registerFaqRequest.getContent())
                 .build();
 
-        try{
             // faq 정보 저장
             faqRepository.save(faq);
-        }
-        // faq 중복 체크
-        catch (Exception e){
-            log.error("registerFaq Exception : {}", e.getMessage());
-            throw new InternWorkException.dataDuplicateException();
-        }
+
 
         return Response.ok().setData(faq.getId());
     }
@@ -75,6 +69,9 @@ public class FaqService {
     public Response searchFaqDetail(Long FaqId) {
         return FaqMapper.toSearchFaqDetailResponse();
     }
+
+
+
 
     /** * * * * * *
      *            *
