@@ -120,6 +120,7 @@ public class CategoryService {
         category.updateCategoryName(updateCategoryRequest.getCategoryName() !=null ? updateCategoryRequest.getCategoryName():category.getCategoryName());
         category.updateCategoryType(updateCategoryRequest.getCategoryType() !=null? updateCategoryRequest.getCategoryType():category.getCategoryType());
         category.updateUpdatedate(updateCategoryRequest.getUpdateDate() !=null? updateCategoryRequest.getUpdateDate():category.getUpdateDate());
+        category.updateUpdateUser(updateCategoryRequest.getUpdateUser() !=null? updateCategoryRequest.getUpdateUser():category.getUpdateUser());
 
         try{
             categoryRepository.save(category);

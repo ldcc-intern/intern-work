@@ -103,5 +103,7 @@ public class FaqRequest {
         private User userId;
 
         private LocalDateTime updateDate;
+
+        private User updateUser;
     }
 }

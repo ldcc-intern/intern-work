@@ -13,12 +13,15 @@ import kr.ldcc.internwork.model.mapper.FaqMapper;
 import kr.ldcc.internwork.repository.FaqRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Slf4j
@@ -32,14 +35,11 @@ public class FaqService {
         this.faqRepository = faqRepository;
     }
 
-
-    /**
-     * * * * * *
-     * *
-     * faq 등록   *
-     * *
-     * * * * * *
-     **/
+    /** * * * * *
+     *          *
+     * faq 등록  *
+     *          *
+     * * * * * **/
     @Transactional
     public Response registerFaq(FaqRequest.RegisterFaqRequest registerFaqRequest) {
         Faq faq = Faq.builder()
@@ -60,13 +60,12 @@ public class FaqService {
         return Response.ok().setData(faq.getId());
     }
 
-    /**
-     * * * * * * * * * **
-     * *
-     * faq 리스트 전체 조회  *
-     * *
-     * * * * * * * * * * *
-     */
+
+    /** * * * * * * * * * **
+     *                     *
+     *  faq 리스트 전체 조회  *
+     *                     *
+     * * * * * * * * * * * */
     @Transactional
     public Object searchFaqAllList() {
 
@@ -78,13 +77,11 @@ public class FaqService {
         return FaqMapper.toSearchFaqListResponse(faqs);
     }
 
-    /**
-     * * * * * * * * * * * *
-     * *
+    /** * * * * * * * * * * **
+     *                       *
      * faq 리스트 faqType조회  *
-     * *
-     * * * * * * * * * * * *
-     */
+     *                       *
+     * * * * * * * * * * * * */
     @Transactional
     public Object searchFaqTypeList(FaqType faqType) {
         //public Object searchFaqList(String categoryName, LocalDateTime registerDateStart, LocalDateTime registerDateEnd, LocalDateTime noticeDateStart, LocalDateTime noticeDateEnd, FaqType state, String registerUser, String title) {
@@ -97,13 +94,12 @@ public class FaqService {
         return FaqMapper.toSearchFaqListResponse(faqs);
     }
 
-    /**
-     * * * * * * * *
-     * *
-     * faq 상세 조회   *
-     * *
-     * * * * * * * *
-     **/
+
+    /** * * * * * * *
+     *              *
+     * faq 상세 조회  *
+     *              *
+     * * * * * * * **/
     @Transactional
     public Object searchFaqDetail(Long faqId) {
 
@@ -115,13 +111,11 @@ public class FaqService {
     }
 
 
-    /**
-     * * * * * *
-     * *
-     * faq 수정   *
-     * *
-     * * * * * *
-     **/
+    /** * * * * **
+     *           *
+     *  faq 수정  *
+     *           *
+     * * * * * * */
     @Transactional
     public FaqDto updateFaq(Long faqId, FaqRequest.UpdateFaqRequest updateFaqRequest) {
 
@@ -137,6 +131,7 @@ public class FaqService {
         faq.updateTitle(updateFaqRequest.getFaqTitle() != null ? updateFaqRequest.getFaqTitle() : faq.getFaqTitle());
         faq.updateUpdateDate(updateFaqRequest.getUpdateDate() != null ? updateFaqRequest.getUpdateDate() : faq.getUpdateDate());
         faq.updateUpdateReason(updateFaqRequest.getUpdateReason() != null ? updateFaqRequest.getUpdateReason() : faq.getUpdateReason());
+        faq.updateUpdateUser(updateFaqRequest.getUpdateUser() != null ? updateFaqRequest.getUpdateUser() : faq.getUpdateUser());
 
         try {
             faqRepository.save(faq);
@@ -148,13 +143,12 @@ public class FaqService {
         return FaqMapper.toUpdateFaqResponse(faq);
     }
 
-    /**
-     * * * * * *
-     * *
-     * faq 삭제   *
-     * *
-     * * * * * *
-     **/
+
+    /** * * * * **
+     *           *
+     *  faq 삭제  *
+     *           *
+     * * * * * * */
     @Transactional
     public Response deleteFaq(Long faqId) {
         Optional<Faq> faq = faqRepository.findById(faqId);
@@ -170,5 +164,7 @@ public class FaqService {
 
     throw new InternWorkException.dataNotFoundException();
     }
+
+
 
 }

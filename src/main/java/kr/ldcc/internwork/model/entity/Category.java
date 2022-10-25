@@ -42,7 +42,7 @@ public class Category extends BaseEntity {
     private String authInfo;
 
     @Builder
-    public Category(String mainCategory, String categoryName, CategoryType categoryType, LocalDateTime registerDate, User registerUser, String authInfo, Integer orderId){
+    public Category(String mainCategory, String categoryName, CategoryType categoryType, LocalDateTime registerDate, User registerUser, User updateUser, String authInfo, Integer orderId){
         this.mainCategory = mainCategory;
         this.categoryName = categoryName;
         this.categoryType = categoryType;
@@ -50,11 +50,14 @@ public class Category extends BaseEntity {
         this.registerDate = registerDate;
         this.authInfo = authInfo;
         this.orderId = orderId;
+        this.updateUser = updateUser;
     }
 
     public void setCategoryName(String categoryName) {
         this.categoryName = categoryName;
     }
+
+    public void setUpdateUser(User updateUser) {this.updateUser = updateUser;}
 
     public void setUpdateDate(LocalDateTime updateDate) {
         this.updateDate = updateDate;
@@ -78,4 +81,6 @@ public class Category extends BaseEntity {
     public void updateAuthInfo(String authInfo) {this.authInfo = authInfo;}
 
     public void updateUpdatedate(LocalDateTime updateDate) {this.updateDate = updateDate;}
+
+    public void updateUpdateUser(User updateUser) {this.updateUser = updateUser;}
 }
