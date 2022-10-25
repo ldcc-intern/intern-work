@@ -25,7 +25,7 @@ public class UserService {
     }
 
     @Transactional
-    public Response createUser(UserRequest.CreateUserRequest createUserRequest) {
+    public Long createUser(UserRequest.CreateUserRequest createUserRequest) {
         User user = User.builder().name(createUserRequest.getName()).build();
         try {
             userRepository.save(user);
@@ -33,17 +33,16 @@ public class UserService {
             log.error("createUser Exception : {}", e.getMessage());
             throw new InternWorkException.dataDuplicateException();
         }
-        return UserMapper.toCreateUserResponse(user.getId());
+        return user.getId();
     }
 
     @Transactional
-    public Response getUserList() {
-        List<User> users = userRepository.findAll();
-        return UserMapper.toGetUserListResponse(users);
+    public List<User> getUserList() {
+        return userRepository.findAll();
     }
 
     @Transactional
-    public Response updateUser(Long userId, UserRequest.UpdateUserRequest updateUserRequest) {
+    public User updateUser(Long userId, UserRequest.UpdateUserRequest updateUserRequest) {
         User user = userRepository.findById(userId).orElseThrow(() -> {
             log.error("updateUser Exception : [존재하지 않는 User ID]");
             return new InternWorkException.dataUpdateException();
@@ -55,7 +54,7 @@ public class UserService {
             log.error("updateUser Exception : {}", e.getMessage());
             throw new InternWorkException.dataUpdateException();
         }
-        return UserMapper.toUpdateUserResponse(user);
+        return user;
     }
 
     @Transactional

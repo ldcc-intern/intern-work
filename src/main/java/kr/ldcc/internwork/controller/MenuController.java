@@ -2,6 +2,7 @@ package kr.ldcc.internwork.controller;
 
 import kr.ldcc.internwork.model.dto.request.MenuRequest;
 import kr.ldcc.internwork.model.dto.response.Response;
+import kr.ldcc.internwork.model.mapper.MenuMapper;
 import kr.ldcc.internwork.service.MenuService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -20,7 +21,7 @@ public class MenuController {
 
     @PostMapping("/menu")
     public Response createMenu(@RequestBody @Valid MenuRequest.CreateMenuRequest createMenuRequest) {
-        return menuService.createMenu(createMenuRequest);
+        return Response.ok().setData(MenuMapper.toCreateMenuResponse(menuService.createMenu(createMenuRequest)));
     }
 
     @GetMapping("/menu")

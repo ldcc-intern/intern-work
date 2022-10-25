@@ -2,6 +2,7 @@ package kr.ldcc.internwork.controller;
 
 import kr.ldcc.internwork.model.dto.request.UserRequest;
 import kr.ldcc.internwork.model.dto.response.Response;
+import kr.ldcc.internwork.model.mapper.UserMapper;
 import kr.ldcc.internwork.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -20,17 +21,17 @@ public class UserController {
 
     @PostMapping("/user")
     public Response createUser(@RequestBody @Valid UserRequest.CreateUserRequest createUserRequest) {
-        return userService.createUser(createUserRequest);
+        return Response.ok().setData(UserMapper.toCreateUserResponse(userService.createUser(createUserRequest)));
     }
 
     @GetMapping("/user")
     public Response getUserList() {
-        return userService.getUserList();
+        return Response.ok().setData(UserMapper.toGetUserListResponse(userService.getUserList()));
     }
 
     @PutMapping("/user/{userId}")
     public Response updateUser(@PathVariable("userId") Long userId, @RequestBody @Valid UserRequest.UpdateUserRequest updateUserRequest) {
-        return userService.updateUser(userId, updateUserRequest);
+        return Response.ok().setData(UserMapper.toUpdateUserResponse(userService.updateUser(userId, updateUserRequest)));
     }
 
     @DeleteMapping("/user/{userId}")

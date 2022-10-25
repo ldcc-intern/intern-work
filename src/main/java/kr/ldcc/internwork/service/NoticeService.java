@@ -9,16 +9,15 @@ import kr.ldcc.internwork.model.entity.Notice;
 import kr.ldcc.internwork.model.entity.User;
 import kr.ldcc.internwork.model.mapper.NoticeMapper;
 import kr.ldcc.internwork.repository.NoticeRepository;
-import kr.ldcc.internwork.repository.NoticeSpecification;
 import kr.ldcc.internwork.repository.UserRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Optional;
@@ -58,27 +57,19 @@ public class NoticeService {
 
     @Transactional
     public Response getNoticeList(Pageable pageable, String regStart, String regEnd, NoticeType state, String noticeStart, String noticeEnd, String userName, String title) {
-        Specification<Notice> specification = (root, query, criteriaBuilder) -> null;
+        LocalDate registerDateStart = null;
+        LocalDate registerDateEnd = null;
         if (regStart != null && regEnd != null) {
-            LocalDateTime registerDateStart = LocalDateTime.parse(regStart, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-            LocalDateTime registerDateEnd = LocalDateTime.parse(regEnd, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-            specification = specification.and(NoticeSpecification.betweenRegisterDate(registerDateStart, registerDateEnd));
+            registerDateStart = LocalDate.parse(regStart, DateTimeFormatter.ISO_DATE);
+            registerDateEnd = LocalDate.parse(regEnd, DateTimeFormatter.ISO_DATE);
         }
-        if (state != null) {
-            specification = specification.and(NoticeSpecification.equalState(state));
-        }
+        LocalDate noticeDateStart = null;
+        LocalDate noticeDateEnd = null;
         if (noticeStart != null && noticeEnd != null) {
-            LocalDateTime noticeDateStart = LocalDateTime.parse(noticeStart, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-            LocalDateTime noticeDateEnd = LocalDateTime.parse(noticeEnd, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-            specification = specification.and(NoticeSpecification.betweenNoticeDate(noticeDateStart, noticeDateEnd));
+            noticeDateStart = LocalDate.parse(noticeStart, DateTimeFormatter.ISO_DATE);
+            noticeDateEnd = LocalDate.parse(noticeEnd, DateTimeFormatter.ISO_DATE);
         }
-        if (userName != null) {
-            specification = specification.and(NoticeSpecification.equalRegisterUser(userName));
-        }
-        if (title != null) {
-            specification = specification.and(NoticeSpecification.equalTitle(title));
-        }
-        Page<Notice> notices = noticeRepository.findAll(specification, pageable);
+        Page<Notice> notices = noticeRepository.getNoticeList(pageable, registerDateStart, registerDateEnd, state, noticeDateStart, noticeDateEnd, userName, title);
         return NoticeMapper.toGetNoticeListResponse(notices);
     }
 
@@ -88,7 +79,7 @@ public class NoticeService {
             log.error("getDetailMenu Exception : [존재하지 않는 Notice ID]", ExceptionCode.DATA_NOT_FOUND_EXCEPTION);
             return new InternWorkException.dataNotFoundException();
         });
-        updateView(noticeId);
+        noticeRepository.updateView(noticeId);
         return NoticeMapper.toGetDetailNoticeResponse(notice);
     }
 
@@ -129,9 +120,5 @@ public class NoticeService {
             return NoticeMapper.toDeleteNoticeResponse();
         }
         throw new InternWorkException.dataNotFoundException();
-    }
-
-    public int updateView(Long id) {
-        return noticeRepository.updateView(id);
     }
 }

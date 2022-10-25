@@ -26,7 +26,7 @@ public class Notice extends BaseEntity {
     private NoticeType state;
     @Column(length = 40, nullable = false)
     private String title;
-    @Column(columnDefinition = "Integer DEFAULT 0", nullable = false)
+    @Column(columnDefinition = "Integer DEFAULT 0")
     private Integer view;
     @ManyToOne
     @JoinColumn(name = "register_user", updatable = false)
