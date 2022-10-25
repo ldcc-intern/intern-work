@@ -33,7 +33,7 @@ public class MenuService {
     }
 
     @Transactional
-    public Response createMenu(@RequestBody MenuRequest.CreateMenuRequest createMenuRequest) {
+    public Long createMenu(@RequestBody MenuRequest.CreateMenuRequest createMenuRequest) {
         User user = userRepository.findById(createMenuRequest.getUserId()).orElseThrow(() -> {
             log.error("createMenu Exception : [존재하지 않는 User ID]");
             return new InternWorkException.dataDuplicateException();
@@ -65,7 +65,7 @@ public class MenuService {
                 log.error("createMenu Exception : {}", e.getMessage());
                 throw new InternWorkException.dataDuplicateException();
             }
-            return MenuMapper.toCreateMenuResponse(menu.getId());
+            return menu.getId();
         }
         Integer orderId = menuRepository.findAllByParent(parent).size();
         Menu menu = Menu.builder()
@@ -81,7 +81,7 @@ public class MenuService {
             log.error("createMenu Exception : {}", e.getMessage());
             throw new InternWorkException.dataDuplicateException();
         }
-        return MenuMapper.toCreateMenuResponse(menu.getId());
+        return menu.getId();
     }
 
     @Transactional
@@ -111,9 +111,8 @@ public class MenuService {
         menu.updateMenuTitle(updateMenuRequest.getTitle() != null ? updateMenuRequest.getTitle() : menu.getTitle());
         menu.updateMenuState(updateMenuRequest.getState() != null ? updateMenuRequest.getState() : menu.getState());
         menu.updateMenuUpdateUser(user);
-        if (updateMenuRequest.getOrderId() == null) {
-            if (updateMenuRequest.getParentId() == 0) {
-//                내용만 변경, save 만
+        if (updateMenuRequest.getParentId() != 0) {
+            if (updateMenuRequest.getOrderId() != null || updateMenuRequest.getOrderId() == menu.getOrderId()) {
                 try {
                     menuRepository.save(menu);
                 } catch (Exception e) {
@@ -122,17 +121,38 @@ public class MenuService {
                 }
                 return MenuMapper.toUpdateMenuResponse(menu);
             }
-            if (updateMenuRequest.getParentId() == menu.getParent().getId()) {
-//                내용만 변경, save 만
+            ArrayList<Menu> order = menuRepository.findAllByParent(Sort.by("orderId"), menu.getParent());
+            order.remove(menu);
+            Integer orderId = updateMenuRequest.getOrderId();
+            order.add(orderId, menu);
+            order.forEach(menu1 -> menu1.updateMenuOrderId(order.indexOf(menu1)));
+            try {
+                menuRepository.saveAll(order);
+            } catch (Exception e) {
+                log.error("updateMenu Exception : {}", e.getMessage());
+                throw new InternWorkException.dataDuplicateException();
+            }
+            return MenuMapper.toUpdateMenuResponse(menu);
+        }
+        if (updateMenuRequest.getParentId() != menu.getParent().getId()) {
+            if (updateMenuRequest.getOrderId() != null) {
+                Menu parent = menuRepository.findById(updateMenuRequest.getParentId()).orElseThrow(() -> {
+                    log.error("getDetailMenu Exception : [존재하지 않는 Parent ID]", ExceptionCode.DATA_NOT_FOUND_EXCEPTION);
+                    return new InternWorkException.dataNotFoundException();
+                });
+                menu.updateMenuParent(parent);
+                Integer orderId = updateMenuRequest.getOrderId() != null ? updateMenuRequest.getOrderId() : menu.getOrderId();
+                ArrayList<Menu> order = menuRepository.findAllByParent(Sort.by("orderId"), parent);
+                order.add(orderId, menu);
+                order.forEach(menu1 -> menu1.updateMenuOrderId(order.indexOf(menu1)));
                 try {
-                    menuRepository.save(menu);
+                    menuRepository.saveAll(order);
                 } catch (Exception e) {
                     log.error("updateMenu Exception : {}", e.getMessage());
                     throw new InternWorkException.dataDuplicateException();
                 }
                 return MenuMapper.toUpdateMenuResponse(menu);
             }
-//            Parent 변경, 새로운 Parent Order 맨 뒤에 추가, save
             Menu parent = menuRepository.findById(updateMenuRequest.getParentId()).orElseThrow(() -> {
                 log.error("getDetailMenu Exception : [존재하지 않는 Parent ID]", ExceptionCode.DATA_NOT_FOUND_EXCEPTION);
                 return new InternWorkException.dataNotFoundException();
@@ -148,58 +168,18 @@ public class MenuService {
             }
             return MenuMapper.toUpdateMenuResponse(menu);
         }
-        if (updateMenuRequest.getOrderId() == menu.getOrderId()) {
-            if (updateMenuRequest.getParentId() == 0 || updateMenuRequest.getParentId() == menu.getParent().getId()) {
-//                내용만 변경, save 만
-                try {
-                    menuRepository.save(menu);
-                } catch (Exception e) {
-                    log.error("updateMenu Exception : {}", e.getMessage());
-                    throw new InternWorkException.dataDuplicateException();
-                }
-                return MenuMapper.toUpdateMenuResponse(menu);
-            }
-//            Parent 변경, 새로운 Parent Order OrderId에 추가, save all
-            Menu parent = menuRepository.findById(updateMenuRequest.getParentId()).orElseThrow(() -> {
-                log.error("getDetailMenu Exception : [존재하지 않는 Parent ID]", ExceptionCode.DATA_NOT_FOUND_EXCEPTION);
-                return new InternWorkException.dataNotFoundException();
-            });
-            menu.updateMenuParent(parent);
-            Integer orderId = updateMenuRequest.getOrderId() != null ? updateMenuRequest.getOrderId() : menu.getOrderId();
-            ArrayList<Menu> order = menuRepository.findAllByParent(Sort.by("orderId"), parent);
-            order.add(orderId, menu);
-            order.forEach(menu1 -> menu1.updateMenuOrderId(order.indexOf(menu1)));
+        if (updateMenuRequest.getOrderId() == null || updateMenuRequest.getOrderId() == menu.getOrderId()) {
             try {
-                menuRepository.saveAll(order);
+                menuRepository.save(menu);
             } catch (Exception e) {
                 log.error("updateMenu Exception : {}", e.getMessage());
                 throw new InternWorkException.dataDuplicateException();
             }
             return MenuMapper.toUpdateMenuResponse(menu);
         }
-        if (updateMenuRequest.getParentId() == 0 || updateMenuRequest.getParentId() == menu.getParent().getId()) {
-//            Order만 변경, 기존 Order에서 삭제 후 추가, save all
-            ArrayList<Menu> order = menuRepository.findAllByParent(Sort.by("orderId"), menu.getParent());
-            order.remove(menu);
-            Integer orderId = updateMenuRequest.getOrderId();
-            order.add(orderId, menu);
-            order.forEach(menu1 -> menu1.updateMenuOrderId(order.indexOf(menu1)));
-            try {
-                menuRepository.saveAll(order);
-            } catch (Exception e) {
-                log.error("updateMenu Exception : {}", e.getMessage());
-                throw new InternWorkException.dataDuplicateException();
-            }
-            return MenuMapper.toUpdateMenuResponse(menu);
-        }
-//        "Parent 변경, 새로운 Parent Order OrderId에 추가, save all"
-        Menu parent = menuRepository.findById(updateMenuRequest.getParentId()).orElseThrow(() -> {
-            log.error("getDetailMenu Exception : [존재하지 않는 Parent ID]", ExceptionCode.DATA_NOT_FOUND_EXCEPTION);
-            return new InternWorkException.dataNotFoundException();
-        });
-        menu.updateMenuParent(parent);
-        Integer orderId = updateMenuRequest.getOrderId() != null ? updateMenuRequest.getOrderId() : menu.getOrderId();
-        ArrayList<Menu> order = menuRepository.findAllByParent(Sort.by("orderId"), parent);
+        ArrayList<Menu> order = menuRepository.findAllByParent(Sort.by("orderId"), menu.getParent());
+        order.remove(menu);
+        Integer orderId = updateMenuRequest.getOrderId();
         order.add(orderId, menu);
         order.forEach(menu1 -> menu1.updateMenuOrderId(order.indexOf(menu1)));
         try {

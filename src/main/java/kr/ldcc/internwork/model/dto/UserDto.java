@@ -8,17 +8,7 @@ import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.Accessors;
 
-@Getter
-@Setter
-@NoArgsConstructor
-@ToString
-@Accessors(chain = true)
-@JsonIgnoreProperties(ignoreUnknown = true)
-@JsonInclude(value = JsonInclude.Include.NON_NULL)
 public class UserDto {
-    private Long id;
-    private String name;
-
     @Getter
     @Setter
     @NoArgsConstructor
@@ -28,5 +18,17 @@ public class UserDto {
     @JsonInclude(value = JsonInclude.Include.NON_NULL)
     public static class CreateUserResponse {
         private Long id;
+    }
+
+    @Getter
+    @Setter
+    @NoArgsConstructor
+    @ToString
+    @Accessors(chain = true)
+    @JsonIgnoreProperties(ignoreUnknown = true)
+    @JsonInclude(value = JsonInclude.Include.NON_NULL)
+    public static class UpdateUserResponse {
+        private Long id;
+        private String name;
     }
 }

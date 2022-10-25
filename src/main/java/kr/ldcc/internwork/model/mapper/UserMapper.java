@@ -10,16 +10,16 @@ import java.util.List;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class UserMapper {
-    public static Response toCreateUserResponse(Long userId) {
-        return Response.ok().setData(new UserDto.CreateUserResponse().setId(userId));
+    public static UserDto.CreateUserResponse toCreateUserResponse(Long userId) {
+        return new UserDto.CreateUserResponse().setId(userId);
     }
 
-    public static Response toGetUserListResponse(List<User> users) {
-        return Response.ok().setData(users);
+    public static List<User> toGetUserListResponse(List<User> users) {
+        return users;
     }
 
-    public static Response toUpdateUserResponse(User user) {
-        return Response.ok().setData(ObjectMapperUtils.map(user, UserDto.class));
+    public static UserDto.UpdateUserResponse toUpdateUserResponse(User user) {
+        return new UserDto.UpdateUserResponse().setId(user.getId()).setName(user.getName());
     }
 
     public static Response toDeleteUserResponse() {

@@ -12,8 +12,8 @@ import java.util.stream.Collectors;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class MenuMapper {
-    public static Response toCreateMenuResponse(Long id) {
-        return Response.ok().setData(new MenuDto.CreateMenuResponse().setId(id));
+    public static MenuDto.CreateMenuResponse toCreateMenuResponse(Long id) {
+        return new MenuDto.CreateMenuResponse().setId(id);
     }
 
     public static Response toGetMenuListResponse(List<Menu> menus) {
