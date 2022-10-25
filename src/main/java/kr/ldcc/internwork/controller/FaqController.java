@@ -11,6 +11,8 @@ import kr.ldcc.internwork.service.FaqService;
 import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -123,4 +125,7 @@ public class FaqController {
     public Response deleteFaq(@PathVariable("faqId") Long faqId){
         return faqService.deleteFaq(faqId);
     }
+
+
+
 }

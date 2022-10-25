@@ -5,6 +5,7 @@ import kr.ldcc.internwork.controller.FaqController;
 import kr.ldcc.internwork.model.dto.request.FaqRequest;
 import kr.ldcc.internwork.model.dto.response.Response;
 import kr.ldcc.internwork.repository.FaqRepository;
+import kr.ldcc.internwork.repository.UserRepository;
 import kr.ldcc.internwork.service.FaqService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -35,6 +36,8 @@ class FaqTest {
 
     @Autowired FaqService faqService;
 
+    @Autowired UserRepository userRepository;
+
     @BeforeEach
     public void before() {
         Faq faq = Faq.builder()
@@ -45,6 +48,7 @@ class FaqTest {
                 .registerDate(LocalDateTime.now())
                 .noticeDate(LocalDateTime.now())
                 .authInfo("Test")
+                .registerUser(userRepository.findByName("name"))
                 .build();
         faqRepository.save(faq);
     }
@@ -60,6 +64,7 @@ class FaqTest {
         registerFaqRequest.setRegisterDate(LocalDateTime.now());
         registerFaqRequest.setNoticeDate(LocalDateTime.now());
         registerFaqRequest.setAuthInfo("인증");
+        registerFaqRequest.setRegisterUser(userRepository.findByName("사용자1"));
 
         Response faq = faqController.registerFaq(registerFaqRequest);
 
@@ -91,6 +96,7 @@ class FaqTest {
         updateFaqRequest.setUpdateDate(LocalDateTime.now());
         updateFaqRequest.setFaqType(FaqType.SHOW);
         updateFaqRequest.setUpdateReason("수정이유입니다");
+        updateFaqRequest.setUpdateUser(userRepository.findByName("사용자2"));
 
         faqController.updateFaq(findFaq.getId(), updateFaqRequest);
 
