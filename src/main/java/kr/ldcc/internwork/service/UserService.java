@@ -2,30 +2,24 @@ package kr.ldcc.internwork.service;
 
 import kr.ldcc.internwork.common.exception.InternWorkException;
 import kr.ldcc.internwork.model.dto.request.UserRequest;
-import kr.ldcc.internwork.model.dto.response.Response;
 import kr.ldcc.internwork.model.entity.User;
-import kr.ldcc.internwork.model.mapper.UserMapper;
 import kr.ldcc.internwork.repository.UserRepository;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
 
+@Service
+@RequiredArgsConstructor
 @Slf4j
-@Component
 public class UserService {
     private final UserRepository userRepository;
 
-    @Autowired
-    public UserService(UserRepository userRepository) {
-        this.userRepository = userRepository;
-    }
-
     @Transactional
-    public Long createUser(UserRequest.CreateUserRequest createUserRequest) {
+    public User createUser(UserRequest.CreateUserRequest createUserRequest) {
         User user = User.builder().name(createUserRequest.getName()).build();
         try {
             userRepository.save(user);
@@ -33,7 +27,7 @@ public class UserService {
             log.error("createUser Exception : {}", e.getMessage());
             throw new InternWorkException.dataDuplicateException();
         }
-        return user.getId();
+        return user;
     }
 
     @Transactional
@@ -58,11 +52,11 @@ public class UserService {
     }
 
     @Transactional
-    public Response deleteUser(Long userId) {
+    public User deleteUser(Long userId) {
         Optional<User> user = userRepository.findById(userId);
         if (user.isPresent()) {
             userRepository.deleteById(userId);
-            return UserMapper.toDeleteUserResponse();
+            return user.get();
         }
         throw new InternWorkException.dataNotFoundException();
     }

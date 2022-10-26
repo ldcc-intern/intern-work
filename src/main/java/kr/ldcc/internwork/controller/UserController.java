@@ -36,6 +36,6 @@ public class UserController {
 
     @DeleteMapping("/user/{userId}")
     public Response deleteUser(@PathVariable("userId") Long userId) {
-        return userService.deleteUser(userId);
+        return Response.ok().setData(UserMapper.toDeleteUserResponse(userService.deleteUser(userId)));
     }
 }

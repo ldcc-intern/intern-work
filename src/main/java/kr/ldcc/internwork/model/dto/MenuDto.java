@@ -29,19 +29,20 @@ public class MenuDto {
     @Accessors(chain = true)
     @JsonIgnoreProperties(ignoreUnknown = true)
     @JsonInclude(value = JsonInclude.Include.NON_NULL)
-    public static class MenuListResponse {
+    public static class GetMenuListResponse {
         private Long id;
         private Integer orderId;
         private Long parentId;
         private String title;
-        private List<MenuListResponse> children;
+        private List<GetMenuListResponse> children;
 
         @Builder
-        public MenuListResponse(Long id, Integer orderId, Long parentId, String title) {
+        public GetMenuListResponse(Long id, Integer orderId, Long parentId, String title, List<GetMenuListResponse> children) {
             this.id = id;
             this.orderId = orderId;
             this.parentId = parentId;
             this.title = title;
+            this.children = children;
         }
     }
 
@@ -79,5 +80,16 @@ public class MenuDto {
         private String title;
         private User registerUser;
         private User updateUser;
+    }
+
+    @Getter
+    @Setter
+    @NoArgsConstructor
+    @ToString
+    @Accessors(chain = true)
+    @JsonIgnoreProperties(ignoreUnknown = true)
+    @JsonInclude(value = JsonInclude.Include.NON_NULL)
+    public static class DeleteMenuResponse {
+        private Long id;
     }
 }

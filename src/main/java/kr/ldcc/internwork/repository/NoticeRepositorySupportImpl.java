@@ -24,28 +24,8 @@ public class NoticeRepositorySupportImpl implements NoticeRepositorySupport {
     QUser qUser = QUser.user;
 
     @Override
-    public Page<Notice> getNoticeList(Pageable pageable, LocalDate registerDateStart, LocalDate registerDateEnd, NoticeType state, LocalDate noticeDateStart, LocalDate noticeDateEnd, String user, String title) {
-        List<Notice> content = getContent(pageable, registerDateStart, registerDateEnd, state, noticeDateStart, noticeDateEnd, user, title);
-        Long total = getTotal(registerDateStart, registerDateEnd, state, noticeDateStart, noticeDateEnd, user, title);
-        return new PageImpl<>(content, pageable, total);
-    }
-
-    private Long getTotal(LocalDate registerDateStart, LocalDate registerDateEnd, NoticeType state, LocalDate noticeDateStart, LocalDate noticeDateEnd, String userName, String title) {
-        return queryFactory
-                .select(qNotice.count())
-                .from(qNotice)
-                .where(
-                        betweenRegisterDate(registerDateStart, registerDateEnd),
-                        findByState(state),
-                        betweenNoticeDate(noticeDateStart, noticeDateEnd),
-                        findByUserName(userName),
-                        findByTitle(title)
-                )
-                .fetchOne();
-    }
-
-    private List<Notice> getContent(Pageable pageable, LocalDate registerDateStart, LocalDate registerDateEnd, NoticeType state, LocalDate noticeDateStart, LocalDate noticeDateEnd, String userName, String title) {
-        return queryFactory
+    public Page<Notice> getNoticeList(Pageable pageable, LocalDate registerDateStart, LocalDate registerDateEnd, NoticeType state, LocalDate noticeDateStart, LocalDate noticeDateEnd, String userName, String title) {
+        List<Notice> content = queryFactory
                 .selectFrom(qNotice)
                 .leftJoin(qNotice.registerUser, qUser)
                 .fetchJoin()
@@ -59,6 +39,18 @@ public class NoticeRepositorySupportImpl implements NoticeRepositorySupport {
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .fetch();
+        Long total = queryFactory
+                .select(qNotice.count())
+                .from(qNotice)
+                .where(
+                        betweenRegisterDate(registerDateStart, registerDateEnd),
+                        findByState(state),
+                        betweenNoticeDate(noticeDateStart, noticeDateEnd),
+                        findByUserName(userName),
+                        findByTitle(title)
+                )
+                .fetchOne();
+        return new PageImpl<>(content, pageable, total);
     }
 
     private BooleanExpression findByTitle(String title) {

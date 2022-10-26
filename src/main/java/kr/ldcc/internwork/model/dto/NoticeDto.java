@@ -18,7 +18,6 @@ public class NoticeDto {
     @JsonInclude(value = JsonInclude.Include.NON_NULL)
     public static class CreateNoticeResponse {
         private Long id;
-
     }
 
     @Getter
@@ -43,7 +42,7 @@ public class NoticeDto {
             this.title = title;
             this.registerUser = registerUser;
             this.registerDate = registerDate;
-            NoticeDate = noticeDate;
+            this.NoticeDate = noticeDate;
             this.state = state;
             this.view = view;
         }
@@ -89,5 +88,16 @@ public class NoticeDto {
         private Integer view;
         private String registerUser;
         private String updateUser;
+    }
+
+    @Getter
+    @Setter
+    @NoArgsConstructor
+    @ToString
+    @Accessors(chain = true)
+    @JsonIgnoreProperties(ignoreUnknown = true)
+    @JsonInclude(value = JsonInclude.Include.NON_NULL)
+    public static class DeleteNoticeResponse {
+        private Long id;
     }
 }

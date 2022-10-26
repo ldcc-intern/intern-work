@@ -8,7 +8,6 @@ import lombok.Setter;
 import lombok.experimental.Accessors;
 
 public class MenuRequest {
-
     @Getter
     @Setter
     @Accessors(chain = true)
@@ -26,7 +25,7 @@ public class MenuRequest {
     @Setter
     @Accessors(chain = true)
     @JsonIgnoreProperties(ignoreUnknown = true)
-    public static class updateMenuRequest {
+    public static class UpdateMenuRequest {
         private String title;
         @Enum(enumClass = MenuType.class)
         private MenuType state;
