@@ -26,21 +26,21 @@ public class MenuController {
 
     @GetMapping("/menu")
     public Response getMenuList() {
-        return menuService.getMenuList();
+        return Response.ok().setData(MenuMapper.toGetMenuListResponse(menuService.getMenuList()));
     }
 
     @GetMapping("/menu/{menuId}")
     public Response getDetailMenu(@PathVariable("menuId") Long menuId) {
-        return menuService.getDetailMenu(menuId);
+        return Response.ok().setData(MenuMapper.toGetDetailMenuResponse(menuService.getDetailMenu(menuId)));
     }
 
     @PutMapping("/menu/{menuId}")
-    public Response updateMenu(@PathVariable("menuId") Long menuId, @RequestBody @Valid MenuRequest.updateMenuRequest updateMenuRequest) {
-        return menuService.updateMenu(menuId, updateMenuRequest);
+    public Response updateMenu(@PathVariable("menuId") Long menuId, @RequestBody @Valid MenuRequest.UpdateMenuRequest updateMenuRequest) {
+        return Response.ok().setData(MenuMapper.toUpdateMenuResponse(menuService.updateMenu(menuId, updateMenuRequest)));
     }
 
     @DeleteMapping("/menu/{menuId}")
     public Response deleteMenu(@PathVariable("menuId") Long menuId) {
-        return menuService.deleteMenu(menuId);
+        return Response.ok().setData(MenuMapper.toDeleteMenuResponse(menuService.deleteMenu(menuId)));
     }
 }

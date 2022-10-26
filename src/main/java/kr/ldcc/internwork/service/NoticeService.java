@@ -4,17 +4,15 @@ import kr.ldcc.internwork.common.exception.ExceptionCode;
 import kr.ldcc.internwork.common.exception.InternWorkException;
 import kr.ldcc.internwork.common.types.NoticeType;
 import kr.ldcc.internwork.model.dto.request.NoticeRequest;
-import kr.ldcc.internwork.model.dto.response.Response;
 import kr.ldcc.internwork.model.entity.Notice;
 import kr.ldcc.internwork.model.entity.User;
-import kr.ldcc.internwork.model.mapper.NoticeMapper;
 import kr.ldcc.internwork.repository.NoticeRepository;
 import kr.ldcc.internwork.repository.UserRepository;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
@@ -22,20 +20,15 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Optional;
 
+@Service
+@RequiredArgsConstructor
 @Slf4j
-@Component
 public class NoticeService {
     private final NoticeRepository noticeRepository;
     private final UserRepository userRepository;
 
-    @Autowired
-    public NoticeService(NoticeRepository noticeRepository, UserRepository userRepository) {
-        this.noticeRepository = noticeRepository;
-        this.userRepository = userRepository;
-    }
-
     @Transactional
-    public Response createNotice(NoticeRequest.CreateNoticeRequest createNoticeRequest) {
+    public Notice createNotice(NoticeRequest.CreateNoticeRequest createNoticeRequest) {
         User user = userRepository.findById(createNoticeRequest.getUserId()).orElseThrow(() -> {
             log.error("createMenu Exception : [존재하지 않는 User ID]");
             return new InternWorkException.dataDuplicateException();
@@ -52,11 +45,11 @@ public class NoticeService {
                 .state(NoticeType.OPEN)
                 .build();
         noticeRepository.save(notice);
-        return NoticeMapper.toCreateNoticeResponse(notice.getId());
+        return notice;
     }
 
     @Transactional
-    public Response getNoticeList(Pageable pageable, String regStart, String regEnd, NoticeType state, String noticeStart, String noticeEnd, String userName, String title) {
+    public Page<Notice> getNoticeList(Pageable pageable, String regStart, String regEnd, NoticeType state, String noticeStart, String noticeEnd, String userName, String title) {
         LocalDate registerDateStart = null;
         LocalDate registerDateEnd = null;
         if (regStart != null && regEnd != null) {
@@ -69,22 +62,21 @@ public class NoticeService {
             noticeDateStart = LocalDate.parse(noticeStart, DateTimeFormatter.ISO_DATE);
             noticeDateEnd = LocalDate.parse(noticeEnd, DateTimeFormatter.ISO_DATE);
         }
-        Page<Notice> notices = noticeRepository.getNoticeList(pageable, registerDateStart, registerDateEnd, state, noticeDateStart, noticeDateEnd, userName, title);
-        return NoticeMapper.toGetNoticeListResponse(notices);
+        return noticeRepository.getNoticeList(pageable, registerDateStart, registerDateEnd, state, noticeDateStart, noticeDateEnd, userName, title);
     }
 
     @Transactional
-    public Response getDetailNotice(Long noticeId) {
+    public Notice getDetailNotice(Long noticeId) {
         Notice notice = noticeRepository.findById(noticeId).orElseThrow(() -> {
             log.error("getDetailMenu Exception : [존재하지 않는 Notice ID]", ExceptionCode.DATA_NOT_FOUND_EXCEPTION);
             return new InternWorkException.dataNotFoundException();
         });
         noticeRepository.updateView(noticeId);
-        return NoticeMapper.toGetDetailNoticeResponse(notice);
+        return notice;
     }
 
     @Transactional
-    public Response updateNotice(Long noticeId, NoticeRequest.UpdateNoticeRequest updateNoticeRequest) {
+    public Notice updateNotice(Long noticeId, NoticeRequest.UpdateNoticeRequest updateNoticeRequest) {
         Notice notice = noticeRepository.findById(noticeId).orElseThrow(() -> {
             log.error("getDetailMenu Exception : [존재하지 않는 Notice ID]", ExceptionCode.DATA_NOT_FOUND_EXCEPTION);
             return new InternWorkException.dataNotFoundException();
@@ -109,15 +101,15 @@ public class NoticeService {
             log.error("updateNotice Exception : {}", e.getMessage());
             throw new InternWorkException.dataDuplicateException();
         }
-        return NoticeMapper.toUpdateNoticeResponse(notice);
+        return notice;
     }
 
     @Transactional
-    public Response deleteNotice(Long noticeId) {
+    public Notice deleteNotice(Long noticeId) {
         Optional<Notice> notice = noticeRepository.findById(noticeId);
         if (notice.isPresent()) {
             noticeRepository.deleteById(noticeId);
-            return NoticeMapper.toDeleteNoticeResponse();
+            return notice.get();
         }
         throw new InternWorkException.dataNotFoundException();
     }
