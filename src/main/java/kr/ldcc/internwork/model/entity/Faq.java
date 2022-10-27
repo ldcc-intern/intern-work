@@ -20,6 +20,7 @@ public class Faq extends BaseEntity {
     private Long id; // faq 번호
 
     //@ManyToOne
+    //@Column(name = "category_name")
     private String categoryName; // 카테고리명
 
     @Column(length = 5000)
