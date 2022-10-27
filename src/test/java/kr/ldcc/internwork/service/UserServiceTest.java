@@ -19,9 +19,8 @@ class UserServiceTest {
     @Test
     void createUser() {
 //        given
-        UserRequest.CreateUserRequest createUserRequest = new UserRequest.CreateUserRequest().setName("Test 이름");
 //        when
-        User newUser = userService.createUser(createUserRequest);
+        User newUser = userService.createUser(new UserRequest.CreateUserRequest().setName("Test 이름"));
 //        then
         User findUser = userRepository.findById(newUser.getId()).get();
         assertEquals(findUser.getName(), newUser.getName());
@@ -30,11 +29,9 @@ class UserServiceTest {
     @Test
     void updateUser() {
 //        given
-        UserRequest.CreateUserRequest createUserRequest = new UserRequest.CreateUserRequest().setName("Test 이름");
-        User user = userService.createUser(createUserRequest);
-        UserRequest.UpdateUserRequest updateUserRequest = new UserRequest.UpdateUserRequest().setName("테스트 이름");
+        User user = userService.createUser(new UserRequest.CreateUserRequest().setName("Test 이름"));
 //        when
-        User updateUser = userService.updateUser(user.getId(), updateUserRequest);
+        User updateUser = userService.updateUser(user.getId(), new UserRequest.UpdateUserRequest().setName("테스트 이름"));
 //        then
         User findUser = userRepository.findById(user.getId()).get();
         assertEquals(findUser.getName(), updateUser.getName());
@@ -43,8 +40,7 @@ class UserServiceTest {
     @Test
     void deleteUser() {
 //        given
-        UserRequest.CreateUserRequest createUserRequest = new UserRequest.CreateUserRequest().setName("Test 이름");
-        User user = userService.createUser(createUserRequest);
+        User user = userService.createUser(new UserRequest.CreateUserRequest().setName("Test 이름"));
 //        when
         User deleteUser = userService.deleteUser(user.getId());
 //        then

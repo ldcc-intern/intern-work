@@ -27,8 +27,7 @@ class MenuServiceTest {
     @Test/*parent == null, orderId == null*/
     void createMenu1() {
 //        given
-        UserRequest.CreateUserRequest registerUserRequest = new UserRequest.CreateUserRequest().setName("등록자");
-        User registerUser = userService.createUser(registerUserRequest);
+        User registerUser = userService.createUser(new UserRequest.CreateUserRequest().setName("등록자"));
         MenuRequest.CreateMenuRequest createMenuRequest = new MenuRequest.CreateMenuRequest()
                 .setTitle("Test 메뉴")
                 .setState(MenuType.ON)
@@ -48,13 +47,12 @@ class MenuServiceTest {
     @Test/*parent == null, orderId != null*/
     void createMenu2() {
 //        given
-        UserRequest.CreateUserRequest registerUserRequest = new UserRequest.CreateUserRequest().setName("등록자");
-        User registerUser = userService.createUser(registerUserRequest);
-        MenuRequest.CreateMenuRequest orderCreateMenuRequest = new MenuRequest.CreateMenuRequest()
-                .setTitle("Test 메뉴")
-                .setState(MenuType.ON)
-                .setUserId(registerUser.getId());
-        Menu order = menuService.createMenu(orderCreateMenuRequest);
+        User registerUser = userService.createUser(new UserRequest.CreateUserRequest().setName("등록자"));
+        Menu order = menuService.createMenu(
+                new MenuRequest.CreateMenuRequest()
+                        .setTitle("Test 메뉴")
+                        .setState(MenuType.ON)
+                        .setUserId(registerUser.getId()));
         MenuRequest.CreateMenuRequest createMenuRequest = new MenuRequest.CreateMenuRequest()
                 .setTitle("Test 메뉴")
                 .setState(MenuType.ON)
@@ -74,13 +72,11 @@ class MenuServiceTest {
     @Test/*parent != null, orderId == null*/
     void createMenu3() {
 //        given
-        UserRequest.CreateUserRequest registerUserRequest = new UserRequest.CreateUserRequest().setName("등록자");
-        User registerUser = userService.createUser(registerUserRequest);
-        MenuRequest.CreateMenuRequest parentCreateMenuRequest = new MenuRequest.CreateMenuRequest()
+        User registerUser = userService.createUser(new UserRequest.CreateUserRequest().setName("등록자"));
+        Menu parent = menuService.createMenu(new MenuRequest.CreateMenuRequest()
                 .setTitle("Test 메뉴")
                 .setState(MenuType.ON)
-                .setUserId(registerUser.getId());
-        Menu parent = menuService.createMenu(parentCreateMenuRequest);
+                .setUserId(registerUser.getId()));
         MenuRequest.CreateMenuRequest createMenuRequest = new MenuRequest.CreateMenuRequest()
                 .setTitle("Test 메뉴")
                 .setState(MenuType.ON)
@@ -101,19 +97,16 @@ class MenuServiceTest {
     @Test/*parent != null, orderId != null*/
     void createMenu4() {
 //        given
-        UserRequest.CreateUserRequest registerUserRequest = new UserRequest.CreateUserRequest().setName("등록자");
-        User registerUser = userService.createUser(registerUserRequest);
-        MenuRequest.CreateMenuRequest parentCreateMenuRequest = new MenuRequest.CreateMenuRequest()
+        User registerUser = userService.createUser(new UserRequest.CreateUserRequest().setName("등록자"));
+        Menu parent = menuService.createMenu(new MenuRequest.CreateMenuRequest()
                 .setTitle("Test 메뉴")
                 .setState(MenuType.ON)
-                .setUserId(registerUser.getId());
-        Menu parent = menuService.createMenu(parentCreateMenuRequest);
-        MenuRequest.CreateMenuRequest orderCreateMenuRequest = new MenuRequest.CreateMenuRequest()
+                .setUserId(registerUser.getId()));
+        Menu order = menuService.createMenu(new MenuRequest.CreateMenuRequest()
                 .setTitle("Test 메뉴")
                 .setState(MenuType.ON)
                 .setUserId(registerUser.getId())
-                .setParentId(parent.getId());
-        Menu order = menuService.createMenu(orderCreateMenuRequest);
+                .setParentId(parent.getId()));
         MenuRequest.CreateMenuRequest createMenuRequest = new MenuRequest.CreateMenuRequest()
                 .setTitle("Test 메뉴")
                 .setState(MenuType.ON)
@@ -131,25 +124,25 @@ class MenuServiceTest {
         assertEquals(findMenu.getOrderId(), createMenuRequest.getOrderId());
     }
 
-    @Test/*parent == null, orderId == null*/
+    @Test/*parent == null, orderId == null, save 만*/
     void updateMenu1() {
 //        given
-        UserRequest.CreateUserRequest registerUserRequest = new UserRequest.CreateUserRequest().setName("등록자");
-        User registerUser = userService.createUser(registerUserRequest);
-        MenuRequest.CreateMenuRequest parentCreateMenuRequest = new MenuRequest.CreateMenuRequest()
-                .setTitle("Test 메뉴")
+        User registerUser = userService.createUser(new UserRequest.CreateUserRequest().setName("등록자"));
+        Menu parent = menuService.createMenu(new MenuRequest.CreateMenuRequest()
+                .setTitle("Test Parent 메뉴")
                 .setState(MenuType.ON)
-                .setUserId(registerUser.getId());
-        Menu parent = menuService.createMenu(parentCreateMenuRequest);
-        MenuRequest.CreateMenuRequest createMenuRequest = new MenuRequest.CreateMenuRequest()
-                .setTitle("Test 메뉴")
+                .setUserId(registerUser.getId()));
+        menuService.createMenu(new MenuRequest.CreateMenuRequest()
+                .setTitle("Test Order 메뉴")
                 .setState(MenuType.ON)
                 .setUserId(registerUser.getId())
-                .setParentId(parent.getId());
-        menuService.createMenu(createMenuRequest);
-        Menu createMenu = menuService.createMenu(createMenuRequest);
-        UserRequest.CreateUserRequest updateUserRequest = new UserRequest.CreateUserRequest().setName("수정자");
-        User updateUser = userService.createUser(updateUserRequest);
+                .setParentId(parent.getId()));
+        Menu createMenu = menuService.createMenu(new MenuRequest.CreateMenuRequest()
+                .setTitle("Test New 메뉴")
+                .setState(MenuType.ON)
+                .setUserId(registerUser.getId())
+                .setParentId(parent.getId()));
+        User updateUser = userService.createUser(new UserRequest.CreateUserRequest().setName("수정자"));
         MenuRequest.UpdateMenuRequest updateMenuRequest = new MenuRequest.UpdateMenuRequest()
                 .setTitle("테스트 메뉴")
                 .setState(MenuType.OFF)
@@ -158,6 +151,12 @@ class MenuServiceTest {
         Menu menu = menuService.updateMenu(createMenu.getId(), updateMenuRequest);
 //        then
         Menu findMenu = menuRepository.findById(menu.getId()).get();
+        assertEquals(findMenu.getTitle(), menu.getTitle());
+        assertEquals(findMenu.getState(), menu.getState());
+        assertEquals(findMenu.getRegisterUser().getId(), menu.getRegisterUser().getId());
+        assertEquals(findMenu.getUpdateUser().getId(), menu.getUpdateUser().getId());
+        assertEquals(findMenu.getParent().getId(), menu.getParent().getId());
+        assertEquals(findMenu.getOrderId(), menu.getOrderId());
         assertEquals(findMenu.getTitle(), updateMenuRequest.getTitle());
         assertEquals(findMenu.getState(), updateMenuRequest.getState());
         assertEquals(findMenu.getRegisterUser().getId(), createMenu.getRegisterUser().getId());
@@ -166,7 +165,7 @@ class MenuServiceTest {
         assertEquals(findMenu.getOrderId(), createMenu.getOrderId());
     }
 
-    @Test/*parent == null, orderId 기존과 같을 때*/
+    @Test/*parent == null, orderId 기존과 같을 때, save 만*/
     void updateMenu2() {
 //        given
         UserRequest.CreateUserRequest registerUserRequest = new UserRequest.CreateUserRequest().setName("등록자");
@@ -194,33 +193,39 @@ class MenuServiceTest {
         Menu menu = menuService.updateMenu(createMenu.getId(), updateMenuRequest);
 //        then
         Menu findMenu = menuRepository.findById(menu.getId()).get();
+        assertEquals(findMenu.getTitle(), menu.getTitle());
+        assertEquals(findMenu.getState(), menu.getState());
+        assertEquals(findMenu.getRegisterUser().getId(), menu.getRegisterUser().getId());
+        assertEquals(findMenu.getUpdateUser().getId(), menu.getUpdateUser().getId());
+        assertEquals(findMenu.getParent().getId(), menu.getParent().getId());
+        assertEquals(findMenu.getOrderId(), menu.getOrderId());
         assertEquals(findMenu.getTitle(), updateMenuRequest.getTitle());
         assertEquals(findMenu.getState(), updateMenuRequest.getState());
         assertEquals(findMenu.getRegisterUser().getId(), createMenu.getRegisterUser().getId());
         assertEquals(findMenu.getUpdateUser().getId(), updateMenuRequest.getUserId());
         assertEquals(findMenu.getParent().getId(), createMenu.getParent().getId());
-        assertEquals(findMenu.getOrderId(), createMenu.getOrderId());
+        assertEquals(findMenu.getOrderId(), updateMenuRequest.getOrderId());
     }
 
-    @Test/*parent == null, orderId 기존과 다를 때*/
+    @Test/*parent == null, orderId 기존과 다를 때, 기존 배열에서 삭제 후 새로운 배열에 추가, saveAll*/
     void updateMenu3() {
 //        given
-        UserRequest.CreateUserRequest registerUserRequest = new UserRequest.CreateUserRequest().setName("등록자");
-        User registerUser = userService.createUser(registerUserRequest);
-        MenuRequest.CreateMenuRequest parentCreateMenuRequest = new MenuRequest.CreateMenuRequest()
-                .setTitle("Test 메뉴")
+        User registerUser = userService.createUser(new UserRequest.CreateUserRequest().setName("등록자"));
+        Menu parent = menuService.createMenu(new MenuRequest.CreateMenuRequest()
+                .setTitle("Test Parent 메뉴")
                 .setState(MenuType.ON)
-                .setUserId(registerUser.getId());
-        Menu parent = menuService.createMenu(parentCreateMenuRequest);
-        MenuRequest.CreateMenuRequest createMenuRequest = new MenuRequest.CreateMenuRequest()
-                .setTitle("Test 메뉴")
+                .setUserId(registerUser.getId()));
+        Menu order = menuService.createMenu(new MenuRequest.CreateMenuRequest()
+                .setTitle("Test Order 메뉴")
                 .setState(MenuType.ON)
                 .setUserId(registerUser.getId())
-                .setParentId(parent.getId());
-        Menu order = menuService.createMenu(createMenuRequest);
-        Menu createMenu = menuService.createMenu(createMenuRequest);
-        UserRequest.CreateUserRequest updateUserRequest = new UserRequest.CreateUserRequest().setName("수정자");
-        User updateUser = userService.createUser(updateUserRequest);
+                .setParentId(parent.getId()));
+        Menu createMenu = menuService.createMenu(new MenuRequest.CreateMenuRequest()
+                .setTitle("Test New 메뉴")
+                .setState(MenuType.ON)
+                .setUserId(registerUser.getId())
+                .setParentId(parent.getId()));
+        User updateUser = userService.createUser(new UserRequest.CreateUserRequest().setName("수정자"));
         MenuRequest.UpdateMenuRequest updateMenuRequest = new MenuRequest.UpdateMenuRequest()
                 .setTitle("테스트 메뉴")
                 .setState(MenuType.OFF)
@@ -230,34 +235,39 @@ class MenuServiceTest {
         Menu menu = menuService.updateMenu(createMenu.getId(), updateMenuRequest);
 //        then
         Menu findMenu = menuRepository.findById(menu.getId()).get();
+        assertEquals(findMenu.getTitle(), menu.getTitle());
+        assertEquals(findMenu.getState(), menu.getState());
+        assertEquals(findMenu.getRegisterUser().getId(), menu.getRegisterUser().getId());
+        assertEquals(findMenu.getUpdateUser().getId(), menu.getUpdateUser().getId());
+        assertEquals(findMenu.getParent().getId(), menu.getParent().getId());
+        assertEquals(findMenu.getOrderId(), menu.getOrderId());
         assertEquals(findMenu.getTitle(), updateMenuRequest.getTitle());
         assertEquals(findMenu.getState(), updateMenuRequest.getState());
         assertEquals(findMenu.getRegisterUser().getId(), createMenu.getRegisterUser().getId());
         assertEquals(findMenu.getUpdateUser().getId(), updateMenuRequest.getUserId());
         assertEquals(findMenu.getParent().getId(), createMenu.getParent().getId());
-        assertEquals(findMenu.getOrderId(), order.getOrderId());
-        assertEquals(menu.getOrderId(), order.getOrderId());
+        assertEquals(findMenu.getOrderId(), updateMenuRequest.getOrderId());
     }
 
-    @Test/*parent == 기존과 같을 때, orderId == null*/
+    @Test/*parent == 기존과 같을 때, orderId == null, save 만*/
     void updateMenu4() {
 //        given
-        UserRequest.CreateUserRequest registerUserRequest = new UserRequest.CreateUserRequest().setName("등록자");
-        User registerUser = userService.createUser(registerUserRequest);
-        MenuRequest.CreateMenuRequest parentCreateMenuRequest = new MenuRequest.CreateMenuRequest()
-                .setTitle("Test 메뉴")
+        User registerUser = userService.createUser(new UserRequest.CreateUserRequest().setName("등록자"));
+        Menu parent = menuService.createMenu(new MenuRequest.CreateMenuRequest()
+                .setTitle("Test 부모 메뉴")
                 .setState(MenuType.ON)
-                .setUserId(registerUser.getId());
-        Menu parent = menuService.createMenu(parentCreateMenuRequest);
-        MenuRequest.CreateMenuRequest createMenuRequest = new MenuRequest.CreateMenuRequest()
+                .setUserId(registerUser.getId()));
+        menuService.createMenu(new MenuRequest.CreateMenuRequest()
                 .setTitle("Test 메뉴")
                 .setState(MenuType.ON)
                 .setUserId(registerUser.getId())
-                .setParentId(parent.getId());
-        Menu order = menuService.createMenu(createMenuRequest);
-        Menu createMenu = menuService.createMenu(createMenuRequest);
-        UserRequest.CreateUserRequest updateUserRequest = new UserRequest.CreateUserRequest().setName("수정자");
-        User updateUser = userService.createUser(updateUserRequest);
+                .setParentId(parent.getId()));
+        Menu createMenu = menuService.createMenu(new MenuRequest.CreateMenuRequest()
+                .setTitle("Test 메뉴")
+                .setState(MenuType.ON)
+                .setUserId(registerUser.getId())
+                .setParentId(parent.getId()));
+        User updateUser = userService.createUser(new UserRequest.CreateUserRequest().setName("수정자"));
         MenuRequest.UpdateMenuRequest updateMenuRequest = new MenuRequest.UpdateMenuRequest()
                 .setTitle("테스트 메뉴")
                 .setState(MenuType.OFF)
@@ -267,33 +277,39 @@ class MenuServiceTest {
         Menu menu = menuService.updateMenu(createMenu.getId(), updateMenuRequest);
 //        then
         Menu findMenu = menuRepository.findById(menu.getId()).get();
+        assertEquals(findMenu.getTitle(), menu.getTitle());
+        assertEquals(findMenu.getState(), menu.getState());
+        assertEquals(findMenu.getRegisterUser().getId(), menu.getRegisterUser().getId());
+        assertEquals(findMenu.getUpdateUser().getId(), menu.getUpdateUser().getId());
+        assertEquals(findMenu.getParent().getId(), menu.getParent().getId());
+        assertEquals(findMenu.getOrderId(), menu.getOrderId());
         assertEquals(findMenu.getTitle(), updateMenuRequest.getTitle());
         assertEquals(findMenu.getState(), updateMenuRequest.getState());
         assertEquals(findMenu.getRegisterUser().getId(), createMenu.getRegisterUser().getId());
         assertEquals(findMenu.getUpdateUser().getId(), updateMenuRequest.getUserId());
-        assertEquals(findMenu.getParent().getId(), createMenu.getParent().getId());
+        assertEquals(findMenu.getParent().getId(), updateMenuRequest.getParentId());
         assertEquals(findMenu.getOrderId(), createMenu.getOrderId());
     }
 
-    @Test/*parent == 기존과 같을 때, orderId 기존과 같을 때*/
+    @Test/*parent == 기존과 같을 때, orderId 기존과 같을 때, save 만*/
     void updateMenu5() {
 //        given
-        UserRequest.CreateUserRequest registerUserRequest = new UserRequest.CreateUserRequest().setName("등록자");
-        User registerUser = userService.createUser(registerUserRequest);
-        MenuRequest.CreateMenuRequest parentCreateMenuRequest = new MenuRequest.CreateMenuRequest()
-                .setTitle("Test 메뉴")
+        User registerUser = userService.createUser(new UserRequest.CreateUserRequest().setName("등록자"));
+        Menu parent = menuService.createMenu(new MenuRequest.CreateMenuRequest()
+                .setTitle("Test Parent 메뉴")
                 .setState(MenuType.ON)
-                .setUserId(registerUser.getId());
-        Menu parent = menuService.createMenu(parentCreateMenuRequest);
-        MenuRequest.CreateMenuRequest createMenuRequest = new MenuRequest.CreateMenuRequest()
+                .setUserId(registerUser.getId()));
+        menuService.createMenu(new MenuRequest.CreateMenuRequest()
                 .setTitle("Test 메뉴")
                 .setState(MenuType.ON)
                 .setUserId(registerUser.getId())
-                .setParentId(parent.getId());
-        Menu order = menuService.createMenu(createMenuRequest);
-        Menu createMenu = menuService.createMenu(createMenuRequest);
-        UserRequest.CreateUserRequest updateUserRequest = new UserRequest.CreateUserRequest().setName("수정자");
-        User updateUser = userService.createUser(updateUserRequest);
+                .setParentId(parent.getId()));
+        Menu createMenu = menuService.createMenu(new MenuRequest.CreateMenuRequest()
+                .setTitle("Test 메뉴")
+                .setState(MenuType.ON)
+                .setUserId(registerUser.getId())
+                .setParentId(parent.getId()));
+        User updateUser = userService.createUser(new UserRequest.CreateUserRequest().setName("수정자"));
         MenuRequest.UpdateMenuRequest updateMenuRequest = new MenuRequest.UpdateMenuRequest()
                 .setTitle("테스트 메뉴")
                 .setState(MenuType.OFF)
@@ -304,12 +320,113 @@ class MenuServiceTest {
         Menu menu = menuService.updateMenu(createMenu.getId(), updateMenuRequest);
 //        then
         Menu findMenu = menuRepository.findById(menu.getId()).get();
+        assertEquals(findMenu.getTitle(), menu.getTitle());
+        assertEquals(findMenu.getState(), menu.getState());
+        assertEquals(findMenu.getRegisterUser().getId(), menu.getRegisterUser().getId());
+        assertEquals(findMenu.getUpdateUser().getId(), menu.getUpdateUser().getId());
+        assertEquals(findMenu.getParent().getId(), menu.getParent().getId());
+        assertEquals(findMenu.getOrderId(), menu.getOrderId());
         assertEquals(findMenu.getTitle(), updateMenuRequest.getTitle());
         assertEquals(findMenu.getState(), updateMenuRequest.getState());
         assertEquals(findMenu.getRegisterUser().getId(), createMenu.getRegisterUser().getId());
         assertEquals(findMenu.getUpdateUser().getId(), updateMenuRequest.getUserId());
-        assertEquals(findMenu.getParent().getId(), createMenu.getParent().getId());
-        assertEquals(findMenu.getOrderId(), createMenu.getOrderId());
+        assertEquals(findMenu.getParent().getId(), updateMenuRequest.getParentId());
+        assertEquals(findMenu.getOrderId(), updateMenuRequest.getOrderId());
+    }
+
+    @Test/*parent == 기존과 같을 때, orderId 기존과 다를 때, 기존 배열에서 삭제 후 새로운 배열에 추가, save All*/
+    void updateMenu6() {
+//        given
+        User registerUser = userService.createUser(new UserRequest.CreateUserRequest().setName("등록자"));
+        Menu parent = menuService.createMenu(new MenuRequest.CreateMenuRequest()
+                .setTitle("Test Parent 메뉴")
+                .setState(MenuType.ON)
+                .setUserId(registerUser.getId()));
+        Menu order = menuService.createMenu(new MenuRequest.CreateMenuRequest()
+                .setTitle("Test 메뉴")
+                .setState(MenuType.ON)
+                .setUserId(registerUser.getId())
+                .setParentId(parent.getId()));
+        Menu createMenu = menuService.createMenu(new MenuRequest.CreateMenuRequest()
+                .setTitle("Test 메뉴")
+                .setState(MenuType.ON)
+                .setUserId(registerUser.getId())
+                .setParentId(parent.getId()));
+        User updateUser = userService.createUser(new UserRequest.CreateUserRequest().setName("수정자"));
+        MenuRequest.UpdateMenuRequest updateMenuRequest = new MenuRequest.UpdateMenuRequest()
+                .setTitle("테스트 메뉴")
+                .setState(MenuType.OFF)
+                .setUserId(updateUser.getId())
+                .setParentId(createMenu.getParent().getId())
+                .setOrderId(order.getOrderId());
+//        when
+        Menu menu = menuService.updateMenu(createMenu.getId(), updateMenuRequest);
+//        then
+        Menu findMenu = menuRepository.findById(menu.getId()).get();
+        assertEquals(findMenu.getTitle(), menu.getTitle());
+        assertEquals(findMenu.getState(), menu.getState());
+        assertEquals(findMenu.getRegisterUser().getId(), menu.getRegisterUser().getId());
+        assertEquals(findMenu.getUpdateUser().getId(), menu.getUpdateUser().getId());
+        assertEquals(findMenu.getParent().getId(), menu.getParent().getId());
+        assertEquals(findMenu.getOrderId(), menu.getOrderId());
+        assertEquals(findMenu.getTitle(), updateMenuRequest.getTitle());
+        assertEquals(findMenu.getState(), updateMenuRequest.getState());
+        assertEquals(findMenu.getRegisterUser().getId(), createMenu.getRegisterUser().getId());
+        assertEquals(findMenu.getUpdateUser().getId(), updateMenuRequest.getUserId());
+        assertEquals(findMenu.getParent().getId(), updateMenuRequest.getParentId());
+        assertEquals(findMenu.getOrderId(), updateMenuRequest.getOrderId());
+    }
+
+    @Test/*parent == 기존과 다를 때, orderId == null, Parent 변경, 맨 뒤에 save*/
+    void updateMenu7() {
+//        given
+        User registerUser = userService.createUser(new UserRequest.CreateUserRequest().setName("등록자"));
+        Menu parent = menuService.createMenu(new MenuRequest.CreateMenuRequest()
+                .setTitle("Test Parent 메뉴")
+                .setState(MenuType.ON)
+                .setUserId(registerUser.getId()));
+        menuService.createMenu(new MenuRequest.CreateMenuRequest()
+                .setTitle("Test 메뉴")
+                .setState(MenuType.ON)
+                .setUserId(registerUser.getId())
+                .setParentId(parent.getId()));
+        Menu createMenu = menuService.createMenu(new MenuRequest.CreateMenuRequest()
+                .setTitle("Test 메뉴")
+                .setState(MenuType.ON)
+                .setUserId(registerUser.getId())
+                .setParentId(parent.getId()));
+        Menu newParent = menuService.createMenu(new MenuRequest.CreateMenuRequest()
+                .setTitle("Test New Parent 메뉴")
+                .setState(MenuType.ON)
+                .setUserId(registerUser.getId()));
+        menuService.createMenu(new MenuRequest.CreateMenuRequest()
+                .setTitle("Test 메뉴")
+                .setState(MenuType.ON)
+                .setUserId(registerUser.getId())
+                .setParentId(newParent.getId()));
+        User updateUser = userService.createUser(new UserRequest.CreateUserRequest().setName("수정자"));
+        MenuRequest.UpdateMenuRequest updateMenuRequest = new MenuRequest.UpdateMenuRequest()
+                .setTitle("테스트 메뉴")
+                .setState(MenuType.OFF)
+                .setUserId(updateUser.getId())
+                .setParentId(newParent.getId());
+//        when
+        Menu menu = menuService.updateMenu(createMenu.getId(), updateMenuRequest);
+//        then
+        Menu findMenu = menuRepository.findById(menu.getId()).get();
+        Integer orderId = menuRepository.findAllByParent(findMenu.getParent()).size() - 1;
+        assertEquals(findMenu.getTitle(), menu.getTitle());
+        assertEquals(findMenu.getState(), menu.getState());
+        assertEquals(findMenu.getRegisterUser().getId(), menu.getRegisterUser().getId());
+        assertEquals(findMenu.getUpdateUser().getId(), menu.getUpdateUser().getId());
+        assertEquals(findMenu.getParent().getId(), menu.getParent().getId());
+        assertEquals(findMenu.getOrderId(), menu.getOrderId());
+        assertEquals(findMenu.getTitle(), updateMenuRequest.getTitle());
+        assertEquals(findMenu.getState(), updateMenuRequest.getState());
+        assertEquals(findMenu.getRegisterUser().getId(), createMenu.getRegisterUser().getId());
+        assertEquals(findMenu.getUpdateUser().getId(), updateMenuRequest.getUserId());
+        assertEquals(findMenu.getParent().getId(), updateMenuRequest.getParentId());
+        assertEquals(findMenu.getOrderId(), orderId);
     }
 
     @Test
