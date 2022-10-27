@@ -72,7 +72,7 @@ public class FaqRepositorySupportImpl implements FaqRepositorySupport {
         if(title == null) {
             return null;
         }
-        return faq.title.eq(title);
+        return faq.faqTitle.eq(title);
     }
 
     private BooleanExpression betweenNoticeDate(LocalDate noticeStartDate, LocalDate noticeEndDate) {
@@ -90,16 +90,26 @@ public class FaqRepositorySupportImpl implements FaqRepositorySupport {
     }
 
     private BooleanExpression findByFaqType(FaqType faqType) {
+        if(faqType == null) {
+            return null;
+        }
 
         return faq.faqType.eq(faqType);
     }
 
     private BooleanExpression findByCategoryName(String categoryName){
+        if(categoryName == null) {
+            return null;
+        }
+
         return faq.categoryName.eq(categoryName);
     }
 
 
     private BooleanExpression findByRegisterUserName(String registerUserName){
+        if(registerUserName == null) {
+            return null;
+        }
         return faq.registerUser.name.eq(registerUserName);
     }
 }
