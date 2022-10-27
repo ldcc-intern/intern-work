@@ -5,16 +5,16 @@ import kr.ldcc.internwork.model.entity.Notice;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 public interface NoticeRepositorySupport {
     Page<Notice> getNoticeList(
             Pageable pageable,
-            LocalDate registerDateStart,
-            LocalDate registerDateEnd,
+            LocalDateTime registerDateStart,
+            LocalDateTime registerDateEnd,
             NoticeType state,
-            LocalDate noticeDateStart,
-            LocalDate noticeDateEnd,
+            LocalDateTime noticeDateStart,
+            LocalDateTime noticeDateEnd,
             String userName,
             String title
     );

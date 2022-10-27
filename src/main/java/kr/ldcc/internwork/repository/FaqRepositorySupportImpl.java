@@ -4,12 +4,9 @@ import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import kr.ldcc.internwork.common.types.FaqType;
 import kr.ldcc.internwork.model.entity.Faq;
-import kr.ldcc.internwork.model.entity.QFaq;
-import kr.ldcc.internwork.model.entity.QUser;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -67,26 +64,25 @@ public class FaqRepositorySupportImpl implements FaqRepositorySupport {
     }
 
 
-
     private BooleanExpression findByTitle(String title) {
-        if(title == null) {
+        if (title == null) {
             return null;
         }
-        return faq.title.eq(title);
+        return faq.faqTitle.eq(title);
     }
 
     private BooleanExpression betweenNoticeDate(LocalDate noticeStartDate, LocalDate noticeEndDate) {
-        if(noticeStartDate == null && noticeEndDate == null) {
+        if (noticeStartDate == null && noticeEndDate == null) {
             return null;
         }
-        return faq.noticeDate.between(noticeStartDate.atTime(0, 0), noticeEndDate.atTime(23,59));
+        return faq.noticeDate.between(noticeStartDate.atTime(0, 0), noticeEndDate.atTime(23, 59));
     }
 
     private BooleanExpression betweenRegisterDate(LocalDate registerStartDate, LocalDate registerEndDate) {
-        if(registerStartDate == null && registerEndDate == null) {
+        if (registerStartDate == null && registerEndDate == null) {
             return null;
         }
-        return faq.noticeDate.between(registerEndDate.atTime(0, 0), registerEndDate.atTime(23,59));
+        return faq.noticeDate.between(registerEndDate.atTime(0, 0), registerEndDate.atTime(23, 59));
     }
 
     private BooleanExpression findByFaqType(FaqType faqType) {
@@ -94,12 +90,12 @@ public class FaqRepositorySupportImpl implements FaqRepositorySupport {
         return faq.faqType.eq(faqType);
     }
 
-    private BooleanExpression findByCategoryName(String categoryName){
+    private BooleanExpression findByCategoryName(String categoryName) {
         return faq.categoryName.eq(categoryName);
     }
 
 
-    private BooleanExpression findByRegisterUserName(String registerUserName){
+    private BooleanExpression findByRegisterUserName(String registerUserName) {
         return faq.registerUser.name.eq(registerUserName);
     }
 }
