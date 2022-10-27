@@ -72,7 +72,7 @@ public class FaqRepositorySupportImpl implements FaqRepositorySupport {
         if(title == null) {
             return null;
         }
-        return faq.faqTitle.eq(title);
+        return faq.title.eq(title);
     }
 
     private BooleanExpression betweenNoticeDate(LocalDate noticeStartDate, LocalDate noticeEndDate) {
