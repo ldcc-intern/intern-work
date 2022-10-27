@@ -2,11 +2,13 @@ package kr.ldcc.internwork.controller;
 
 
 import kr.ldcc.internwork.common.types.FaqType;
+import kr.ldcc.internwork.common.types.validation.Enum;
 import kr.ldcc.internwork.model.dto.FaqDto;
 import kr.ldcc.internwork.model.dto.request.FaqRequest;
 import kr.ldcc.internwork.model.dto.response.Response;
 import kr.ldcc.internwork.model.entity.Faq;
 import kr.ldcc.internwork.model.entity.User;
+import kr.ldcc.internwork.model.mapper.FaqMapper;
 import kr.ldcc.internwork.service.FaqService;
 import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,12 +52,12 @@ public class FaqController {
      *  faq 리스트 Type 조회 *
      *                     *
      * * * * * * * * * * * */
-
+/**
     @GetMapping("/faq/{faqType}")
     public Response getFaqTypeList(@PathVariable("faqType") FaqType faqType) {
         return Response.ok().setData(faqService.searchFaqTypeList(faqType));
     }
-
+**/
 
     /** * * * * * * * * * **
      *                     *
@@ -63,10 +65,12 @@ public class FaqController {
      *                     *
      * * * * * * * * * * * */
 
+    /**
     @GetMapping("/faq")
     public Response searchFaqAllList() {
         return Response.ok().setData(faqService.searchFaqAllList());
     }
+    */
 
 
 
@@ -79,26 +83,23 @@ public class FaqController {
     // 검색조건
     // categoryName, registerStartDate, registerEndDate, noticeStartDate, noticeEndDate, faqType, registerUserName, faqTitle
 
-    /**
     @GetMapping("/faq")
-    public Object searchFaqList(
-            @RequestParam(value = "categoryName") String categoryName,
-            @RequestParam(value = "registerStartDate") LocalDateTime registerStartDate,
-            @RequestParam(value = "registerEndDate") LocalDateTime registerEndDate,
-            @RequestParam(value = "noticeStartDate") LocalDateTime noticeStartDate,
-            @RequestParam(value = "noticeEndDate") LocalDateTime noticeEndDate,
-            @RequestParam(value = "faqType") FaqType faqType,
-            @RequestParam(value = "faqTitle") String faqTitle,
-            @RequestParam(value = "registerUserName") String registerUserName
+    public Response searchFaqList(
+            Pageable pageable,
+            @RequestParam(required = false) @Enum(enumClass = FaqType.class) FaqType faqType,
+            @RequestParam(required = false) String registerStart,
+            @RequestParam(required = false) String registerEnd,
+            @RequestParam(required = false) String noticeStart,
+            @RequestParam(required = false) String noticeEnd,
+            @RequestParam(required = false) String faqTitle,
+            @RequestParam(required = false) String registerUserName,
+            @RequestParam(required = false) String categoryName
+
             ) {
 
-        return faqService.searchFaqList(categoryName, registerStartDate,
-                registerEndDate, noticeStartDate, noticeEndDate, faqType,
-                registerUserName, faqTitle);
+        return Response.ok().setData(FaqMapper.toSearchFaqListResponse(faqService.getFaqList(pageable, registerStart, registerEnd, faqType, noticeStart, noticeEnd, categoryName, registerUserName, faqTitle)));
 
     }
-
-    */
 
 
     // faq 상세 조회

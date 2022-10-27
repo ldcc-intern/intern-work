@@ -15,11 +15,14 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.jca.support.LocalConnectionFactoryBean;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -66,6 +69,8 @@ public class FaqService {
      *  faq 리스트 전체 조회  *
      *                     *
      * * * * * * * * * * * */
+/**
+ *
     @Transactional
     public Object searchFaqAllList() {
 
@@ -77,11 +82,36 @@ public class FaqService {
         return FaqMapper.toSearchFaqListResponse(faqs);
     }
 
+*/
+
+
+    //faq 리스트 조회
+    @Transactional
+    public Page<Faq> getFaqList(Pageable pageable, String registerStart, String registerEnd, FaqType faqType, String noticeStart, String noticeEnd, String categoryName, String registerUserName, String faqTitle) {
+        LocalDate registerStartDate = null;
+        LocalDate registerEndDate = null;
+
+        if(registerStart != null && registerEnd != null) {
+            registerStartDate = LocalDate.parse(registerStart, DateTimeFormatter.ISO_DATE);
+            registerEndDate = LocalDate.parse(registerEnd, DateTimeFormatter.ISO_DATE);
+        }
+        LocalDate noticeStartDate = null;
+        LocalDate noticeEndDate = null;
+
+        if(noticeStart != null && noticeEnd != null) {
+            noticeStartDate = LocalDate.parse(noticeStart, DateTimeFormatter.ISO_DATE);
+            noticeEndDate = LocalDate.parse(noticeEnd, DateTimeFormatter.ISO_DATE);
+        }
+
+        return faqRepository.getFaqList(pageable, categoryName, registerStartDate, registerEndDate, noticeStartDate, noticeEndDate, faqType, registerUserName, faqTitle);
+    }
+
     /** * * * * * * * * * * **
      *                       *
      * faq 리스트 faqType조회  *
      *                       *
      * * * * * * * * * * * * */
+    /**
     @Transactional
     public Object searchFaqTypeList(FaqType faqType) {
         //public Object searchFaqList(String categoryName, LocalDateTime registerDateStart, LocalDateTime registerDateEnd, LocalDateTime noticeDateStart, LocalDateTime noticeDateEnd, FaqType state, String registerUser, String title) {
@@ -93,6 +123,7 @@ public class FaqService {
 
         return FaqMapper.toSearchFaqListResponse(faqs);
     }
+    */
 
 
     /** * * * * * * *
