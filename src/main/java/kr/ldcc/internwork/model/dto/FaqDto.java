@@ -41,7 +41,7 @@ public class FaqDto {
 
         private Long FaqId;
         private String categoryName;
-        private String title;
+        private String faqTitle;
         private LocalDateTime registerDate;
         private User registerUserName;
         private FaqType faqType;
@@ -59,7 +59,7 @@ public class FaqDto {
     public static class FaqDetailResponse {
 
         private String categoryName;
-        private String  title;
+        private String  faqTitle;
         private User registerUser;
         private User updateUser;
         private LocalDateTime registerDate;

@@ -77,7 +77,7 @@ public class FaqController {
      * * * * * * * * * * * */
 
     // 검색조건
-    // categoryName, registerStartDate, registerEndDate, noticeStartDate, noticeEndDate, faqType, registerUserName, title
+    // categoryName, registerStartDate, registerEndDate, noticeStartDate, noticeEndDate, faqType, registerUserName, faqTitle
 
     /**
     @GetMapping("/faq")
@@ -88,13 +88,13 @@ public class FaqController {
             @RequestParam(value = "noticeStartDate") LocalDateTime noticeStartDate,
             @RequestParam(value = "noticeEndDate") LocalDateTime noticeEndDate,
             @RequestParam(value = "faqType") FaqType faqType,
-            @RequestParam(value = "title") String title,
+            @RequestParam(value = "faqTitle") String faqTitle,
             @RequestParam(value = "registerUserName") String registerUserName
             ) {
 
         return faqService.searchFaqList(categoryName, registerStartDate,
                 registerEndDate, noticeStartDate, noticeEndDate, faqType,
-                registerUserName, title);
+                registerUserName, faqTitle);
 
     }
 

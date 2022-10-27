@@ -25,7 +25,7 @@ public class FaqMapper {
         faqs.stream().forEach(faq -> faqListResponses.add(new FaqDto.FaqListResponse()
                 .setFaqId(faq.getId())
                 .setCategoryName(faq.getCategoryName())
-                .setTitle(faq.getFaqTitle())
+                .setFaqTitle(faq.getFaqTitle())
                 .setRegisterDate(faq.getRegisterDate())
                 .setNoticeDate(faq.getNoticeDate())
                 .setFaqType(faq.getFaqType())));
@@ -37,7 +37,7 @@ public class FaqMapper {
     public static Object toSearchFaqDetailResponse(Faq faq) {
         return new FaqDto.FaqDetailResponse()
                 .setCategoryName(faq.getCategoryName())
-                .setTitle(faq.getFaqTitle())
+                .setFaqTitle(faq.getFaqTitle())
                 .setRegisterUser(faq.getRegisterUser())
                 .setRegisterDate(faq.getRegisterDate())
                 .setUpdateUser(faq.getUpdateUser())
