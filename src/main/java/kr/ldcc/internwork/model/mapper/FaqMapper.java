@@ -6,6 +6,8 @@ import kr.ldcc.internwork.model.dto.response.Response;
 import kr.ldcc.internwork.model.entity.Faq;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,18 +21,20 @@ public class FaqMapper {
     }
 
     // faq 리스트 조회 Response
-    public static Object toSearchFaqListResponse(List<Faq> faqs) {
-        List<FaqDto.FaqListResponse> faqListResponses = new ArrayList<>();
+    public static Page<FaqDto.FaqListResponse> toSearchFaqListResponse(Page<Faq> faqs) {
+        return faqs.map(
+                faq -> FaqDto.FaqListResponse.builder()
+                        .no(faqs.getContent().indexOf(faq))
+                        .categoryName(faq.getCategoryName())
+                        .registerUserName(faq.getRegisterUser().getName())
+                        .faqType(faq.getFaqType())
+                        .faqTitle(faq.getFaqTitle())
+                        .registerDate(faq.getRegisterDate())
+                        .noticeDate(faq.getNoticeDate())
+                        .build()
 
-        faqs.stream().forEach(faq -> faqListResponses.add(new FaqDto.FaqListResponse()
-                .setFaqId(faq.getId())
-                .setCategoryName(faq.getCategoryName())
-                .setFaqTitle(faq.getFaqTitle())
-                .setRegisterDate(faq.getRegisterDate())
-                .setNoticeDate(faq.getNoticeDate())
-                .setFaqType(faq.getFaqType())));
+        );
 
-        return faqListResponses;
     }
 
     // faq 상세 조회 Response

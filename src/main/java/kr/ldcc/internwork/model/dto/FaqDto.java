@@ -6,10 +6,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import kr.ldcc.internwork.common.types.FaqType;
 import kr.ldcc.internwork.model.entity.Category;
 import kr.ldcc.internwork.model.entity.User;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 import lombok.experimental.Accessors;
 
 import java.time.LocalDateTime;
@@ -39,13 +36,25 @@ public class FaqDto {
     @JsonInclude(value = JsonInclude.Include.NON_NULL)
     public static class FaqListResponse {
 
-        private Long FaqId;
+        private Integer no;
         private String categoryName;
         private String faqTitle;
         private LocalDateTime registerDate;
-        private User registerUserName;
+
+        private String registerUserName;
         private FaqType faqType;
         private LocalDateTime noticeDate;
+
+        @Builder
+        public FaqListResponse(Integer no, String categoryName, String faqTitle, LocalDateTime registerDate, LocalDateTime noticeDate, String registerUserName, FaqType faqType) {
+            this.no = no;
+            this.categoryName = categoryName;
+            this.faqTitle = faqTitle;
+            this.registerDate = registerDate;
+            this.noticeDate = noticeDate;
+            this.registerUserName = registerUserName;
+            this.faqType = faqType;
+        }
 
     }
 
