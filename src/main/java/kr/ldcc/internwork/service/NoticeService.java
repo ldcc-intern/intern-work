@@ -31,7 +31,7 @@ public class NoticeService {
     @Transactional
     public Notice createNotice(NoticeRequest.CreateNoticeRequest createNoticeRequest) {
         User user = userRepository.findById(createNoticeRequest.getUserId()).orElseThrow(() -> {
-            log.error("createMenu Exception : [존재하지 않는 User ID]");
+            log.error("createNotice Exception : [존재하지 않는 User ID]");
             return new InternWorkException.dataDuplicateException();
         });
         LocalDateTime noticeDate = LocalDate.parse(createNoticeRequest.getDate(), DateTimeFormatter.ISO_DATE).atTime(LocalTime.parse(createNoticeRequest.getTime(), DateTimeFormatter.ISO_TIME));
@@ -66,7 +66,7 @@ public class NoticeService {
     @Transactional
     public Notice getDetailNotice(Long noticeId) {
         Notice notice = noticeRepository.findById(noticeId).orElseThrow(() -> {
-            log.error("getDetailMenu Exception : [존재하지 않는 Notice ID]", ExceptionCode.DATA_NOT_FOUND_EXCEPTION);
+            log.error("getDetailNotice Exception : [존재하지 않는 Notice ID]", ExceptionCode.DATA_NOT_FOUND_EXCEPTION);
             return new InternWorkException.dataNotFoundException();
         });
         noticeRepository.updateView(noticeId);
@@ -76,11 +76,11 @@ public class NoticeService {
     @Transactional
     public Notice updateNotice(Long noticeId, NoticeRequest.UpdateNoticeRequest updateNoticeRequest) {
         Notice notice = noticeRepository.findById(noticeId).orElseThrow(() -> {
-            log.error("getDetailMenu Exception : [존재하지 않는 Notice ID]", ExceptionCode.DATA_NOT_FOUND_EXCEPTION);
+            log.error("updateNotice Exception : [존재하지 않는 Notice ID]", ExceptionCode.DATA_NOT_FOUND_EXCEPTION);
             return new InternWorkException.dataNotFoundException();
         });
         User user = userRepository.findById(updateNoticeRequest.getUserId()).orElseThrow(() -> {
-            log.error("getDetailMenu Exception : [존재하지 않는 User ID]", ExceptionCode.DATA_NOT_FOUND_EXCEPTION);
+            log.error("updateNotice Exception : [존재하지 않는 User ID]", ExceptionCode.DATA_NOT_FOUND_EXCEPTION);
             return new InternWorkException.dataNotFoundException();
         });
         LocalDateTime noticeDate = updateNoticeRequest.getDate() != null && updateNoticeRequest.getTime() != null ? LocalDate.parse(updateNoticeRequest.getDate(), DateTimeFormatter.ISO_DATE).atTime(LocalTime.parse(updateNoticeRequest.getTime(), DateTimeFormatter.ISO_TIME)) : notice.getNoticeDate();
