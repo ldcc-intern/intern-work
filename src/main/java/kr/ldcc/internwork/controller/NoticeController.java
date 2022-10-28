@@ -29,16 +29,16 @@ public class NoticeController {
 
     @GetMapping("/notice")
     public Response getNoticeList(
-            Pageable pageable,
             @RequestParam(required = false) @Enum(enumClass = NoticeType.class) NoticeType state,
             @RequestParam(required = false) String regStart,
             @RequestParam(required = false) String regEnd,
             @RequestParam(required = false) String noticeStart,
             @RequestParam(required = false) String noticeEnd,
             @RequestParam(required = false) String user,
-            @RequestParam(required = false) String title
+            @RequestParam(required = false) String title,
+            Pageable pageable
     ) {
-        return Response.ok().setData(NoticeMapper.toGetNoticeListResponse(noticeService.getNoticeList(pageable, regStart, regEnd, state, noticeStart, noticeEnd, user, title)));
+        return Response.ok().setData(NoticeMapper.toGetNoticeListResponse(noticeService.getNoticeList(regStart, regEnd, state, noticeStart, noticeEnd, user, title,pageable)));
     }
 
     @GetMapping("/notice/{noticeId}")

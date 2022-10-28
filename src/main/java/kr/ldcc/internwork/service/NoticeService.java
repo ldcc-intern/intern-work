@@ -1,10 +1,12 @@
 package kr.ldcc.internwork.service;
 
+import com.querydsl.core.BooleanBuilder;
 import kr.ldcc.internwork.common.exception.ExceptionCode;
 import kr.ldcc.internwork.common.exception.InternWorkException;
 import kr.ldcc.internwork.common.types.NoticeType;
 import kr.ldcc.internwork.model.dto.request.NoticeRequest;
 import kr.ldcc.internwork.model.entity.Notice;
+import kr.ldcc.internwork.model.entity.QNotice;
 import kr.ldcc.internwork.model.entity.User;
 import kr.ldcc.internwork.repository.NoticeRepository;
 import kr.ldcc.internwork.repository.UserRepository;
@@ -47,20 +49,23 @@ public class NoticeService {
     }
 
     @Transactional
-    public Page<Notice> getNoticeList(Pageable pageable, String regStart, String regEnd, NoticeType state, String noticeStart, String noticeEnd, String userName, String title) {
-        LocalDateTime registerDateStart = null;
-        LocalDateTime registerDateEnd = null;
+    public Page<Notice> getNoticeList(String regStart, String regEnd, NoticeType state, String noticeStart, String noticeEnd, String userName, String title, Pageable pageable) {
+        QNotice notice = QNotice.notice;
+        BooleanBuilder builder = new BooleanBuilder();
         if (regStart != null && regEnd != null) {
-            registerDateStart = LocalDate.parse(regStart, DateTimeFormatter.ISO_DATE).atTime(0, 0);
-            registerDateEnd = LocalDate.parse(regEnd, DateTimeFormatter.ISO_DATE).atTime(23, 59);
+            builder.and(notice.noticeDate.between(LocalDate.parse(regStart, DateTimeFormatter.ISO_DATE).atTime(0, 0), LocalDate.parse(regEnd, DateTimeFormatter.ISO_DATE).atTime(23, 59)));
         }
-        LocalDateTime noticeDateStart = null;
-        LocalDateTime noticeDateEnd = null;
+        builder.and(notice.state.eq(state));
         if (noticeStart != null && noticeEnd != null) {
-            noticeDateStart = LocalDate.parse(noticeStart, DateTimeFormatter.ISO_DATE).atTime(0, 0);
-            noticeDateEnd = LocalDate.parse(noticeEnd, DateTimeFormatter.ISO_DATE).atTime(23, 59);
+            builder.and(notice.noticeDate.between(LocalDate.parse(noticeStart, DateTimeFormatter.ISO_DATE).atTime(0, 0), LocalDate.parse(noticeEnd, DateTimeFormatter.ISO_DATE).atTime(23, 59)));
         }
-        return noticeRepository.getNoticeList(pageable, registerDateStart, registerDateEnd, state, noticeDateStart, noticeDateEnd, userName, title);
+        if (userName != null) {
+            builder.and(notice.registerUser.name.eq(userName));
+        }
+        if (title != null) {
+            builder.and(notice.title.contains(title));
+        }
+        return noticeRepository.findAll(builder, pageable);
     }
 
     @Transactional
@@ -69,7 +74,7 @@ public class NoticeService {
             log.error("getDetailNotice Exception : [존재하지 않는 Notice ID]", ExceptionCode.DATA_NOT_FOUND_EXCEPTION);
             return new InternWorkException.dataNotFoundException();
         });
-        noticeRepository.updateView(noticeId);
+        notice.updateView(noticeRepository.updateView(noticeId));
         return notice;
     }
 
