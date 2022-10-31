@@ -4,39 +4,30 @@ package kr.ldcc.internwork.service;
 import kr.ldcc.internwork.common.exception.ExceptionCode;
 import kr.ldcc.internwork.common.exception.InternWorkException;
 import kr.ldcc.internwork.common.types.FaqType;
-import kr.ldcc.internwork.model.dto.FaqDto;
 import kr.ldcc.internwork.model.dto.request.FaqRequest;
 import kr.ldcc.internwork.model.dto.response.Response;
 import kr.ldcc.internwork.model.entity.Faq;
 import kr.ldcc.internwork.model.entity.User;
-import kr.ldcc.internwork.model.mapper.FaqMapper;
 import kr.ldcc.internwork.repository.FaqRepository;
 import kr.ldcc.internwork.repository.UserRepository;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.hibernate.internal.ExceptionConverterImpl;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Optional;
 
 @Slf4j
 @Component
+@RequiredArgsConstructor
 public class FaqService {
 
     private final FaqRepository faqRepository;
     private final UserRepository userRepository;
-
-    @Autowired
-    public FaqService(FaqRepository faqRepository, UserRepository userRepository) {
-        this.faqRepository = faqRepository;
-        this.userRepository = userRepository;
-    }
 
     /** * * * * *
      *          *
@@ -45,13 +36,18 @@ public class FaqService {
      * * * * * **/
     @Transactional
     public Response registerFaq(FaqRequest.RegisterFaqRequest registerFaqRequest) {
+
+        User registerUser = userRepository.findById(registerFaqRequest.getRegisterUserId()).orElseThrow(() -> {
+            log.error("updateFaq Exception : [존재하지 않는 User Id]", ExceptionCode.DATA_NOT_FOUND_EXCEPTION);
+            return new InternWorkException.dataNotFoundException();
+        });
+
         Faq faq = Faq.builder()
                 .categoryName(registerFaqRequest.getCategoryName())
                 .faqType(registerFaqRequest.getFaqType())
-                .registerDate(registerFaqRequest.getRegisterDate())
                 .noticeDate(registerFaqRequest.getNoticeDate())
                 .faqTitle(registerFaqRequest.getFaqTitle())
-                .registerUser(registerFaqRequest.getRegisterUser())
+                .registerUser(registerUser)
                 .content(registerFaqRequest.getContent())
                 .authInfo(registerFaqRequest.getAuthInfo())
                 .build();
@@ -62,27 +58,6 @@ public class FaqService {
 
         return Response.ok().setData(faq.getId());
     }
-
-
-    /** * * * * * * * * * **
-     *                     *
-     *  faq 리스트 전체 조회  *
-     *                     *
-     * * * * * * * * * * * */
-/**
- *
-    @Transactional
-    public Object searchFaqAllList() {
-
-        List<Faq> faqs = null;
-
-        // 전체리스트 조회
-        faqs = faqRepository.findAll();
-
-        return FaqMapper.toSearchFaqListResponse(faqs);
-    }
-
-*/
 
 
     //faq 리스트 조회
@@ -105,25 +80,6 @@ public class FaqService {
 
         return faqRepository.getFaqList(pageable, categoryName, registerStartDate, registerEndDate, noticeStartDate, noticeEndDate, faqType, registerUserName, faqTitle);
     }
-
-    /** * * * * * * * * * * **
-     *                       *
-     * faq 리스트 faqType조회  *
-     *                       *
-     * * * * * * * * * * * * */
-    /**
-    @Transactional
-    public Object searchFaqTypeList(FaqType faqType) {
-        //public Object searchFaqList(String categoryName, LocalDateTime registerDateStart, LocalDateTime registerDateEnd, LocalDateTime noticeDateStart, LocalDateTime noticeDateEnd, FaqType state, String registerUser, String title) {
-
-        List<Faq> faqs = null;
-
-        // 전체리스트 조회
-        faqs = faqRepository.findByFaqType(faqType);
-
-        return FaqMapper.toSearchFaqListResponse(faqs);
-    }
-    */
 
 
     /** * * * * * * *
@@ -162,16 +118,15 @@ public class FaqService {
             return new InternWorkException.dataNotFoundException();
         });
 
+
         // Null 이 아니면
         faq.updateFaqType(updateFaqRequest.getFaqType() != null ? updateFaqRequest.getFaqType() : faq.getFaqType());
         faq.updateContent(updateFaqRequest.getContent() != null ? updateFaqRequest.getContent() : faq.getContent());
         faq.updateTitle(updateFaqRequest.getFaqTitle() != null ? updateFaqRequest.getFaqTitle() : faq.getFaqTitle());
-        faq.updateUpdateDate(updateFaqRequest.getUpdateDate() != null ? updateFaqRequest.getUpdateDate() : faq.getUpdateDate());
         faq.updateUpdateReason(updateFaqRequest.getUpdateReason() != null ? updateFaqRequest.getUpdateReason() : faq.getUpdateReason());
         faq.updateUpdateUser(updateUser);
-
         faq.updateCategoryName(updateFaqRequest.getCategoryName() != null ? updateFaqRequest.getCategoryName() : faq.getCategoryName());
-        faq.updateUpdateDate(LocalDateTime.now());
+
 
         try {
             faqRepository.save(faq);

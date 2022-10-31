@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.Accessors;
+import org.eclipse.jdt.internal.compiler.codegen.LongCache;
 
 import java.time.LocalDateTime;
 
@@ -68,8 +69,29 @@ public class CategoryDto {
         private String mainCategory;
         private String categoryName;
         private CategoryType categoryType;
-        private User registerUserName;
-        private User updateUserName;
+        private String registerUserName;
+        private String updateUserName;
+        private LocalDateTime registerDate;
+        private LocalDateTime updateDate;
+
+    }
+
+    @Getter
+    @Setter
+    @NoArgsConstructor
+    @ToString
+    @Accessors(chain = true)
+    @JsonIgnoreProperties(ignoreUnknown = true)
+    @JsonInclude(value = JsonInclude.Include.NON_NULL)
+    public static class UpdateCategoryResponse { // 카테고리 업데이트
+
+        private Long id;
+        private LocalDateTime noticeDate;
+        private String mainCategory;
+        private String categoryName;
+        private CategoryType categoryType;
+        private String registerUserName;
+        private String updateUserName;
         private LocalDateTime registerDate;
         private LocalDateTime updateDate;
 

@@ -1,6 +1,5 @@
 package kr.ldcc.internwork.model.mapper;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import kr.ldcc.internwork.model.dto.CategoryDto;
 import kr.ldcc.internwork.model.dto.response.Response;
 import kr.ldcc.internwork.model.entity.Category;
@@ -37,19 +36,28 @@ public class CategoryMapper {
     }
 
     // category 상세 조회 Response
-    public static Object toGetCategoryDetailResponse(Category category) {
+    public static CategoryDto.CategoryDetailResponse toGetCategoryDetailResponse(Category category) {
         return new CategoryDto.CategoryDetailResponse()
                 .setMainCategory(category.getMainCategory())
                 .setCategoryName(category.getCategoryName())
                 .setCategoryType(category.getCategoryType())
                 .setRegisterDate(category.getRegisterDate())
+                .setUpdateUserName(category.getUpdateUser().getName()  != null ? category.getUpdateUser().getName() : null)
+                .setRegisterUserName(category.getResisterUser().getName() != null ? category.getUpdateUser().getName() : null)
                 .setUpdateDate(category.getUpdateDate());
     }
 
     // category 수정 Response
-    public static CategoryDto toUpdateCategoryResponse(Category category) {
-
-        return ObjectMapperUtils.map(category, CategoryDto.class);
+    public static CategoryDto.UpdateCategoryResponse toUpdateCategoryResponse(Category category) {
+        return new CategoryDto.UpdateCategoryResponse()
+                .setId(category.getId())
+                .setMainCategory(category.getMainCategory())
+                .setCategoryName(category.getCategoryName())
+                .setCategoryType(category.getCategoryType())
+                .setUpdateUserName(category.getUpdateUser().getName())
+                .setRegisterUserName(category.getResisterUser().getName())
+                .setRegisterDate(category.getRegisterDate())
+                .setUpdateDate(category.getUpdateDate());
     }
 
     // category 삭제 Response

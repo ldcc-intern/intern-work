@@ -45,7 +45,6 @@ class FaqTest {
                 .categoryName("Test")
                 .faqTitle("Test")
                 .content("Test")
-                .registerDate(LocalDateTime.now())
                 .noticeDate(LocalDateTime.now())
                 .authInfo("Test")
                 .registerUser(userRepository.findByName("name"))
@@ -61,10 +60,8 @@ class FaqTest {
         registerFaqRequest.setCategoryName("우리동네");
         registerFaqRequest.setFaqTitle("제목");
         registerFaqRequest.setContent("내용은");
-        registerFaqRequest.setRegisterDate(LocalDateTime.now());
         registerFaqRequest.setNoticeDate(LocalDateTime.now());
         registerFaqRequest.setAuthInfo("인증");
-        registerFaqRequest.setRegisterUser(userRepository.findByName("사용자1"));
 
         Response faq = faqController.registerFaq(registerFaqRequest);
 
@@ -93,7 +90,6 @@ class FaqTest {
 
         FaqRequest.UpdateFaqRequest updateFaqRequest = new FaqRequest.UpdateFaqRequest();
         updateFaqRequest.setFaqTitle("제목수정확인");
-        updateFaqRequest.setUpdateDate(LocalDateTime.now());
         updateFaqRequest.setFaqType(FaqType.SHOW);
         updateFaqRequest.setUpdateReason("수정이유입니다");
         updateFaqRequest.setUpdateUserId(2L);

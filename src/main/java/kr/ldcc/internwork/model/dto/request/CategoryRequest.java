@@ -27,9 +27,7 @@ public class CategoryRequest {
 
         private Integer orderId; // 카테고리 순서
 
-        private User registerUser; // 등록자
-
-        private LocalDateTime registerDate; // 등록일
+        private Long registerUserId; // 등록자
 
         private String authInfo;
 
@@ -56,7 +54,7 @@ public class CategoryRequest {
 
         private LocalDateTime registerDate; // 등록일
 
-        private User updateUser; // 수정자
+        private Long updateUserId; // 수정자
 
         private LocalDateTime updateDate; // 수정일
 

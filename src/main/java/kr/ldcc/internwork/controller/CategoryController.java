@@ -4,6 +4,7 @@ package kr.ldcc.internwork.controller;
 import kr.ldcc.internwork.model.dto.CategoryDto;
 import kr.ldcc.internwork.model.dto.request.CategoryRequest;
 import kr.ldcc.internwork.model.dto.response.Response;
+import kr.ldcc.internwork.model.mapper.CategoryMapper;
 import kr.ldcc.internwork.service.CategoryService;
 import lombok.Getter;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,7 +51,7 @@ public class CategoryController {
      * * * * * * * * * * * */
     @GetMapping("/category/{categoryId}")
     public Response getDetailCategory(@PathVariable("categoryId") Long categoryId) {
-        return Response.ok().setData(categoryService.getCategoryDetail(categoryId));
+        return Response.ok().setData(CategoryMapper.toGetCategoryDetailResponse(categoryService.getCategoryDetail(categoryId)));
     }
 
     /** * * * * * * *  * * *
@@ -71,14 +72,8 @@ public class CategoryController {
      * * * * * * * * * **/
     @PutMapping("/category/{categoryId}")
     public Response updateCategory(@PathVariable("categoryId") Long categoryId,
-                                   @RequestBody @Valid CategoryRequest.UpdateCategoryRequest updateCategoryRequest) {
-        Optional<CategoryDto> CategoryDto = Optional.ofNullable(categoryService.updateCategory(categoryId, updateCategoryRequest));
-
-        if(CategoryDto.isPresent()) {
-            //Response 설정
-            return Response.ok();
-        }
-        return Response.dataNotFoundException();
+                                   @RequestBody @Valid CategoryRequest.UpdateCategoryRequest updateCategoryRequest){
+        return Response.ok().setData(CategoryMapper.toUpdateCategoryResponse(categoryService.updateCategory(categoryId, updateCategoryRequest)));
     }
 
     /** * * * * * * *  *

@@ -30,10 +30,6 @@ public class Faq extends BaseEntity {
 
     private LocalDateTime noticeDate; // 공지 시작일
 
-    private LocalDateTime registerDate; // 등록일
-
-    private LocalDateTime updateDate; // 수정일
-
     @Enumerated(EnumType.STRING)
     private FaqType faqType; // Faq 상태 [SHOW, CLOSE, RESERVE]
 
@@ -51,7 +47,7 @@ public class Faq extends BaseEntity {
     private User updateUser; // 수정자
 
     @Builder
-    public Faq(FaqType faqType, String categoryName, String content, String updateReason, LocalDateTime noticeDate, LocalDateTime registerDate, String faqTitle, User updateUser, User registerUser, String authInfo){
+    public Faq(FaqType faqType, String categoryName, String content, String updateReason, LocalDateTime noticeDate, String faqTitle, User updateUser, User registerUser, String authInfo){
 
         this.faqType = faqType;
         this.faqTitle = faqTitle;
@@ -61,7 +57,6 @@ public class Faq extends BaseEntity {
         this.registerUser = registerUser;
         this.content = content;
         this.noticeDate = noticeDate;
-        this.registerDate = registerDate;
         this.authInfo = authInfo;
     }
 
@@ -86,8 +81,6 @@ public class Faq extends BaseEntity {
     public void updateUpdateReason(String updateReason) {this.updateReason = updateReason;}
 
     public void updateContent(String content) {this.content = content;}
-
-    public void updateUpdateDate(LocalDateTime updateDate) {this.updateDate = updateDate;}
 
     public void updateUpdateUser(User updateUser) {this.updateUser = updateUser;}
 }
