@@ -36,7 +36,7 @@ public class NoticeService {
     public NoticeDto.CreateNoticeResponse createNotice(NoticeRequest.CreateNoticeRequest createNoticeRequest) {
         User user = userRepository.findById(createNoticeRequest.getUserId()).orElseThrow(() -> {
             log.error("createNotice Exception : [존재하지 않는 User ID]");
-            return new InternWorkException.dataDuplicateException();
+            return new InternWorkException.dataNotFoundException();
         });
         LocalDateTime noticeDate = LocalDate.parse(createNoticeRequest.getDate(), DateTimeFormatter.ISO_DATE).atTime(LocalTime.parse(createNoticeRequest.getTime(), DateTimeFormatter.ISO_TIME));
         Notice notice = Notice.builder()

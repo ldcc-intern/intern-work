@@ -39,7 +39,7 @@ public class MenuMapper {
                 .setRegisterUser(menu.getRegisterUser().getName())
                 .setUpdateUser((menu.getUpdateUser() != null) ? menu.getUpdateUser().getName() : null)
                 .setRegisterDate(menu.getRegisterDate())
-                .setUpdateDate(menu.getUpdateDate());
+                .setUpdateDate(menu.getUpdateDate() != menu.getRegisterDate() ? menu.getUpdateDate() : null);
     }
 
     public static MenuDto.UpdateMenuResponse toUpdateMenuResponse(Menu menu) {
