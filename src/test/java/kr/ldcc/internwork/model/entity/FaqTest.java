@@ -79,7 +79,7 @@ class FaqTest {
 
     @Test
     public void 자주묻는질문상세조회() throws Exception {
-        Faq findFaq = faqRepository.findByFaqTitle("제목");
+        Faq findFaq = faqRepository.findByFaqTitle("제목수정");
 
         Optional<Faq> faq = faqRepository.findById(findFaq.getId());
 
@@ -96,7 +96,7 @@ class FaqTest {
         updateFaqRequest.setUpdateDate(LocalDateTime.now());
         updateFaqRequest.setFaqType(FaqType.SHOW);
         updateFaqRequest.setUpdateReason("수정이유입니다");
-        updateFaqRequest.setUpdateUser(userRepository.findByName("사용자2"));
+        updateFaqRequest.setUpdateUserId(2L);
 
         faqController.updateFaq(findFaq.getId(), updateFaqRequest);
 

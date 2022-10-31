@@ -38,13 +38,13 @@ public class FaqMapper {
     }
 
     // faq 상세 조회 Response
-    public static Object toSearchFaqDetailResponse(Faq faq) {
+    public static FaqDto.FaqDetailResponse toSearchFaqDetailResponse(Faq faq) {
         return new FaqDto.FaqDetailResponse()
                 .setCategoryName(faq.getCategoryName())
                 .setFaqTitle(faq.getFaqTitle())
-                .setRegisterUser(faq.getRegisterUser())
+                .setRegisterUserName(faq.getRegisterUser().getName())
                 .setRegisterDate(faq.getRegisterDate())
-                .setUpdateUser(faq.getUpdateUser())
+                .setUpdateUserName(faq.getUpdateUser().getName() != null ? faq.getUpdateUser().getName() : null)
                 .setUpdateDate(faq.getUpdateDate())
                 .setNoticeDate(faq.getNoticeDate())
                 .setFaqType(faq.getFaqType())
@@ -53,8 +53,19 @@ public class FaqMapper {
     }
 
     // faq 수정 Response
-    public static FaqDto toUpdateFaqResponse(Faq faq) {
-        return ObjectMapperUtils.map(faq, FaqDto.class);
+    public static FaqDto.UpdateFaqResponse toUpdateFaqResponse(Faq faq) {
+        return new FaqDto.UpdateFaqResponse()
+                .setId(faq.getId())
+                .setCategoryName(faq.getCategoryName())
+                .setFaqTitle(faq.getFaqTitle())
+                .setRegisterUserName(faq.getRegisterUser().getName())
+                .setRegisterDate(faq.getRegisterDate())
+                .setUpdateUserName(faq.getUpdateUser().getName())
+                .setUpdateDate(faq.getUpdateDate())
+                .setNoticeDate(faq.getNoticeDate())
+                .setFaqType(faq.getFaqType())
+                .setUpdateReason(faq.getUpdateReason())
+                .setContent(faq.getContent());
     }
 
     // faq 삭제 Response

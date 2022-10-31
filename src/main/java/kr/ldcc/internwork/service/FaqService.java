@@ -7,24 +7,22 @@ import kr.ldcc.internwork.common.types.FaqType;
 import kr.ldcc.internwork.model.dto.FaqDto;
 import kr.ldcc.internwork.model.dto.request.FaqRequest;
 import kr.ldcc.internwork.model.dto.response.Response;
-import kr.ldcc.internwork.model.entity.Category;
 import kr.ldcc.internwork.model.entity.Faq;
+import kr.ldcc.internwork.model.entity.User;
 import kr.ldcc.internwork.model.mapper.FaqMapper;
 import kr.ldcc.internwork.repository.FaqRepository;
+import kr.ldcc.internwork.repository.UserRepository;
 import lombok.extern.slf4j.Slf4j;
+import org.hibernate.internal.ExceptionConverterImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.jca.support.LocalConnectionFactoryBean;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 @Slf4j
@@ -32,10 +30,12 @@ import java.util.Optional;
 public class FaqService {
 
     private final FaqRepository faqRepository;
+    private final UserRepository userRepository;
 
     @Autowired
-    public FaqService(FaqRepository faqRepository) {
+    public FaqService(FaqRepository faqRepository, UserRepository userRepository) {
         this.faqRepository = faqRepository;
+        this.userRepository = userRepository;
     }
 
     /** * * * * *
@@ -132,13 +132,14 @@ public class FaqService {
      *              *
      * * * * * * * **/
     @Transactional
-    public Object searchFaqDetail(Long faqId) {
+    public Faq searchFaqDetail(Long faqId) {
 
         Faq faq = faqRepository.findById(faqId).orElseThrow(() -> {
             log.error("searchFaqDetail Exception : [존재하지 않는 Faq ID]", ExceptionCode.DATA_NOT_FOUND_EXCEPTION);
             return new InternWorkException.dataNotFoundException();
         });
-        return FaqMapper.toSearchFaqDetailResponse(faq);
+
+        return faq;
     }
 
 
@@ -148,12 +149,17 @@ public class FaqService {
      *           *
      * * * * * * */
     @Transactional
-    public FaqDto updateFaq(Long faqId, FaqRequest.UpdateFaqRequest updateFaqRequest) {
+    public Faq updateFaq(Long faqId, FaqRequest.UpdateFaqRequest updateFaqRequest) {
 
         // Null 일 경우, ERROR 발생
         Faq faq = faqRepository.findById(faqId).orElseThrow(() -> {
-            log.error("updateFaq Exception : [존재하지 않는 Faq ID]");
+            log.error("updateFaq Exception : [존재하지 않는 Faq ID]", ExceptionCode.DATA_NOT_FOUND_EXCEPTION);
             return new InternWorkException.dataUpdateException();
+        });
+
+        User updateUser = userRepository.findById(updateFaqRequest.getUpdateUserId()).orElseThrow(() -> {
+            log.error("updateFaq Exception : [존재하지 않는 User Id]", ExceptionCode.DATA_NOT_FOUND_EXCEPTION);
+            return new InternWorkException.dataNotFoundException();
         });
 
         // Null 이 아니면
@@ -162,7 +168,10 @@ public class FaqService {
         faq.updateTitle(updateFaqRequest.getFaqTitle() != null ? updateFaqRequest.getFaqTitle() : faq.getFaqTitle());
         faq.updateUpdateDate(updateFaqRequest.getUpdateDate() != null ? updateFaqRequest.getUpdateDate() : faq.getUpdateDate());
         faq.updateUpdateReason(updateFaqRequest.getUpdateReason() != null ? updateFaqRequest.getUpdateReason() : faq.getUpdateReason());
-        faq.updateUpdateUser(updateFaqRequest.getUpdateUser() != null ? updateFaqRequest.getUpdateUser() : faq.getUpdateUser());
+        faq.updateUpdateUser(updateUser);
+
+        faq.updateCategoryName(updateFaqRequest.getCategoryName() != null ? updateFaqRequest.getCategoryName() : faq.getCategoryName());
+        faq.updateUpdateDate(LocalDateTime.now());
 
         try {
             faqRepository.save(faq);
@@ -171,7 +180,7 @@ public class FaqService {
             throw new InternWorkException.dataUpdateException();
         }
 
-        return FaqMapper.toUpdateFaqResponse(faq);
+        return faq;
     }
 
 

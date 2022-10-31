@@ -26,7 +26,7 @@ public class FaqRequest {
 
         private String faqTitle;
 
-        private String registerUser;
+        private User registerUser;
 
         private LocalDateTime registerDate;
 
@@ -86,8 +86,6 @@ public class FaqRequest {
     @JsonIgnoreProperties(ignoreUnknown = true)
     public static class UpdateFaqRequest {
 
-        private Long categoryId;
-
         private String categoryName;
 
         private String faqTitle;
@@ -100,10 +98,8 @@ public class FaqRequest {
 
         private String updateReason;
 
-        private User userId;
-
         private LocalDateTime updateDate;
 
-        private User updateUser;
+        private Long updateUserId;
     }
 }

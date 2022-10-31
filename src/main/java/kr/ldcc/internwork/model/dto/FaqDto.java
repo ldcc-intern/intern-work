@@ -24,7 +24,7 @@ public class FaqDto {
     private String updateReason;
     private LocalDateTime noticeDate;
     private FaqType faqType;
-    private String title;
+    private String faqTitle;
 
 
     @Getter
@@ -40,7 +40,6 @@ public class FaqDto {
         private String categoryName;
         private String faqTitle;
         private LocalDateTime registerDate;
-
         private String registerUserName;
         private FaqType faqType;
         private LocalDateTime noticeDate;
@@ -68,15 +67,38 @@ public class FaqDto {
     public static class FaqDetailResponse {
 
         private String categoryName;
-        private String  faqTitle;
-        private User registerUser;
-        private User updateUser;
+        private String faqTitle;
+        private String registerUserName;
+        private String updateUserName;
         private LocalDateTime registerDate;
         private LocalDateTime updateDate;
         private LocalDateTime noticeDate;
         private FaqType faqType;
         private String updateReason;
         private String content;
+
+    }
+
+
+    @Getter
+    @Setter
+    @NoArgsConstructor
+    @ToString
+    @Accessors(chain = true)
+    @JsonIgnoreProperties(ignoreUnknown = true)
+    @JsonInclude(value = JsonInclude.Include.NON_NULL)
+    public static class UpdateFaqResponse {
+        private Long id;
+        private LocalDateTime registerDate;
+        private LocalDateTime updateDate;
+        private LocalDateTime noticeDate;
+        private String content;
+        private String updateReason;
+        private FaqType faqType;
+        private String faqTitle;
+        private String registerUserName;
+        private String updateUserName;
+        private String categoryName;
 
     }
 

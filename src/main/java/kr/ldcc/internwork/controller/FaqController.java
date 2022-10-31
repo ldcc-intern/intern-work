@@ -106,22 +106,14 @@ public class FaqController {
     @GetMapping("/faq/{faqId}")
     public Response searchFaqDetail(@PathVariable("faqId") Long faqId) {
 
-        return Response.ok().setData(faqService.searchFaqDetail(faqId));
+        return Response.ok().setData(FaqMapper.toSearchFaqDetailResponse(faqService.searchFaqDetail(faqId)));
     }
 
     // faq 수정
     @PutMapping("/faq/{faqId}")
     public Response updateFaq(@PathVariable("faqId") Long faqId, @RequestBody @Valid FaqRequest.UpdateFaqRequest updateFaqRequest) {
 
-        Optional<FaqDto> FaqDto = Optional.ofNullable(faqService.updateFaq(faqId, updateFaqRequest));
-
-        if (FaqDto.isPresent()) {
-            // Response 설정
-            return Response.ok();
-        }
-
-
-        return Response.dataNotFoundException();
+        return Response.ok().setData(FaqMapper.toUpdateFaqResponse(faqService.updateFaq(faqId, updateFaqRequest)));
     }
 
     // faq 삭제
