@@ -4,6 +4,7 @@ import kr.ldcc.internwork.common.exception.InternWorkException;
 import kr.ldcc.internwork.model.dto.UserDto;
 import kr.ldcc.internwork.model.dto.request.UserRequest;
 import kr.ldcc.internwork.model.entity.User;
+import kr.ldcc.internwork.model.mapper.UserMapper;
 import kr.ldcc.internwork.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -12,7 +13,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -29,15 +29,12 @@ public class UserService {
             log.error("createUser Exception : {}", e.getMessage());
             throw new InternWorkException.dataDuplicateException();
         }
-        return new UserDto.CreateUserResponse().setId(user.getId());
+        return UserMapper.toCreateUserResponse(user);
     }
 
     @Transactional
     public List<UserDto.GetUserListResponse> getUserList() {
-        return userRepository.findAll().stream().map(user -> UserDto.GetUserListResponse.builder()
-                .id(user.getId())
-                .name(user.getName())
-                .build()).collect(Collectors.toList());
+        return UserMapper.toGetUserListResponse(userRepository.findAll());
     }
 
     @Transactional
@@ -53,7 +50,7 @@ public class UserService {
             log.error("updateUser Exception : {}", e.getMessage());
             throw new InternWorkException.dataUpdateException();
         }
-        return new UserDto.UpdateUserResponse().setId(user.getId()).setName(user.getName());
+        return UserMapper.toUpdateUserResponse(user);
     }
 
     @Transactional
@@ -61,7 +58,7 @@ public class UserService {
         Optional<User> user = userRepository.findById(userId);
         if (user.isPresent()) {
             userRepository.deleteById(userId);
-            return new UserDto.DeleteUserResponse().setId(user.get().getId());
+            return UserMapper.toDeleteUserResponse(user);
         }
         throw new InternWorkException.dataNotFoundException();
     }
