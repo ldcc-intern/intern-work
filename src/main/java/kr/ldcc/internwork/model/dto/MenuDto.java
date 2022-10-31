@@ -3,7 +3,6 @@ package kr.ldcc.internwork.model.dto;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import kr.ldcc.internwork.common.types.MenuType;
-import kr.ldcc.internwork.model.entity.User;
 import lombok.*;
 import lombok.experimental.Accessors;
 
@@ -78,8 +77,8 @@ public class MenuDto {
         private Long parent;
         private MenuType state;
         private String title;
-        private User registerUser;
-        private User updateUser;
+        private String registerUser;
+        private String updateUser;
     }
 
     @Getter
