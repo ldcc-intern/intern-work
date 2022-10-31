@@ -47,7 +47,7 @@ public class NoticeMapper {
         return new NoticeDto.UpdateNoticeResponse()
                 .setId(notice.getId())
                 .setRegisterDate(notice.getRegisterDate())
-                .setUpdateDate(notice.getUpdateDate())
+                .setUpdateDate(notice.getUpdateDate() != notice.getRegisterDate() ? notice.getUpdateDate() : null)
                 .setContent(notice.getContent())
                 .setReason(notice.getReason())
                 .setNoticeDate(notice.getNoticeDate())

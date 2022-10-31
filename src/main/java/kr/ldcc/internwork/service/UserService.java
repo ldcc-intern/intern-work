@@ -41,7 +41,7 @@ public class UserService {
     public UserDto.UpdateUserResponse updateUser(Long userId, UserRequest.UpdateUserRequest updateUserRequest) {
         User user = userRepository.findById(userId).orElseThrow(() -> {
             log.error("updateUser Exception : [존재하지 않는 User ID]");
-            return new InternWorkException.dataUpdateException();
+            return new InternWorkException.dataNotFoundException();
         });
         user.updateUserName(updateUserRequest.getName() != null ? updateUserRequest.getName() : user.getName());
         try {

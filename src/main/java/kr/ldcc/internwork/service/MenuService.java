@@ -30,13 +30,13 @@ public class MenuService {
     public MenuDto.CreateMenuResponse createMenu(@RequestBody MenuRequest.CreateMenuRequest createMenuRequest) {
         User registerUser = userRepository.findById(createMenuRequest.getUserId()).orElseThrow(() -> {
             log.error("createMenu Exception : [존재하지 않는 User ID]");
-            return new InternWorkException.dataDuplicateException();
+            return new InternWorkException.dataNotFoundException();
         });
         Menu parent = null;
         if (createMenuRequest.getParentId() != null) {
             parent = menuRepository.findById(createMenuRequest.getParentId()).orElseThrow(() -> {
                 log.error("createMenu Exception : [존재하지 않는 Parent ID]");
-                return new InternWorkException.dataDuplicateException();
+                return new InternWorkException.dataNotFoundException();
             });
         }
         if (createMenuRequest.getOrderId() != null) {
