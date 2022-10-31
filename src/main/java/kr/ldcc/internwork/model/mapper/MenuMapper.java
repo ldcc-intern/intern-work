@@ -1,67 +1,29 @@
 package kr.ldcc.internwork.model.mapper;
 
 import kr.ldcc.internwork.model.dto.MenuDto;
-import kr.ldcc.internwork.model.entity.Menu;
+import kr.ldcc.internwork.model.dto.response.Response;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
-
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class MenuMapper {
-    public static MenuDto.CreateMenuResponse toCreateMenuResponse(Menu menu) {
-        return new MenuDto.CreateMenuResponse().setId(menu.getId());
+    public static Response toCreateMenuResponse(MenuDto.CreateMenuResponse createMenuResponse) {
+        return Response.ok().setData(createMenuResponse);
     }
 
-    public static MenuDto.GetMenuListResponse toGetMenuListResponse(List<Menu> menus) {
-        Map<Long, List<MenuDto.GetMenuListResponse>> groupingByParent = menus.stream().map(menu -> MenuDto.GetMenuListResponse.builder()
-                .id(menu.getId())
-                .orderId(menu.getOrderId())
-                .parentId(menu.getParent() != null ? menu.getParent().getId() : 0)
-                .title(menu.getTitle())
-                .build()
-        ).collect(Collectors.groupingBy(menuListResponse -> menuListResponse.getParentId()));
-        MenuDto.GetMenuListResponse getMenuListResponse = MenuDto.GetMenuListResponse.builder().id(0L).build();
-        addChildren(getMenuListResponse, groupingByParent);
-        return getMenuListResponse;
+    public static Response toGetMenuListResponse(MenuDto.GetMenuListResponse getMenuListResponse) {
+        return Response.ok().setData(getMenuListResponse);
     }
 
-    public static MenuDto.GetDetailMenuResponse toGetDetailMenuResponse(Menu menu) {
-        return new MenuDto.GetDetailMenuResponse()
-                .setId(menu.getId())
-                .setMain(menu.getParent() != null ? (menu.getParent().getParent() != null ? menu.getParent().getParent().getTitle() : menu.getParent().getTitle()) : null)
-                .setSmall(menu.getParent() != null ? (menu.getParent().getParent() != null ? menu.getParent().getTitle() : null) : null)
-                .setTitle(menu.getTitle())
-                .setState(menu.getState())
-                .setRegisterUser(menu.getRegisterUser().getName())
-                .setUpdateUser((menu.getUpdateUser() != null) ? menu.getUpdateUser().getName() : null)
-                .setRegisterDate(menu.getRegisterDate())
-                .setUpdateDate(menu.getUpdateDate());
+    public static Response toGetDetailMenuResponse(MenuDto.GetDetailMenuResponse getDetailMenuResponse) {
+        return Response.ok().setData(getDetailMenuResponse);
     }
 
-    public static MenuDto.UpdateMenuResponse toUpdateMenuResponse(Menu menu) {
-        return new MenuDto.UpdateMenuResponse()
-                .setId(menu.getId())
-                .setOrderId(menu.getOrderId())
-                .setParent(menu.getParent().getId())
-                .setState(menu.getState())
-                .setTitle(menu.getTitle())
-                .setRegisterUser(menu.getRegisterUser())
-                .setUpdateUser(menu.getUpdateUser());
+    public static Response toUpdateMenuResponse(MenuDto.UpdateMenuResponse updateMenuResponse) {
+        return Response.ok().setData(updateMenuResponse);
     }
 
-    public static MenuDto.DeleteMenuResponse toDeleteMenuResponse(Menu menu) {
-        return new MenuDto.DeleteMenuResponse().setId(menu.getId());
-    }
-
-    private static void addChildren(MenuDto.GetMenuListResponse parent, Map<Long, List<MenuDto.GetMenuListResponse>> groupingByParentId) {
-        List<MenuDto.GetMenuListResponse> children = groupingByParentId.get(parent.getId());
-        if (children == null) {
-            return;
-        }
-        parent.setChildren(children);
-        children.forEach(menuListResponse -> addChildren(menuListResponse, groupingByParentId));
+    public static Response toDeleteMenuResponse(MenuDto.DeleteMenuResponse deleteMenuResponse) {
+        return Response.ok().setData(deleteMenuResponse);
     }
 }

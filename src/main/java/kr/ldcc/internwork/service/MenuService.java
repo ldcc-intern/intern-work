@@ -2,6 +2,7 @@ package kr.ldcc.internwork.service;
 
 import kr.ldcc.internwork.common.exception.ExceptionCode;
 import kr.ldcc.internwork.common.exception.InternWorkException;
+import kr.ldcc.internwork.model.dto.MenuDto;
 import kr.ldcc.internwork.model.dto.request.MenuRequest;
 import kr.ldcc.internwork.model.entity.Menu;
 import kr.ldcc.internwork.model.entity.User;
@@ -16,7 +17,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -26,7 +29,7 @@ public class MenuService {
     private final UserRepository userRepository;
 
     @Transactional
-    public Menu createMenu(@RequestBody MenuRequest.CreateMenuRequest createMenuRequest) {
+    public MenuDto.CreateMenuResponse createMenu(@RequestBody MenuRequest.CreateMenuRequest createMenuRequest) {
         User registerUser = userRepository.findById(createMenuRequest.getUserId()).orElseThrow(() -> {
             log.error("createMenu Exception : [존재하지 않는 User ID]");
             return new InternWorkException.dataDuplicateException();
@@ -58,7 +61,7 @@ public class MenuService {
                 log.error("createMenu Exception : {}", e.getMessage());
                 throw new InternWorkException.dataDuplicateException();
             }
-            return menu;
+            return new MenuDto.CreateMenuResponse().setId(menu.getId());
         }
         Integer orderId = menuRepository.findAllByParent(parent).size();
         Menu menu = Menu.builder()
@@ -74,23 +77,43 @@ public class MenuService {
             log.error("createMenu Exception : {}", e.getMessage());
             throw new InternWorkException.dataDuplicateException();
         }
-        return menu;
+        return new MenuDto.CreateMenuResponse().setId(menu.getId());
     }
 
     @Transactional
-    public List<Menu> getMenuList() {
-        return menuRepository.findAll(Sort.by("orderId"));
+    public MenuDto.GetMenuListResponse getMenuList() {
+        List<Menu> menus = menuRepository.findAll(Sort.by("orderId"));
+        Map<Long, List<MenuDto.GetMenuListResponse>> groupingByParent = menus.stream().map(menu -> MenuDto.GetMenuListResponse.builder()
+                .id(menu.getId())
+                .orderId(menu.getOrderId())
+                .parentId(menu.getParent() != null ? menu.getParent().getId() : 0)
+                .title(menu.getTitle())
+                .build()
+        ).collect(Collectors.groupingBy(menuListResponse -> menuListResponse.getParentId()));
+        MenuDto.GetMenuListResponse getMenuListResponse = MenuDto.GetMenuListResponse.builder().id(0L).build();
+        addChildren(getMenuListResponse, groupingByParent);
+        return getMenuListResponse;
     }
 
-    public Menu getDetailMenu(Long menuId) {
-        return menuRepository.findById(menuId).orElseThrow(() -> {
+    public MenuDto.GetDetailMenuResponse getDetailMenu(Long menuId) {
+        Menu menu = menuRepository.findById(menuId).orElseThrow(() -> {
             log.error("getDetailMenu Exception : [존재하지 않는 Menu ID]", ExceptionCode.DATA_NOT_FOUND_EXCEPTION);
             return new InternWorkException.dataNotFoundException();
         });
+        return new MenuDto.GetDetailMenuResponse()
+                .setId(menu.getId())
+                .setMain(menu.getParent() != null ? (menu.getParent().getParent() != null ? menu.getParent().getParent().getTitle() : menu.getParent().getTitle()) : null)
+                .setSmall(menu.getParent() != null ? (menu.getParent().getParent() != null ? menu.getParent().getTitle() : null) : null)
+                .setTitle(menu.getTitle())
+                .setState(menu.getState())
+                .setRegisterUser(menu.getRegisterUser().getName())
+                .setUpdateUser((menu.getUpdateUser() != null) ? menu.getUpdateUser().getName() : null)
+                .setRegisterDate(menu.getRegisterDate())
+                .setUpdateDate(menu.getUpdateDate());
     }
 
     @Transactional
-    public Menu updateMenu(Long menuId, MenuRequest.UpdateMenuRequest updateMenuRequest) {
+    public MenuDto.UpdateMenuResponse updateMenu(Long menuId, MenuRequest.UpdateMenuRequest updateMenuRequest) {
         Menu menu = menuRepository.findById(menuId).orElseThrow(() -> {
             log.error("getDetailMenu Exception : [존재하지 않는 Menu ID]", ExceptionCode.DATA_NOT_FOUND_EXCEPTION);
             return new InternWorkException.dataNotFoundException();
@@ -110,7 +133,14 @@ public class MenuService {
                     log.error("updateMenu Exception : {}", e.getMessage());
                     throw new InternWorkException.dataDuplicateException();
                 }
-                return menu;
+                return new MenuDto.UpdateMenuResponse()
+                        .setId(menu.getId())
+                        .setOrderId(menu.getOrderId())
+                        .setParent(menu.getParent().getId())
+                        .setState(menu.getState())
+                        .setTitle(menu.getTitle())
+                        .setRegisterUser(menu.getRegisterUser())
+                        .setUpdateUser(menu.getUpdateUser());
             }
             ArrayList<Menu> order = menuRepository.findAllByParent(Sort.by("orderId"), menu.getParent());
             order.remove(menu);
@@ -124,7 +154,14 @@ public class MenuService {
                 log.error("updateMenu Exception : {}", e.getMessage());
                 throw new InternWorkException.dataDuplicateException();
             }
-            return menu;
+            return new MenuDto.UpdateMenuResponse()
+                    .setId(menu.getId())
+                    .setOrderId(menu.getOrderId())
+                    .setParent(menu.getParent().getId())
+                    .setState(menu.getState())
+                    .setTitle(menu.getTitle())
+                    .setRegisterUser(menu.getRegisterUser())
+                    .setUpdateUser(menu.getUpdateUser());
         }
         if (updateMenuRequest.getOrderId() == null) {
             Menu parent = menuRepository.findById(updateMenuRequest.getParentId()).orElseThrow(() -> {
@@ -140,7 +177,14 @@ public class MenuService {
                 log.error("updateMenu Exception : {}", e.getMessage());
                 throw new InternWorkException.dataDuplicateException();
             }
-            return menu;
+            return new MenuDto.UpdateMenuResponse()
+                    .setId(menu.getId())
+                    .setOrderId(menu.getOrderId())
+                    .setParent(menu.getParent().getId())
+                    .setState(menu.getState())
+                    .setTitle(menu.getTitle())
+                    .setRegisterUser(menu.getRegisterUser())
+                    .setUpdateUser(menu.getUpdateUser());
         }
         Menu parent = menuRepository.findById(updateMenuRequest.getParentId()).orElseThrow(() -> {
             log.error("getDetailMenu Exception : [존재하지 않는 Parent ID]", ExceptionCode.DATA_NOT_FOUND_EXCEPTION);
@@ -158,16 +202,32 @@ public class MenuService {
             log.error("updateMenu Exception : {}", e.getMessage());
             throw new InternWorkException.dataDuplicateException();
         }
-        return menu;
+        return new MenuDto.UpdateMenuResponse()
+                .setId(menu.getId())
+                .setOrderId(menu.getOrderId())
+                .setParent(menu.getParent().getId())
+                .setState(menu.getState())
+                .setTitle(menu.getTitle())
+                .setRegisterUser(menu.getRegisterUser())
+                .setUpdateUser(menu.getUpdateUser());
     }
 
     @Transactional
-    public Menu deleteMenu(Long menuId) {
+    public MenuDto.DeleteMenuResponse deleteMenu(Long menuId) {
         Optional<Menu> menu = menuRepository.findById(menuId);
         if (menu.isPresent() && menuRepository.findAllByParent(menu.get()).size() == 0) {
             menuRepository.deleteById(menuId);
-            return menu.get();
+            return new MenuDto.DeleteMenuResponse().setId(menu.get().getId());
         }
         throw new InternWorkException.dataNotFoundException();
+    }
+
+    private static void addChildren(MenuDto.GetMenuListResponse parent, Map<Long, List<MenuDto.GetMenuListResponse>> groupingByParentId) {
+        List<MenuDto.GetMenuListResponse> children = groupingByParentId.get(parent.getId());
+        if (children == null) {
+            return;
+        }
+        parent.setChildren(children);
+        children.forEach(menuListResponse -> addChildren(menuListResponse, groupingByParentId));
     }
 }
