@@ -7,11 +7,12 @@ import kr.ldcc.internwork.model.dto.CategoryDto;
 import kr.ldcc.internwork.model.dto.request.CategoryRequest;
 import kr.ldcc.internwork.model.dto.response.Response;
 import kr.ldcc.internwork.model.entity.Category;
-import kr.ldcc.internwork.model.entity.Faq;
+import kr.ldcc.internwork.model.entity.User;
 import kr.ldcc.internwork.model.mapper.CategoryMapper;
 import kr.ldcc.internwork.repository.CategoryRepository;
+import kr.ldcc.internwork.repository.UserRepository;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,14 +22,12 @@ import java.util.Optional;
 
 @Slf4j
 @Component
+@RequiredArgsConstructor
 public class CategoryService {
 
     private final CategoryRepository categoryRepository;
 
-    @Autowired
-    public CategoryService(CategoryRepository categoryRepository){
-        this.categoryRepository = categoryRepository;
-    }
+    private final UserRepository userRepository;
 
     /** * * * * * * *  *
      *                 *
@@ -37,13 +36,17 @@ public class CategoryService {
      * * * * * * * * * */
     @Transactional
     public Response createCategory(CategoryRequest.CreateCategoryRequest createCategoryRequest) {
+
+        User user = userRepository.findById(createCategoryRequest.getRegisterUserId()).orElseThrow(() -> {
+            log.error("createCategory Exception : [존재하지 않는 User Id]");
+            return new InternWorkException.dataNotFoundException();
+        });
         Category category = Category.builder()
                 .mainCategory(createCategoryRequest.getMainCategory())
                 .categoryName(createCategoryRequest.getCategoryName())
                 .categoryType(createCategoryRequest.getCategoryType())
-                .registerUser(createCategoryRequest.getRegisterUser())
+                .registerUser(user)
                 .authInfo(createCategoryRequest.getAuthInfo())
-                .registerDate(createCategoryRequest.getRegisterDate())
                 .orderId(createCategoryRequest.getOrderId())
                 .build();
 
@@ -78,12 +81,12 @@ public class CategoryService {
      *                     *
      * * * * * * * * * * * */
     @Transactional
-    public Object getCategoryDetail(Long categoryId) {
+    public Category getCategoryDetail(Long categoryId) {
         Category category = categoryRepository.findById(categoryId).orElseThrow(() ->{
             log.error("getDetailCategory Exception : [존재하지 않는 Category ID]", ExceptionCode.DATA_NOT_FOUND_EXCEPTION);
             return new InternWorkException.dataDuplicateException();});
 
-        return CategoryMapper.toGetCategoryDetailResponse(category);
+        return category;
     }
 
 
@@ -110,17 +113,24 @@ public class CategoryService {
      *                  *
      * * * * * * * * * **/
     @Transactional
-    public CategoryDto updateCategory(Long categoryId, CategoryRequest.UpdateCategoryRequest updateCategoryRequest){
+    public Category updateCategory(Long categoryId, CategoryRequest.UpdateCategoryRequest updateCategoryRequest){
 
         // Null 일 경우 , ERROR  발생
-        Category category = categoryRepository.findById(categoryId).orElseThrow(() -> {log.error("updateCategory Exception : [존재하지 않는 Category ID]");
-                                                                                    return new InternWorkException.dataUpdateException();});
+        Category category = categoryRepository.findById(categoryId).orElseThrow(() -> {
+            log.error("updateCategory Exception : [존재하지 않는 Category ID]", ExceptionCode.DATA_NOT_FOUND_EXCEPTION) ;
+            return new InternWorkException.dataUpdateException();
+        });
+
+        User user = userRepository.findById(updateCategoryRequest.getUpdateUserId()).orElseThrow(() -> {
+            log.error("updateNotice Exception : [존재하지 않는 User ID]", ExceptionCode.DATA_NOT_FOUND_EXCEPTION);
+            return new InternWorkException.dataNotFoundException();
+        });
 
         // Null 이 아니면
         category.updateCategoryName(updateCategoryRequest.getCategoryName() !=null ? updateCategoryRequest.getCategoryName():category.getCategoryName());
         category.updateCategoryType(updateCategoryRequest.getCategoryType() !=null? updateCategoryRequest.getCategoryType():category.getCategoryType());
-        category.updateUpdatedate(updateCategoryRequest.getUpdateDate() !=null? updateCategoryRequest.getUpdateDate():category.getUpdateDate());
-        category.updateUpdateUser(updateCategoryRequest.getUpdateUser() !=null? updateCategoryRequest.getUpdateUser():category.getUpdateUser());
+        category.updateMainCategory(updateCategoryRequest.getMainCategory() !=null? updateCategoryRequest.getMainCategory():category.getMainCategory());
+        category.updateUpdateUser(user);
 
         try{
             categoryRepository.save(category);
@@ -129,7 +139,7 @@ public class CategoryService {
             throw new InternWorkException.dataUpdateException();
         }
 
-        return CategoryMapper.toUpdateCategoryResponse(category);
+        return category;
 
     }
 

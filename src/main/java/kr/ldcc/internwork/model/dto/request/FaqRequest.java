@@ -28,9 +28,7 @@ public class FaqRequest {
 
         private User registerUser;
 
-        private LocalDateTime registerDate;
-
-        private LocalDateTime noticeDate;
+        private String noticeDate;
 
         private FaqType faqType;
 
@@ -65,9 +63,7 @@ public class FaqRequest {
 
         private String content;
 
-        private User registerUser;
-
-        private LocalDateTime registerDate;
+        private Long registerUserId;
 
         private String authInfo;
 
@@ -90,15 +86,13 @@ public class FaqRequest {
 
         private String faqTitle;
 
-        private LocalDateTime noticeDate;
+        private String noticeDate;
 
         private FaqType faqType;
 
         private String content;
 
         private String updateReason;
-
-        private LocalDateTime updateDate;
 
         private Long updateUserId;
     }

@@ -64,7 +64,7 @@ public class FaqDto {
     @Accessors(chain = true)
     @JsonIgnoreProperties(ignoreUnknown = true)
     @JsonInclude(value = JsonInclude.Include.NON_NULL)
-    public static class FaqDetailResponse {
+    public static class FaqDetailResponse { // faq 상세 조회
 
         private String categoryName;
         private String faqTitle;

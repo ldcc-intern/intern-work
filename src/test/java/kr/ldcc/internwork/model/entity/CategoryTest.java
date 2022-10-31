@@ -58,7 +58,6 @@ class CategoryTest {
                 .mainCategory("Test")
                 .categoryType(CategoryType.ON)
                 .authInfo("Test")
-                .registerDate(LocalDateTime.now())
                 .registerUser(userRepository.findByName("사용자1"))
                 .orderId(1)
                 .build();
@@ -72,10 +71,8 @@ class CategoryTest {
 
         createCategoryRequest.setCategoryName("카테고리명1");
         createCategoryRequest.setMainCategory("메인 카테고리");
-        createCategoryRequest.setRegisterDate(LocalDateTime.now());
         createCategoryRequest.setCategoryType(CategoryType.ON);
         createCategoryRequest.setAuthInfo("인증12");
-        createCategoryRequest.setRegisterUser(userRepository.findByName("사용자1"));
         createCategoryRequest.setOrderId(2);
 
 
@@ -130,7 +127,6 @@ class CategoryTest {
         updateCategoryRequest.setCategoryName("카테고리수정확인");
         updateCategoryRequest.setCategoryType(CategoryType.OFF);
         updateCategoryRequest.setUpdateDate(LocalDateTime.now());
-        updateCategoryRequest.setUpdateUser(userRepository.findByName("사용자2"));
 
         categoryController.updateCategory(findCategory.getId(), updateCategoryRequest);
 
