@@ -4,6 +4,7 @@ import com.querydsl.core.BooleanBuilder;
 import kr.ldcc.internwork.common.exception.ExceptionCode;
 import kr.ldcc.internwork.common.exception.InternWorkException;
 import kr.ldcc.internwork.common.types.NoticeType;
+import kr.ldcc.internwork.model.dto.NoticeDto;
 import kr.ldcc.internwork.model.dto.request.NoticeRequest;
 import kr.ldcc.internwork.model.entity.Notice;
 import kr.ldcc.internwork.model.entity.QNotice;
@@ -31,7 +32,7 @@ public class NoticeService {
     private final UserRepository userRepository;
 
     @Transactional
-    public Notice createNotice(NoticeRequest.CreateNoticeRequest createNoticeRequest) {
+    public NoticeDto.CreateNoticeResponse createNotice(NoticeRequest.CreateNoticeRequest createNoticeRequest) {
         User user = userRepository.findById(createNoticeRequest.getUserId()).orElseThrow(() -> {
             log.error("createNotice Exception : [존재하지 않는 User ID]");
             return new InternWorkException.dataDuplicateException();
@@ -45,41 +46,63 @@ public class NoticeService {
                 .state(NoticeType.OPEN)
                 .build();
         noticeRepository.save(notice);
-        return notice;
+        return new NoticeDto.CreateNoticeResponse().setId(notice.getId());
     }
 
     @Transactional
-    public Page<Notice> getNoticeList(String regStart, String regEnd, NoticeType state, String noticeStart, String noticeEnd, String userName, String title, Pageable pageable) {
-        QNotice notice = QNotice.notice;
+    public Page<NoticeDto.GetNoticeListResponse> getNoticeList(String regStart, String regEnd, NoticeType state, String noticeStart, String noticeEnd, String userName, String title, Pageable pageable) {
+        QNotice qNotice = QNotice.notice;
         BooleanBuilder builder = new BooleanBuilder();
         if (regStart != null && regEnd != null) {
-            builder.and(notice.noticeDate.between(LocalDate.parse(regStart, DateTimeFormatter.ISO_DATE).atTime(0, 0), LocalDate.parse(regEnd, DateTimeFormatter.ISO_DATE).atTime(23, 59)));
+            builder.and(qNotice.noticeDate.between(LocalDate.parse(regStart, DateTimeFormatter.ISO_DATE).atTime(0, 0), LocalDate.parse(regEnd, DateTimeFormatter.ISO_DATE).atTime(23, 59)));
         }
-        builder.and(notice.state.eq(state));
+        builder.and(qNotice.state.eq(state));
         if (noticeStart != null && noticeEnd != null) {
-            builder.and(notice.noticeDate.between(LocalDate.parse(noticeStart, DateTimeFormatter.ISO_DATE).atTime(0, 0), LocalDate.parse(noticeEnd, DateTimeFormatter.ISO_DATE).atTime(23, 59)));
+            builder.and(qNotice.noticeDate.between(LocalDate.parse(noticeStart, DateTimeFormatter.ISO_DATE).atTime(0, 0), LocalDate.parse(noticeEnd, DateTimeFormatter.ISO_DATE).atTime(23, 59)));
         }
         if (userName != null) {
-            builder.and(notice.registerUser.name.eq(userName));
+            builder.and(qNotice.registerUser.name.eq(userName));
         }
         if (title != null) {
-            builder.and(notice.title.contains(title));
+            builder.and(qNotice.title.contains(title));
         }
-        return noticeRepository.findAll(builder, pageable);
+        Page<Notice> notices = noticeRepository.findAll(builder, pageable);
+        return notices.map(
+                notice -> NoticeDto.GetNoticeListResponse.builder()
+                        .no(notices.getContent().indexOf(notice))
+                        .title(notice.getTitle())
+                        .registerUser(notice.getRegisterUser().getName())
+                        .registerDate(notice.getRegisterDate())
+                        .noticeDate(notice.getNoticeDate())
+                        .state(notice.getState())
+                        .view(notice.getView())
+                        .build()
+        );
     }
 
     @Transactional
-    public Notice getDetailNotice(Long noticeId) {
+    public NoticeDto.GetDetailNoticeResponse getDetailNotice(Long noticeId) {
         Notice notice = noticeRepository.findById(noticeId).orElseThrow(() -> {
             log.error("getDetailNotice Exception : [존재하지 않는 Notice ID]", ExceptionCode.DATA_NOT_FOUND_EXCEPTION);
             return new InternWorkException.dataNotFoundException();
         });
         notice.updateView(noticeRepository.updateView(noticeId));
-        return notice;
+        return new NoticeDto.GetDetailNoticeResponse()
+                .setId(notice.getId())
+                .setRegisterDate(notice.getRegisterDate())
+                .setUpdateDate(notice.getUpdateDate())
+                .setContent(notice.getContent())
+                .setReason(notice.getReason())
+                .setNoticeDate(notice.getNoticeDate())
+                .setState(notice.getState())
+                .setTitle(notice.getTitle())
+                .setView(notice.getView())
+                .setRegisterUser(notice.getRegisterUser().getName())
+                .setUpdateUser(notice.getUpdateUser() != null ? notice.getUpdateUser().getName() : null);
     }
 
     @Transactional
-    public Notice updateNotice(Long noticeId, NoticeRequest.UpdateNoticeRequest updateNoticeRequest) {
+    public NoticeDto.UpdateNoticeResponse updateNotice(Long noticeId, NoticeRequest.UpdateNoticeRequest updateNoticeRequest) {
         Notice notice = noticeRepository.findById(noticeId).orElseThrow(() -> {
             log.error("updateNotice Exception : [존재하지 않는 Notice ID]", ExceptionCode.DATA_NOT_FOUND_EXCEPTION);
             return new InternWorkException.dataNotFoundException();
@@ -101,15 +124,26 @@ public class NoticeService {
             log.error("updateNotice Exception : {}", e.getMessage());
             throw new InternWorkException.dataDuplicateException();
         }
-        return notice;
+        return new NoticeDto.UpdateNoticeResponse()
+                .setId(notice.getId())
+                .setRegisterDate(notice.getRegisterDate())
+                .setUpdateDate(notice.getUpdateDate())
+                .setContent(notice.getContent())
+                .setReason(notice.getReason())
+                .setNoticeDate(notice.getNoticeDate())
+                .setState(notice.getState())
+                .setTitle(notice.getTitle())
+                .setView(notice.getView())
+                .setRegisterUser(notice.getRegisterUser().getName())
+                .setUpdateUser(notice.getUpdateUser().getName());
     }
 
     @Transactional
-    public Notice deleteNotice(Long noticeId) {
+    public NoticeDto.DeleteNoticeResponse deleteNotice(Long noticeId) {
         Optional<Notice> notice = noticeRepository.findById(noticeId);
         if (notice.isPresent()) {
             noticeRepository.deleteById(noticeId);
-            return notice.get();
+            return new NoticeDto.DeleteNoticeResponse().setId(notice.get().getId());
         }
         throw new InternWorkException.dataNotFoundException();
     }

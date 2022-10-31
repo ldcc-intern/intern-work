@@ -6,25 +6,21 @@ import kr.ldcc.internwork.model.dto.request.NoticeRequest;
 import kr.ldcc.internwork.model.dto.response.Response;
 import kr.ldcc.internwork.model.mapper.NoticeMapper;
 import kr.ldcc.internwork.service.NoticeService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/api")
 public class NoticeController {
     private final NoticeService noticeService;
 
-    @Autowired
-    public NoticeController(NoticeService noticeService) {
-        this.noticeService = noticeService;
-    }
-
     @PostMapping("/notice")
     public Response createNotice(@RequestBody @Valid NoticeRequest.CreateNoticeRequest createNoticeRequest) {
-        return Response.ok().setData(NoticeMapper.toCreateNoticeResponse(noticeService.createNotice(createNoticeRequest)));
+        return NoticeMapper.toCreateNoticeResponse(noticeService.createNotice(createNoticeRequest));
     }
 
     @GetMapping("/notice")
@@ -38,21 +34,21 @@ public class NoticeController {
             @RequestParam(required = false) String title,
             Pageable pageable
     ) {
-        return Response.ok().setData(NoticeMapper.toGetNoticeListResponse(noticeService.getNoticeList(regStart, regEnd, state, noticeStart, noticeEnd, user, title,pageable)));
+        return NoticeMapper.toGetNoticeListResponse(noticeService.getNoticeList(regStart, regEnd, state, noticeStart, noticeEnd, user, title, pageable));
     }
 
     @GetMapping("/notice/{noticeId}")
     public Response getDetailNotice(@PathVariable("noticeId") Long noticeId) {
-        return Response.ok().setData(NoticeMapper.toGetDetailNoticeResponse(noticeService.getDetailNotice(noticeId)));
+        return NoticeMapper.toGetDetailNoticeResponse(noticeService.getDetailNotice(noticeId));
     }
 
     @PutMapping("/notice/{noticeId}")
     public Response updateNotice(@PathVariable("noticeId") Long noticeId, @RequestBody @Valid NoticeRequest.UpdateNoticeRequest updateNoticeRequest) {
-        return Response.ok().setData(NoticeMapper.toUpdateNoticeResponse(noticeService.updateNotice(noticeId, updateNoticeRequest)));
+        return NoticeMapper.toUpdateNoticeResponse(noticeService.updateNotice(noticeId, updateNoticeRequest));
     }
 
     @DeleteMapping("/notice/{noticeId}")
     public Response deleteNotice(@PathVariable("noticeId") Long noticeId) {
-        return Response.ok().setData(NoticeMapper.toDeleteNoticeResponse(noticeService.deleteNotice(noticeId)));
+        return NoticeMapper.toDeleteNoticeResponse(noticeService.deleteNotice(noticeId));
     }
 }
