@@ -49,8 +49,8 @@ public class MenuMapper {
                 .setParent(menu.getParent().getId())
                 .setState(menu.getState())
                 .setTitle(menu.getTitle())
-                .setRegisterUser(menu.getRegisterUser())
-                .setUpdateUser(menu.getUpdateUser());
+                .setRegisterUser(menu.getRegisterUser().getName())
+                .setUpdateUser(menu.getUpdateUser().getName());
     }
 
     public static MenuDto.DeleteMenuResponse toDeleteMenuResponse(Optional<Menu> menu) {
