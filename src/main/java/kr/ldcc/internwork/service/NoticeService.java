@@ -9,6 +9,7 @@ import kr.ldcc.internwork.model.dto.request.NoticeRequest;
 import kr.ldcc.internwork.model.entity.Notice;
 import kr.ldcc.internwork.model.entity.QNotice;
 import kr.ldcc.internwork.model.entity.User;
+import kr.ldcc.internwork.model.mapper.NoticeMapper;
 import kr.ldcc.internwork.repository.NoticeRepository;
 import kr.ldcc.internwork.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -46,7 +47,7 @@ public class NoticeService {
                 .state(NoticeType.OPEN)
                 .build();
         noticeRepository.save(notice);
-        return new NoticeDto.CreateNoticeResponse().setId(notice.getId());
+        return NoticeMapper.toCreateNoticeResponse(notice);
     }
 
     @Transactional
@@ -66,18 +67,7 @@ public class NoticeService {
         if (title != null) {
             builder.and(qNotice.title.contains(title));
         }
-        Page<Notice> notices = noticeRepository.findAll(builder, pageable);
-        return notices.map(
-                notice -> NoticeDto.GetNoticeListResponse.builder()
-                        .no(notices.getContent().indexOf(notice))
-                        .title(notice.getTitle())
-                        .registerUser(notice.getRegisterUser().getName())
-                        .registerDate(notice.getRegisterDate())
-                        .noticeDate(notice.getNoticeDate())
-                        .state(notice.getState())
-                        .view(notice.getView())
-                        .build()
-        );
+        return NoticeMapper.toGetNoticeListResponse(noticeRepository.findAll(builder, pageable));
     }
 
     @Transactional
@@ -87,18 +77,7 @@ public class NoticeService {
             return new InternWorkException.dataNotFoundException();
         });
         notice.updateView(noticeRepository.updateView(noticeId));
-        return new NoticeDto.GetDetailNoticeResponse()
-                .setId(notice.getId())
-                .setRegisterDate(notice.getRegisterDate())
-                .setUpdateDate(notice.getUpdateDate())
-                .setContent(notice.getContent())
-                .setReason(notice.getReason())
-                .setNoticeDate(notice.getNoticeDate())
-                .setState(notice.getState())
-                .setTitle(notice.getTitle())
-                .setView(notice.getView())
-                .setRegisterUser(notice.getRegisterUser().getName())
-                .setUpdateUser(notice.getUpdateUser() != null ? notice.getUpdateUser().getName() : null);
+        return NoticeMapper.toGetDetailNoticeResponse(notice);
     }
 
     @Transactional
@@ -124,18 +103,7 @@ public class NoticeService {
             log.error("updateNotice Exception : {}", e.getMessage());
             throw new InternWorkException.dataDuplicateException();
         }
-        return new NoticeDto.UpdateNoticeResponse()
-                .setId(notice.getId())
-                .setRegisterDate(notice.getRegisterDate())
-                .setUpdateDate(notice.getUpdateDate())
-                .setContent(notice.getContent())
-                .setReason(notice.getReason())
-                .setNoticeDate(notice.getNoticeDate())
-                .setState(notice.getState())
-                .setTitle(notice.getTitle())
-                .setView(notice.getView())
-                .setRegisterUser(notice.getRegisterUser().getName())
-                .setUpdateUser(notice.getUpdateUser().getName());
+        return NoticeMapper.toUpdateNoticeResponse(notice);
     }
 
     @Transactional
@@ -143,7 +111,7 @@ public class NoticeService {
         Optional<Notice> notice = noticeRepository.findById(noticeId);
         if (notice.isPresent()) {
             noticeRepository.deleteById(noticeId);
-            return new NoticeDto.DeleteNoticeResponse().setId(notice.get().getId());
+            return NoticeMapper.toDeleteNoticeResponse(notice);
         }
         throw new InternWorkException.dataNotFoundException();
     }

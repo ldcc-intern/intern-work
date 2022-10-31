@@ -1,27 +1,32 @@
 package kr.ldcc.internwork.model.mapper;
 
 import kr.ldcc.internwork.model.dto.UserDto;
-import kr.ldcc.internwork.model.dto.response.Response;
+import kr.ldcc.internwork.model.entity.User;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class UserMapper {
-    public static Response toCreateUserResponse(UserDto.CreateUserResponse createUserResponse) {
-        return Response.ok().setData(createUserResponse);
+    public static UserDto.CreateUserResponse toCreateUserResponse(User user) {
+        return new UserDto.CreateUserResponse().setId(user.getId());
     }
 
-    public static Response toGetUserListResponse(List<UserDto.GetUserListResponse> userListResponses) {
-        return Response.ok().setData(userListResponses);
+    public static List<UserDto.GetUserListResponse> toGetUserListResponse(List<User> users) {
+        return users.stream().map(user -> UserDto.GetUserListResponse.builder()
+                .id(user.getId())
+                .name(user.getName())
+                .build()).collect(Collectors.toList());
     }
 
-    public static Response toUpdateUserResponse(UserDto.UpdateUserResponse updateUserResponse) {
-        return Response.ok().setData(updateUserResponse);
+    public static UserDto.UpdateUserResponse toUpdateUserResponse(User user) {
+        return new UserDto.UpdateUserResponse().setId(user.getId()).setName(user.getName());
     }
 
-    public static Response toDeleteUserResponse(UserDto.DeleteUserResponse deleteUserResponse) {
-        return Response.ok().setData(deleteUserResponse);
+    public static UserDto.DeleteUserResponse toDeleteUserResponse(Optional<User> user) {
+        return new UserDto.DeleteUserResponse().setId(user.get().getId());
     }
 }
