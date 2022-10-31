@@ -21,7 +21,7 @@ public class UserService {
     private final UserRepository userRepository;
 
     @Transactional
-    public UserDto.CreateUserResponse createUser(UserRequest.CreateUserRequest createUserRequest) {
+    public Long createUser(UserRequest.CreateUserRequest createUserRequest) {
         User user = User.builder().name(createUserRequest.getName()).build();
         try {
             userRepository.save(user);
@@ -29,7 +29,7 @@ public class UserService {
             log.error("createUser Exception : {}", e.getMessage());
             throw new InternWorkException.dataDuplicateException();
         }
-        return UserMapper.toCreateUserResponse(user);
+        return user.getId();
     }
 
     @Transactional
@@ -54,11 +54,11 @@ public class UserService {
     }
 
     @Transactional
-    public UserDto.DeleteUserResponse deleteUser(Long userId) {
+    public void deleteUser(Long userId) {
         Optional<User> user = userRepository.findById(userId);
         if (user.isPresent()) {
             userRepository.deleteById(userId);
-            return UserMapper.toDeleteUserResponse(user);
+            return;
         }
         throw new InternWorkException.dataNotFoundException();
     }

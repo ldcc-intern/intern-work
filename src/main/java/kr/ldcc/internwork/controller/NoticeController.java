@@ -48,6 +48,7 @@ public class NoticeController {
 
     @DeleteMapping("/notice/{noticeId}")
     public Response deleteNotice(@PathVariable("noticeId") Long noticeId) {
-        return Response.ok().setData(noticeService.deleteNotice(noticeId));
+        noticeService.deleteNotice(noticeId);
+        return Response.ok();
     }
 }

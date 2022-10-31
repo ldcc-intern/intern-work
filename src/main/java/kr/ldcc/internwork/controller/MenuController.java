@@ -36,6 +36,7 @@ public class MenuController {
 
     @DeleteMapping("/menu/{menuId}")
     public Response deleteMenu(@PathVariable("menuId") Long menuId) {
-        return Response.ok().setData(menuService.deleteMenu(menuId));
+        menuService.deleteMenu(menuId);
+        return Response.ok();
     }
 }

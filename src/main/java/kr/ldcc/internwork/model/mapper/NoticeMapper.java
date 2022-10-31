@@ -6,14 +6,8 @@ import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import org.springframework.data.domain.Page;
 
-import java.util.Optional;
-
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class NoticeMapper {
-    public static NoticeDto.CreateNoticeResponse toCreateNoticeResponse(Notice notice) {
-        return new NoticeDto.CreateNoticeResponse().setId(notice.getId());
-    }
-
     public static Page<NoticeDto.GetNoticeListResponse> toGetNoticeListResponse(Page<Notice> notices) {
         return notices.map(
                 notice -> NoticeDto.GetNoticeListResponse.builder()
@@ -56,9 +50,5 @@ public class NoticeMapper {
                 .setView(notice.getView())
                 .setRegisterUser(notice.getRegisterUser().getName())
                 .setUpdateUser(notice.getUpdateUser().getName());
-    }
-
-    public static NoticeDto.DeleteNoticeResponse toDeleteNoticeResponse(Optional<Notice> notice) {
-        return new NoticeDto.DeleteNoticeResponse().setId(notice.get().getId());
     }
 }

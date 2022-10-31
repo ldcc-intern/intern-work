@@ -27,7 +27,7 @@ public class MenuService {
     private final UserRepository userRepository;
 
     @Transactional
-    public MenuDto.CreateMenuResponse createMenu(@RequestBody MenuRequest.CreateMenuRequest createMenuRequest) {
+    public Long createMenu(@RequestBody MenuRequest.CreateMenuRequest createMenuRequest) {
         User registerUser = userRepository.findById(createMenuRequest.getUserId()).orElseThrow(() -> {
             log.error("createMenu Exception : [존재하지 않는 User ID]");
             return new InternWorkException.dataNotFoundException();
@@ -59,7 +59,7 @@ public class MenuService {
                 log.error("createMenu Exception : {}", e.getMessage());
                 throw new InternWorkException.dataDuplicateException();
             }
-            return MenuMapper.toCreateMenuResponse(menu);
+            return menu.getId();
         }
         Integer orderId = menuRepository.findAllByParent(parent).size();
         Menu menu = Menu.builder()
@@ -75,7 +75,7 @@ public class MenuService {
             log.error("createMenu Exception : {}", e.getMessage());
             throw new InternWorkException.dataDuplicateException();
         }
-        return MenuMapper.toCreateMenuResponse(menu);
+        return menu.getId();
     }
 
     @Transactional
@@ -163,11 +163,11 @@ public class MenuService {
     }
 
     @Transactional
-    public MenuDto.DeleteMenuResponse deleteMenu(Long menuId) {
+    public void deleteMenu(Long menuId) {
         Optional<Menu> menu = menuRepository.findById(menuId);
         if (menu.isPresent() && menuRepository.findAllByParent(menu.get()).size() == 0) {
             menuRepository.deleteById(menuId);
-            return MenuMapper.toDeleteMenuResponse(menu);
+            return;
         }
         throw new InternWorkException.dataNotFoundException();
     }
