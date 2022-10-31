@@ -13,17 +13,6 @@ public class UserDto {
     @Accessors(chain = true)
     @JsonIgnoreProperties(ignoreUnknown = true)
     @JsonInclude(value = JsonInclude.Include.NON_NULL)
-    public static class CreateUserResponse {
-        private Long id;
-    }
-
-    @Getter
-    @Setter
-    @NoArgsConstructor
-    @ToString
-    @Accessors(chain = true)
-    @JsonIgnoreProperties(ignoreUnknown = true)
-    @JsonInclude(value = JsonInclude.Include.NON_NULL)
     public static class GetUserListResponse {
         private Long id;
         private String name;
@@ -45,16 +34,5 @@ public class UserDto {
     public static class UpdateUserResponse {
         private Long id;
         private String name;
-    }
-
-    @Getter
-    @Setter
-    @NoArgsConstructor
-    @ToString
-    @Accessors(chain = true)
-    @JsonIgnoreProperties(ignoreUnknown = true)
-    @JsonInclude(value = JsonInclude.Include.NON_NULL)
-    public static class DeleteUserResponse {
-        private Long id;
     }
 }

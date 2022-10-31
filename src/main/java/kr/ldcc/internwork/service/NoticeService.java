@@ -33,7 +33,7 @@ public class NoticeService {
     private final UserRepository userRepository;
 
     @Transactional
-    public NoticeDto.CreateNoticeResponse createNotice(NoticeRequest.CreateNoticeRequest createNoticeRequest) {
+    public Long createNotice(NoticeRequest.CreateNoticeRequest createNoticeRequest) {
         User user = userRepository.findById(createNoticeRequest.getUserId()).orElseThrow(() -> {
             log.error("createNotice Exception : [존재하지 않는 User ID]");
             return new InternWorkException.dataNotFoundException();
@@ -47,7 +47,7 @@ public class NoticeService {
                 .state(NoticeType.OPEN)
                 .build();
         noticeRepository.save(notice);
-        return NoticeMapper.toCreateNoticeResponse(notice);
+        return notice.getId();
     }
 
     @Transactional
@@ -107,11 +107,11 @@ public class NoticeService {
     }
 
     @Transactional
-    public NoticeDto.DeleteNoticeResponse deleteNotice(Long noticeId) {
+    public void deleteNotice(Long noticeId) {
         Optional<Notice> notice = noticeRepository.findById(noticeId);
         if (notice.isPresent()) {
             noticeRepository.deleteById(noticeId);
-            return NoticeMapper.toDeleteNoticeResponse(notice);
+            return;
         }
         throw new InternWorkException.dataNotFoundException();
     }

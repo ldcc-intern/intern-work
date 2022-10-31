@@ -16,17 +16,6 @@ public class NoticeDto {
     @Accessors(chain = true)
     @JsonIgnoreProperties(ignoreUnknown = true)
     @JsonInclude(value = JsonInclude.Include.NON_NULL)
-    public static class CreateNoticeResponse {
-        private Long id;
-    }
-
-    @Getter
-    @Setter
-    @NoArgsConstructor
-    @ToString
-    @Accessors(chain = true)
-    @JsonIgnoreProperties(ignoreUnknown = true)
-    @JsonInclude(value = JsonInclude.Include.NON_NULL)
     public static class GetNoticeListResponse {
         private Integer no;
         private String title;
@@ -88,16 +77,5 @@ public class NoticeDto {
         private Integer view;
         private String registerUser;
         private String updateUser;
-    }
-
-    @Getter
-    @Setter
-    @NoArgsConstructor
-    @ToString
-    @Accessors(chain = true)
-    @JsonIgnoreProperties(ignoreUnknown = true)
-    @JsonInclude(value = JsonInclude.Include.NON_NULL)
-    public static class DeleteNoticeResponse {
-        private Long id;
     }
 }

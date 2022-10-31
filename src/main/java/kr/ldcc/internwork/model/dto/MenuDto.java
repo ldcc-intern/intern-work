@@ -17,17 +17,6 @@ public class MenuDto {
     @Accessors(chain = true)
     @JsonIgnoreProperties(ignoreUnknown = true)
     @JsonInclude(value = JsonInclude.Include.NON_NULL)
-    public static class CreateMenuResponse {
-        private Long id;
-    }
-
-    @Getter
-    @Setter
-    @NoArgsConstructor
-    @ToString
-    @Accessors(chain = true)
-    @JsonIgnoreProperties(ignoreUnknown = true)
-    @JsonInclude(value = JsonInclude.Include.NON_NULL)
     public static class GetMenuListResponse {
         private Long id;
         private Integer orderId;
@@ -79,16 +68,5 @@ public class MenuDto {
         private String title;
         private String registerUser;
         private String updateUser;
-    }
-
-    @Getter
-    @Setter
-    @NoArgsConstructor
-    @ToString
-    @Accessors(chain = true)
-    @JsonIgnoreProperties(ignoreUnknown = true)
-    @JsonInclude(value = JsonInclude.Include.NON_NULL)
-    public static class DeleteMenuResponse {
-        private Long id;
     }
 }
