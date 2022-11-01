@@ -4,10 +4,12 @@ package kr.ldcc.internwork.service;
 import kr.ldcc.internwork.common.exception.ExceptionCode;
 import kr.ldcc.internwork.common.exception.InternWorkException;
 import kr.ldcc.internwork.common.types.FaqType;
+import kr.ldcc.internwork.model.dto.FaqDto;
 import kr.ldcc.internwork.model.dto.request.FaqRequest;
 import kr.ldcc.internwork.model.dto.response.Response;
 import kr.ldcc.internwork.model.entity.Faq;
 import kr.ldcc.internwork.model.entity.User;
+import kr.ldcc.internwork.model.mapper.FaqMapper;
 import kr.ldcc.internwork.repository.FaqRepository;
 import kr.ldcc.internwork.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -35,7 +37,7 @@ public class FaqService {
      *          *
      * * * * * **/
     @Transactional
-    public Response registerFaq(FaqRequest.RegisterFaqRequest registerFaqRequest) {
+    public FaqDto.RegisterFaqResponse registerFaq(FaqRequest.RegisterFaqRequest registerFaqRequest) {
 
         User registerUser = userRepository.findById(registerFaqRequest.getRegisterUserId()).orElseThrow(() -> {
             log.error("updateFaq Exception : [존재하지 않는 User Id]", ExceptionCode.DATA_NOT_FOUND_EXCEPTION);
@@ -56,7 +58,7 @@ public class FaqService {
         faqRepository.save(faq);
 
 
-        return Response.ok().setData(faq.getId());
+        return FaqMapper.toRegisterFaqResponse(faq);
     }
 
 

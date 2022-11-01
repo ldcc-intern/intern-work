@@ -42,36 +42,9 @@ public class FaqController {
      * * * * * * **/
     @PostMapping("/faq")
     public Response registerFaq(@RequestBody @Valid FaqRequest.RegisterFaqRequest registerFaqRequest) {
-        return faqService.registerFaq(registerFaqRequest);
+        return Response.ok().setData(faqService.registerFaq(registerFaqRequest));
 
     }
-
-
-    /** * * * * * * * * * **
-     *                     *
-     *  faq 리스트 Type 조회 *
-     *                     *
-     * * * * * * * * * * * */
-/**
-    @GetMapping("/faq/{faqType}")
-    public Response getFaqTypeList(@PathVariable("faqType") FaqType faqType) {
-        return Response.ok().setData(faqService.searchFaqTypeList(faqType));
-    }
-**/
-
-    /** * * * * * * * * * **
-     *                     *
-     *  faq 리스트 전체 조회  *
-     *                     *
-     * * * * * * * * * * * */
-
-    /**
-    @GetMapping("/faq")
-    public Response searchFaqAllList() {
-        return Response.ok().setData(faqService.searchFaqAllList());
-    }
-    */
-
 
 
     /** * * * * * * * * * * *
