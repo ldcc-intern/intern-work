@@ -2,6 +2,7 @@ package kr.ldcc.internwork.model.mapper;
 
 
 import kr.ldcc.internwork.model.dto.FaqDto;
+import kr.ldcc.internwork.model.dto.NoticeDto;
 import kr.ldcc.internwork.model.dto.response.Response;
 import kr.ldcc.internwork.model.entity.Faq;
 import lombok.AccessLevel;
@@ -16,8 +17,8 @@ import java.util.List;
 public class FaqMapper {
 
     // Faq 등록 Response
-    public static Response toRegisterFaqResponse(Long id) {
-        return Response.ok();
+    public static FaqDto.RegisterFaqResponse toRegisterFaqResponse(Faq faq) {
+        return new FaqDto.RegisterFaqResponse().setId(faq.getId());
     }
 
     // faq 리스트 조회 Response

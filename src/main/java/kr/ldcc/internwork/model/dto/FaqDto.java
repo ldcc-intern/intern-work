@@ -26,6 +26,18 @@ public class FaqDto {
     private FaqType faqType;
     private String faqTitle;
 
+    @Getter
+    @Setter
+    @NoArgsConstructor
+    @ToString
+    @Accessors(chain = true)
+    @JsonIgnoreProperties(ignoreUnknown = true)
+    @JsonInclude(value = JsonInclude.Include.NON_NULL)
+    public static class RegisterFaqResponse { // Faq 등록
+
+        private Long id;
+
+    }
 
     @Getter
     @Setter
