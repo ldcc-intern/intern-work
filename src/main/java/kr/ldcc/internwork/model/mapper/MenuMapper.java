@@ -7,15 +7,10 @@ import lombok.NoArgsConstructor;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class MenuMapper {
-    public static MenuDto.CreateMenuResponse toCreateMenuResponse(Menu menu) {
-        return new MenuDto.CreateMenuResponse().setId(menu.getId());
-    }
-
     public static MenuDto.GetMenuListResponse toGetMenuListResponse(List<Menu> menus) {
         Map<Long, List<MenuDto.GetMenuListResponse>> groupingByParent = menus.stream().map(menu -> MenuDto.GetMenuListResponse.builder()
                 .id(menu.getId())
@@ -51,10 +46,6 @@ public class MenuMapper {
                 .setTitle(menu.getTitle())
                 .setRegisterUser(menu.getRegisterUser().getName())
                 .setUpdateUser(menu.getUpdateUser().getName());
-    }
-
-    public static MenuDto.DeleteMenuResponse toDeleteMenuResponse(Optional<Menu> menu) {
-        return new MenuDto.DeleteMenuResponse().setId(menu.get().getId());
     }
 
     private static void addChildren(MenuDto.GetMenuListResponse parent, Map<Long, List<MenuDto.GetMenuListResponse>> groupingByParentId) {
