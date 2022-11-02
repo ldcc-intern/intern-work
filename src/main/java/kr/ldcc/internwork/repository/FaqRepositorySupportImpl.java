@@ -4,12 +4,9 @@ import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import kr.ldcc.internwork.common.types.FaqType;
 import kr.ldcc.internwork.model.entity.Faq;
-import kr.ldcc.internwork.model.entity.QFaq;
-import kr.ldcc.internwork.model.entity.QUser;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.List;

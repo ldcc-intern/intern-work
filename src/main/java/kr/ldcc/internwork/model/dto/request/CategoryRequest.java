@@ -2,13 +2,11 @@ package kr.ldcc.internwork.model.dto.request;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import kr.ldcc.internwork.common.types.CategoryType;
-import kr.ldcc.internwork.common.types.FaqType;
 import kr.ldcc.internwork.model.entity.User;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 
-import javax.persistence.criteria.CriteriaBuilder;
 import java.time.LocalDateTime;
 
 public class CategoryRequest {
