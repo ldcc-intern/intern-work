@@ -25,7 +25,7 @@ public class FaqMapper {
     public static Page<FaqDto.FaqListResponse> toSearchFaqListResponse(Page<Faq> faqs) {
         return faqs.map(
                 faq -> FaqDto.FaqListResponse.builder()
-                        .no(faqs.getContent().indexOf(faq))
+                        .no(faq.getId())
                         .categoryName(faq.getCategoryName())
                         .registerUserName(faq.getRegisterUser().getName())
                         .faqType(faq.getFaqType())
