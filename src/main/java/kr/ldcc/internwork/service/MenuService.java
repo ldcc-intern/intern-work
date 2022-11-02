@@ -127,13 +127,13 @@ public class MenuService {
             }
             return MenuMapper.toUpdateMenuResponse(menu);
         }
+        Menu parent = menuRepository.findById(updateMenuRequest.getParentId()).orElseThrow(() -> {
+            log.error("getDetailMenu Exception : [존재하지 않는 Parent ID]", ExceptionCode.DATA_NOT_FOUND_EXCEPTION);
+            return new InternWorkException.dataNotFoundException();
+        });
+        menu.updateMenuParent(parent);
         if (updateMenuRequest.getOrderId() == null) {
-            Menu parent = menuRepository.findById(updateMenuRequest.getParentId()).orElseThrow(() -> {
-                log.error("getDetailMenu Exception : [존재하지 않는 Parent ID]", ExceptionCode.DATA_NOT_FOUND_EXCEPTION);
-                return new InternWorkException.dataNotFoundException();
-            });
             Integer orderId = menuRepository.findAllByParent(parent).size();
-            menu.updateMenuParent(parent);
             menu.updateMenuOrderId(orderId);
             try {
                 menuRepository.save(menu);
@@ -143,12 +143,7 @@ public class MenuService {
             }
             return MenuMapper.toUpdateMenuResponse(menu);
         }
-        Menu parent = menuRepository.findById(updateMenuRequest.getParentId()).orElseThrow(() -> {
-            log.error("getDetailMenu Exception : [존재하지 않는 Parent ID]", ExceptionCode.DATA_NOT_FOUND_EXCEPTION);
-            return new InternWorkException.dataNotFoundException();
-        });
         Integer orderId = updateMenuRequest.getOrderId();
-        menu.updateMenuParent(parent);
         menu.updateMenuOrderId(orderId);
         ArrayList<Menu> order = menuRepository.findAllByParent(Sort.by("orderId"), parent);
         order.add(orderId, menu);

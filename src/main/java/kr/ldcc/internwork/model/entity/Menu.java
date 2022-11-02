@@ -22,10 +22,10 @@ public class Menu extends BaseEntity {
     private String title;
     @ManyToOne(fetch = FetchType.LAZY)
     private Menu parent;
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "register_user")
     private User registerUser;
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "update_user")
     private User updateUser;
 

@@ -28,10 +28,10 @@ public class Notice extends BaseEntity {
     private String title;
     @Column(columnDefinition = "Integer DEFAULT 0")
     private Integer view;
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "register_user", updatable = false)
     private User registerUser;
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "update_user")
     private User updateUser;
 

@@ -11,7 +11,7 @@ public class NoticeMapper {
     public static Page<NoticeDto.GetNoticeListResponse> toGetNoticeListResponse(Page<Notice> notices) {
         return notices.map(
                 notice -> NoticeDto.GetNoticeListResponse.builder()
-                        .no(notices.getContent().indexOf(notice))
+                        .id(notice.getId())
                         .title(notice.getTitle())
                         .registerUser(notice.getRegisterUser().getName())
                         .registerDate(notice.getRegisterDate())

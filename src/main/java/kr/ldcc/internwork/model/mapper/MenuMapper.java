@@ -41,7 +41,7 @@ public class MenuMapper {
         return new MenuDto.UpdateMenuResponse()
                 .setId(menu.getId())
                 .setOrderId(menu.getOrderId())
-                .setParent(menu.getParent().getId())
+                .setParent(menu.getParent() != null ? menu.getParent().getId() : null)
                 .setState(menu.getState())
                 .setTitle(menu.getTitle())
                 .setRegisterUser(menu.getRegisterUser().getName())
