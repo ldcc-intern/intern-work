@@ -2,16 +2,10 @@ package kr.ldcc.internwork.model.mapper;
 
 
 import kr.ldcc.internwork.model.dto.FaqDto;
-import kr.ldcc.internwork.model.dto.NoticeDto;
-import kr.ldcc.internwork.model.dto.response.Response;
 import kr.ldcc.internwork.model.entity.Faq;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class FaqMapper {

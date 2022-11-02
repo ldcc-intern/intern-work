@@ -4,13 +4,11 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import kr.ldcc.internwork.common.types.CategoryType;
 import kr.ldcc.internwork.model.entity.Category;
-import kr.ldcc.internwork.model.entity.User;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.Accessors;
-import org.eclipse.jdt.internal.compiler.codegen.LongCache;
 
 import java.time.LocalDateTime;
 

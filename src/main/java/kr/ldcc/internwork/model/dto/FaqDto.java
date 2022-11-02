@@ -4,8 +4,6 @@ package kr.ldcc.internwork.model.dto;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import kr.ldcc.internwork.common.types.FaqType;
-import kr.ldcc.internwork.model.entity.Category;
-import kr.ldcc.internwork.model.entity.User;
 import lombok.*;
 import lombok.experimental.Accessors;
 

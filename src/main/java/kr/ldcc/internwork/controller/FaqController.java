@@ -3,23 +3,15 @@ package kr.ldcc.internwork.controller;
 
 import kr.ldcc.internwork.common.types.FaqType;
 import kr.ldcc.internwork.common.types.validation.Enum;
-import kr.ldcc.internwork.model.dto.FaqDto;
 import kr.ldcc.internwork.model.dto.request.FaqRequest;
 import kr.ldcc.internwork.model.dto.response.Response;
-import kr.ldcc.internwork.model.entity.Faq;
-import kr.ldcc.internwork.model.entity.User;
 import kr.ldcc.internwork.model.mapper.FaqMapper;
 import kr.ldcc.internwork.service.FaqService;
-import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.time.LocalDateTime;
-import java.util.Optional;
 
 
 
