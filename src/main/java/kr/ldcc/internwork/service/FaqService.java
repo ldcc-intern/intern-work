@@ -20,6 +20,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Optional;
 
@@ -44,14 +45,16 @@ public class FaqService {
             return new InternWorkException.dataNotFoundException();
         });
 
+        LocalDateTime noticeDate = LocalDateTime.parse(registerFaqRequest.getNoticeDate(), DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm"));
+
         Faq faq = Faq.builder()
                 .categoryName(registerFaqRequest.getCategoryName())
                 .faqType(registerFaqRequest.getFaqType())
-                .noticeDate(registerFaqRequest.getNoticeDate())
                 .faqTitle(registerFaqRequest.getFaqTitle())
                 .registerUser(registerUser)
                 .content(registerFaqRequest.getContent())
                 .authInfo(registerFaqRequest.getAuthInfo())
+                .noticeDate(noticeDate)
                 .build();
 
         // faq 정보 저장
@@ -120,6 +123,7 @@ public class FaqService {
             return new InternWorkException.dataNotFoundException();
         });
 
+        LocalDateTime noticeDate = LocalDateTime.parse(updateFaqRequest.getNoticeDate(), DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm"));
 
         // Null 이 아니면
         faq.updateFaqType(updateFaqRequest.getFaqType() != null ? updateFaqRequest.getFaqType() : faq.getFaqType());
@@ -127,6 +131,7 @@ public class FaqService {
         faq.updateTitle(updateFaqRequest.getFaqTitle() != null ? updateFaqRequest.getFaqTitle() : faq.getFaqTitle());
         faq.updateUpdateReason(updateFaqRequest.getUpdateReason() != null ? updateFaqRequest.getUpdateReason() : faq.getUpdateReason());
         faq.updateUpdateUser(updateUser);
+        faq.updateNoticeDate(noticeDate);
         faq.updateCategoryName(updateFaqRequest.getCategoryName() != null ? updateFaqRequest.getCategoryName() : faq.getCategoryName());
 
 
