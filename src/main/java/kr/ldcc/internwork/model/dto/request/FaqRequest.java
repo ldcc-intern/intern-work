@@ -57,7 +57,7 @@ public class FaqRequest {
 
         private String faqTitle;
 
-        private LocalDateTime noticeDate;
+        private String noticeDate;
 
         private FaqType faqType;
 
