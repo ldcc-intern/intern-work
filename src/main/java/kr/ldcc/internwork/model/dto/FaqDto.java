@@ -48,7 +48,7 @@ public class FaqDto {
     @JsonInclude(value = JsonInclude.Include.NON_NULL)
     public static class FaqListResponse {
 
-        private Integer no;
+        private Long no;
         private String categoryName;
         private String faqTitle;
         private LocalDateTime registerDate;
@@ -57,7 +57,7 @@ public class FaqDto {
         private LocalDateTime noticeDate;
 
         @Builder
-        public FaqListResponse(Integer no, String categoryName, String faqTitle, LocalDateTime registerDate, LocalDateTime noticeDate, String registerUserName, FaqType faqType) {
+        public FaqListResponse(Long no, String categoryName, String faqTitle, LocalDateTime registerDate, LocalDateTime noticeDate, String registerUserName, FaqType faqType) {
             this.no = no;
             this.categoryName = categoryName;
             this.faqTitle = faqTitle;

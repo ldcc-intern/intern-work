@@ -3,7 +3,7 @@ package kr.ldcc.internwork.model.entity;
 import kr.ldcc.internwork.controller.UserController;
 import kr.ldcc.internwork.model.dto.request.UserRequest;
 import kr.ldcc.internwork.model.dto.response.Response;
-import kr.ldcc.internwork.repository.FaqRepository;
+
 import kr.ldcc.internwork.repository.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -13,7 +13,6 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest

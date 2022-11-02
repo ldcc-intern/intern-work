@@ -18,7 +18,7 @@ public class FaqRequest {
     @Setter
     @Accessors(chain = true)
     @JsonIgnoreProperties(ignoreUnknown = true)
-    public static class SearchFaqRequest {
+    public static class SearchFaqRequest { // 사용 안됨
 
         private Long faqId;
 
@@ -28,7 +28,9 @@ public class FaqRequest {
 
         private User registerUser;
 
-        private String noticeDate;
+        private String noticeStart;
+
+        private String noticeEnd;
 
         private FaqType faqType;
 

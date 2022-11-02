@@ -14,9 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-import org.springframework.transaction.annotation.Transactional;
 
-import javax.swing.text.html.Option;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -60,7 +58,6 @@ class FaqTest {
         registerFaqRequest.setCategoryName("우리동네");
         registerFaqRequest.setFaqTitle("제목");
         registerFaqRequest.setContent("내용은");
-        registerFaqRequest.setNoticeDate(LocalDateTime.now());
         registerFaqRequest.setAuthInfo("인증");
 
         Response faq = faqController.registerFaq(registerFaqRequest);
