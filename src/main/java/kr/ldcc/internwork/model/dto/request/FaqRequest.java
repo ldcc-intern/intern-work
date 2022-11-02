@@ -7,6 +7,8 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 
+import javax.validation.constraints.NotNull;
+
 
 public class FaqRequest {
 
@@ -57,6 +59,8 @@ public class FaqRequest {
 
         private String noticeDate;
 
+        private String noticeTime;
+
         private FaqType faqType;
 
         private String content;
@@ -86,10 +90,13 @@ public class FaqRequest {
 
         private String noticeDate;
 
+        private String noticeTime;
+
         private FaqType faqType;
 
         private String content;
 
+        @NotNull
         private String updateReason;
 
         private Long updateUserId;

@@ -45,7 +45,8 @@ public class FaqService {
             return new InternWorkException.dataNotFoundException();
         });
 
-        LocalDateTime noticeDate = LocalDateTime.parse(registerFaqRequest.getNoticeDate(), DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm"));
+        LocalDateTime noticeDate = LocalDateTime.parse(registerFaqRequest.getNoticeDate() + " " +registerFaqRequest.getNoticeTime(), DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm"));
+
 
         Faq faq = Faq.builder()
                 .categoryName(registerFaqRequest.getCategoryName())
@@ -123,7 +124,7 @@ public class FaqService {
             return new InternWorkException.dataNotFoundException();
         });
 
-        LocalDateTime noticeDate = LocalDateTime.parse(updateFaqRequest.getNoticeDate(), DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm"));
+        LocalDateTime noticeDate = LocalDateTime.parse(updateFaqRequest.getNoticeDate() +" "+ updateFaqRequest.getNoticeTime(), DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm"));
 
         // Null 이 아니면
         faq.updateFaqType(updateFaqRequest.getFaqType() != null ? updateFaqRequest.getFaqType() : faq.getFaqType());
