@@ -17,7 +17,7 @@ public class NoticeDto {
     @JsonIgnoreProperties(ignoreUnknown = true)
     @JsonInclude(value = JsonInclude.Include.NON_NULL)
     public static class GetNoticeListResponse {
-        private Integer no;
+        private Long id;
         private String title;
         private String registerUser;
         private LocalDateTime registerDate;
@@ -26,8 +26,8 @@ public class NoticeDto {
         private Integer view;
 
         @Builder
-        public GetNoticeListResponse(Integer no, String title, String registerUser, LocalDateTime registerDate, LocalDateTime noticeDate, NoticeType state, Integer view) {
-            this.no = no;
+        public GetNoticeListResponse(Long id, String title, String registerUser, LocalDateTime registerDate, LocalDateTime noticeDate, NoticeType state, Integer view) {
+            this.id = id;
             this.title = title;
             this.registerUser = registerUser;
             this.registerDate = registerDate;

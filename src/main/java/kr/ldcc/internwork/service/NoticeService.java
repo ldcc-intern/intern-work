@@ -1,13 +1,11 @@
 package kr.ldcc.internwork.service;
 
-import com.querydsl.core.BooleanBuilder;
 import kr.ldcc.internwork.common.exception.ExceptionCode;
 import kr.ldcc.internwork.common.exception.InternWorkException;
 import kr.ldcc.internwork.common.types.NoticeType;
 import kr.ldcc.internwork.model.dto.NoticeDto;
 import kr.ldcc.internwork.model.dto.request.NoticeRequest;
 import kr.ldcc.internwork.model.entity.Notice;
-import kr.ldcc.internwork.model.entity.QNotice;
 import kr.ldcc.internwork.model.entity.User;
 import kr.ldcc.internwork.model.mapper.NoticeMapper;
 import kr.ldcc.internwork.repository.NoticeRepository;
@@ -38,7 +36,12 @@ public class NoticeService {
             log.error("createNotice Exception : [존재하지 않는 User ID]");
             return new InternWorkException.dataNotFoundException();
         });
-        LocalDateTime noticeDate = LocalDate.parse(createNoticeRequest.getDate(), DateTimeFormatter.ISO_DATE).atTime(LocalTime.parse(createNoticeRequest.getTime(), DateTimeFormatter.ISO_TIME));
+        LocalDateTime noticeDate = LocalDate.parse(
+                        createNoticeRequest.getDate(), DateTimeFormatter.ISO_DATE
+                )
+                .atTime(
+                        LocalTime.parse(createNoticeRequest.getTime(), DateTimeFormatter.ISO_TIME)
+                );
         Notice notice = Notice.builder()
                 .title(createNoticeRequest.getTitle())
                 .noticeDate(noticeDate)
@@ -51,23 +54,12 @@ public class NoticeService {
     }
 
     @Transactional
-    public Page<NoticeDto.GetNoticeListResponse> getNoticeList(String regStart, String regEnd, NoticeType state, String noticeStart, String noticeEnd, String userName, String title, Pageable pageable) {
-        QNotice qNotice = QNotice.notice;
-        BooleanBuilder builder = new BooleanBuilder();
-        if (regStart != null && regEnd != null) {
-            builder.and(qNotice.noticeDate.between(LocalDate.parse(regStart, DateTimeFormatter.ISO_DATE).atTime(0, 0), LocalDate.parse(regEnd, DateTimeFormatter.ISO_DATE).atTime(23, 59)));
-        }
-        builder.and(qNotice.state.eq(state));
-        if (noticeStart != null && noticeEnd != null) {
-            builder.and(qNotice.noticeDate.between(LocalDate.parse(noticeStart, DateTimeFormatter.ISO_DATE).atTime(0, 0), LocalDate.parse(noticeEnd, DateTimeFormatter.ISO_DATE).atTime(23, 59)));
-        }
-        if (userName != null) {
-            builder.and(qNotice.registerUser.name.eq(userName));
-        }
-        if (title != null) {
-            builder.and(qNotice.title.contains(title));
-        }
-        return NoticeMapper.toGetNoticeListResponse(noticeRepository.findAll(builder, pageable));
+    public Page<NoticeDto.GetNoticeListResponse> getNoticeList(String registerStart, String registerEnd, NoticeType state, String noticeDateStart, String noticeDateEnd, String userName, String title, Pageable pageable) {
+        LocalDate registerStartDate = LocalDate.parse(registerStart, DateTimeFormatter.ISO_DATE);
+        LocalDate registerEndDate = LocalDate.parse(registerEnd, DateTimeFormatter.ISO_DATE);
+        LocalDate noticeStartDate = LocalDate.parse(noticeDateStart, DateTimeFormatter.ISO_DATE);
+        LocalDate noticeEndDate = LocalDate.parse(noticeDateEnd, DateTimeFormatter.ISO_DATE);
+        return NoticeMapper.toGetNoticeListResponse(noticeRepository.getNoticeList(registerStartDate, registerEndDate, state, noticeStartDate, noticeEndDate, userName, title, pageable));
     }
 
     @Transactional
