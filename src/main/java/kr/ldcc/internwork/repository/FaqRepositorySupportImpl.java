@@ -72,18 +72,19 @@ public class FaqRepositorySupportImpl implements FaqRepositorySupport {
         return faq.faqTitle.eq(title);
     }
 
+
+    private BooleanExpression betweenRegisterDate(LocalDate registerStartDate, LocalDate registerEndDate) {
+        if(registerStartDate == null || registerEndDate == null) {
+            return null;
+        }
+        return faq.registerDate.between(registerStartDate.atTime(0, 0), registerEndDate.atTime(23,59));
+    }
+
     private BooleanExpression betweenNoticeDate(LocalDate noticeStartDate, LocalDate noticeEndDate) {
-        if(noticeStartDate == null && noticeEndDate == null) {
+        if(noticeStartDate == null || noticeEndDate == null) {
             return null;
         }
         return faq.noticeDate.between(noticeStartDate.atTime(0, 0), noticeEndDate.atTime(23,59));
-    }
-
-    private BooleanExpression betweenRegisterDate(LocalDate registerStartDate, LocalDate registerEndDate) {
-        if(registerStartDate == null && registerEndDate == null) {
-            return null;
-        }
-        return faq.noticeDate.between(registerEndDate.atTime(0, 0), registerEndDate.atTime(23,59));
     }
 
     private BooleanExpression findByFaqType(FaqType faqType) {
