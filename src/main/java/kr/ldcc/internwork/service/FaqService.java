@@ -124,7 +124,14 @@ public class FaqService {
             return new InternWorkException.dataNotFoundException();
         });
 
-        LocalDateTime noticeDate = LocalDateTime.parse(updateFaqRequest.getNoticeDate() +" "+ updateFaqRequest.getNoticeTime(), DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm"));
+        String date = updateFaqRequest.getNoticeDate();
+        String time = updateFaqRequest.getNoticeTime();
+
+        if(date!=null&&time!=null){
+            LocalDateTime noticeDate = LocalDateTime.parse(date +" "+ time, DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm"));
+            faq.updateNoticeDate(noticeDate);
+        }
+
 
         // Null 이 아니면
         faq.updateFaqType(updateFaqRequest.getFaqType() != null ? updateFaqRequest.getFaqType() : faq.getFaqType());
@@ -132,7 +139,6 @@ public class FaqService {
         faq.updateTitle(updateFaqRequest.getFaqTitle() != null ? updateFaqRequest.getFaqTitle() : faq.getFaqTitle());
         faq.updateUpdateReason(updateFaqRequest.getUpdateReason() != null ? updateFaqRequest.getUpdateReason() : faq.getUpdateReason());
         faq.updateUpdateUser(updateUser);
-        faq.updateNoticeDate(noticeDate);
         faq.updateCategoryName(updateFaqRequest.getCategoryName() != null ? updateFaqRequest.getCategoryName() : faq.getCategoryName());
 
 
