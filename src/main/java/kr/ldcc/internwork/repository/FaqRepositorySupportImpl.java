@@ -100,7 +100,7 @@ public class FaqRepositorySupportImpl implements FaqRepositorySupport {
             return null;
         }
 
-        return faq.categoryName.eq(categoryName);
+        return faq.category.categoryName.eq(categoryName);
     }
 
 

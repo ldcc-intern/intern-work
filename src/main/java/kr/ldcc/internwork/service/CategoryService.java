@@ -135,15 +135,31 @@ public class CategoryService {
             return new InternWorkException.dataNotFoundException();
         });
 
-        if (updateCategoryRequest.getOrderId() != null){
-            Integer orderId = updateCategoryRequest.getOrderId();
-            Category swapCategory = categoryRepository.findByOrderId(orderId);
-            swapCategory.updateOrderId(category.getOrderId());
-            category.updateOrderId(orderId);
-            categoryRepository.save(swapCategory);
+        // orderId 순서 이동
+        if (updateCategoryRequest.getUpDown()){ // up 일 경우 [1]
+            if(category.getOrderId() == 0){
+                log.error("updateCategory Exception : [카테고리 위로 이동 불가]", ExceptionCode.DATA_NOT_FOUND_EXCEPTION) ;
+                throw new InternWorkException.dataUpdateException();
+            }
+                Category upCategory = categoryRepository.findByOrderId(category.getOrderId() - 1);
+                upCategory.updateOrderId(category.getOrderId());
+                category.updateOrderId(category.getOrderId() - 1);
+                categoryRepository.save(upCategory);
+
+        }
+        if (!updateCategoryRequest.getUpDown()) { // down 일 경우 [0]
+            if(category.getOrderId() == categoryRepository.findAll().size() - 1){
+                log.error("updateCategory Exception : [카테고리 아래로 이동 불가]", ExceptionCode.DATA_NOT_FOUND_EXCEPTION) ;
+                throw new InternWorkException.dataUpdateException();
+            }
+                Category downCategory = categoryRepository.findByOrderId(category.getOrderId() + 1);
+                downCategory.updateOrderId(category.getOrderId());
+                category.updateOrderId(category.getOrderId() + 1);
+                categoryRepository.save(downCategory);
+
         }
 
-        // Null 이 아니면
+            // Null 이 아니면
         category.updateCategoryName(updateCategoryRequest.getCategoryName() != null ? updateCategoryRequest.getCategoryName():category.getCategoryName());
         category.updateCategoryType(updateCategoryRequest.getCategoryType() != null ? updateCategoryRequest.getCategoryType():category.getCategoryType());
         category.updateMainCategory(updateCategoryRequest.getMainCategory() != null ? updateCategoryRequest.getMainCategory():category.getMainCategory());
