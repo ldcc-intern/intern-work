@@ -19,9 +19,9 @@ public class Faq extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id; // faq 번호
 
-    //@ManyToOne
-    //@Column(name = "category_name")
-    private String categoryName; // 카테고리명
+    @ManyToOne
+    @JoinColumn(name = "category")
+    private Category category; // 카테고리
 
     @Column(length = 5000)
     private String content; // 내용
@@ -47,11 +47,11 @@ public class Faq extends BaseEntity {
     private User updateUser; // 수정자
 
     @Builder
-    public Faq(FaqType faqType, String categoryName, String content, String updateReason, LocalDateTime noticeDate, String faqTitle, User updateUser, User registerUser, String authInfo){
+    public Faq(FaqType faqType, Category category, String content, String updateReason, LocalDateTime noticeDate, String faqTitle, User updateUser, User registerUser, String authInfo){
 
         this.faqType = faqType;
         this.faqTitle = faqTitle;
-        this.categoryName = categoryName;
+        this.category = category;
         this.updateReason = updateReason;
         this.updateUser = updateUser;
         this.registerUser = registerUser;
@@ -70,7 +70,7 @@ public class Faq extends BaseEntity {
     // Faq 수정을 위한 update method
     // 카테고리, 제목, 공지시작일, 공개상태, 수정사유, 내용
 
-    public void updateCategoryName(String categoryName) {this.categoryName = categoryName;}
+    public void updateCategory(Category category) {this.category = category;}
 
     public void updateTitle(String faqTitle) {this.faqTitle = faqTitle;}
 

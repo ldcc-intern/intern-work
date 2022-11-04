@@ -20,7 +20,7 @@ public class FaqMapper {
         return faqs.map(
                 faq -> FaqDto.FaqListResponse.builder()
                         .no(faq.getId())
-                        .categoryName(faq.getCategoryName())
+                        .categoryName(faq.getCategory().getCategoryName())
                         .registerUserName(faq.getRegisterUser().getName())
                         .faqType(faq.getFaqType())
                         .faqTitle(faq.getFaqTitle())
@@ -35,7 +35,7 @@ public class FaqMapper {
     // faq 상세 조회 Response
     public static FaqDto.FaqDetailResponse toSearchFaqDetailResponse(Faq faq) {
         return new FaqDto.FaqDetailResponse()
-                .setCategoryName(faq.getCategoryName())
+                .setCategoryName(faq.getCategory().getCategoryName())
                 .setFaqTitle(faq.getFaqTitle())
                 .setRegisterUserName(faq.getRegisterUser().getName())
                 .setRegisterDate(faq.getRegisterDate())
@@ -51,7 +51,7 @@ public class FaqMapper {
     public static FaqDto.UpdateFaqResponse toUpdateFaqResponse(Faq faq) {
         return new FaqDto.UpdateFaqResponse()
                 .setId(faq.getId())
-                .setCategoryName(faq.getCategoryName())
+                .setCategoryName(faq.getCategory().getCategoryName())
                 .setFaqTitle(faq.getFaqTitle())
                 .setRegisterUserName(faq.getRegisterUser().getName() != null ? faq.getUpdateUser().getName() : null)
                 .setRegisterDate(faq.getRegisterDate())

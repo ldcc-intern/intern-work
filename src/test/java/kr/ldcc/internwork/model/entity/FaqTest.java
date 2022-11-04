@@ -40,7 +40,6 @@ class FaqTest {
     public void before() {
         Faq faq = Faq.builder()
                 .faqType(FaqType.RESERVE)
-                .categoryName("Test")
                 .faqTitle("Test")
                 .content("Test")
                 .noticeDate(LocalDateTime.now())
