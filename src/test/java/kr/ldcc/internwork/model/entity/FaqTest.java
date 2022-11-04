@@ -43,7 +43,6 @@ class FaqTest {
                 .faqTitle("Test")
                 .content("Test")
                 .noticeDate(LocalDateTime.now())
-                .authInfo("Test")
                 .registerUser(userRepository.findByName("name"))
                 .build();
         faqRepository.save(faq);
@@ -56,11 +55,9 @@ class FaqTest {
         registerFaqRequest.setFaqType(FaqType.RESERVE);
         registerFaqRequest.setFaqTitle("제목");
         registerFaqRequest.setContent("내용은");
-        registerFaqRequest.setAuthInfo("인증");
 
         Response faq = faqController.registerFaq(registerFaqRequest);
 
-        assertEquals(faqRepository.findByFaqTitle("제목").getAuthInfo(),"인증");
     }
 
     @Test

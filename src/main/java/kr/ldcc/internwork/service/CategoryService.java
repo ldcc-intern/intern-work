@@ -51,7 +51,6 @@ public class CategoryService {
                 .categoryName(createCategoryRequest.getCategoryName())
                 .categoryType(createCategoryRequest.getCategoryType())
                 .registerUser(user)
-                .authInfo(createCategoryRequest.getAuthInfo())
                 .orderId(categoryRepository.findAll().size())
                 .build();
 

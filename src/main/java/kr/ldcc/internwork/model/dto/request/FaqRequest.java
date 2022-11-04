@@ -72,9 +72,6 @@ public class FaqRequest {
 
         private Long registerUserId;
 
-        private String authInfo;
-
-
     }
 
 

@@ -36,7 +36,6 @@ public class Faq extends BaseEntity {
     @Column(length = 40)
     private String faqTitle; // faq 제목
 
-    private String authInfo;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(updatable = false, name = "register_user")
@@ -47,7 +46,7 @@ public class Faq extends BaseEntity {
     private User updateUser; // 수정자
 
     @Builder
-    public Faq(FaqType faqType, Category category, String content, String updateReason, LocalDateTime noticeDate, String faqTitle, User updateUser, User registerUser, String authInfo){
+    public Faq(FaqType faqType, Category category, String content, String updateReason, LocalDateTime noticeDate, String faqTitle, User updateUser, User registerUser){
 
         this.faqType = faqType;
         this.faqTitle = faqTitle;
@@ -57,7 +56,6 @@ public class Faq extends BaseEntity {
         this.registerUser = registerUser;
         this.content = content;
         this.noticeDate = noticeDate;
-        this.authInfo = authInfo;
     }
 
 

@@ -25,7 +25,6 @@ public class CategoryDto {
     private String mainCategory;
     private Long orderId;
     private CategoryType useState;
-    private String authInfo;
 
     @Getter
     @Setter

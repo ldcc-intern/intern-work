@@ -34,15 +34,13 @@ public class Category extends BaseEntity {
     @JoinColumn(name = "update_user")
     private User updateUser; // 수정자
 
-    private String authInfo;
 
     @Builder
-    public Category(String mainCategory, String categoryName, CategoryType categoryType, User registerUser, User updateUser, String authInfo, Integer orderId){
+    public Category(String mainCategory, String categoryName, CategoryType categoryType, User registerUser, User updateUser, Integer orderId){
         this.mainCategory = mainCategory;
         this.categoryName = categoryName;
         this.categoryType = categoryType;
         this.resisterUser = registerUser;
-        this.authInfo = authInfo;
         this.orderId = orderId;
         this.updateUser = updateUser;
     }
