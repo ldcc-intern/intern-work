@@ -10,6 +10,7 @@ import kr.ldcc.internwork.model.entity.Category;
 import kr.ldcc.internwork.model.entity.User;
 import kr.ldcc.internwork.model.mapper.CategoryMapper;
 import kr.ldcc.internwork.repository.CategoryRepository;
+import kr.ldcc.internwork.repository.FaqRepository;
 import kr.ldcc.internwork.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -17,6 +18,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -38,16 +40,17 @@ public class CategoryService {
     public Response createCategory(CategoryRequest.CreateCategoryRequest createCategoryRequest) {
 
         User user = userRepository.findById(createCategoryRequest.getRegisterUserId()).orElseThrow(() -> {
-            log.error("createCategory Exception : [존재하지 않는 User Id]");
+            log.error("createCategory Exception : [존재하지 않는 User ID]");
             return new InternWorkException.dataNotFoundException();
         });
+
         Category category = Category.builder()
                 .mainCategory(createCategoryRequest.getMainCategory())
                 .categoryName(createCategoryRequest.getCategoryName())
                 .categoryType(createCategoryRequest.getCategoryType())
                 .registerUser(user)
                 .authInfo(createCategoryRequest.getAuthInfo())
-                .orderId(createCategoryRequest.getOrderId())
+                .orderId(categoryRepository.findAll().size())
                 .build();
 
         try{
@@ -126,14 +129,24 @@ public class CategoryService {
             return new InternWorkException.dataNotFoundException();
         });
 
+        if (updateCategoryRequest.getOrderId() != null){
+            Integer orderId = updateCategoryRequest.getOrderId();
+            Category swapCategory = categoryRepository.findByOrderId(orderId);
+            swapCategory.updateOrderId(category.getOrderId());
+            category.updateOrderId(orderId);
+            categoryRepository.save(swapCategory);
+        }
+
         // Null 이 아니면
-        category.updateCategoryName(updateCategoryRequest.getCategoryName() !=null ? updateCategoryRequest.getCategoryName():category.getCategoryName());
-        category.updateCategoryType(updateCategoryRequest.getCategoryType() !=null? updateCategoryRequest.getCategoryType():category.getCategoryType());
-        category.updateMainCategory(updateCategoryRequest.getMainCategory() !=null? updateCategoryRequest.getMainCategory():category.getMainCategory());
+        category.updateCategoryName(updateCategoryRequest.getCategoryName() != null ? updateCategoryRequest.getCategoryName():category.getCategoryName());
+        category.updateCategoryType(updateCategoryRequest.getCategoryType() != null ? updateCategoryRequest.getCategoryType():category.getCategoryType());
+        category.updateMainCategory(updateCategoryRequest.getMainCategory() != null ? updateCategoryRequest.getMainCategory():category.getMainCategory());
         category.updateUpdateUser(user);
+
 
         try{
             categoryRepository.save(category);
+
         } catch(Exception e) {
             log.error("updateCategory Exception : {}", e.getMessage());
             throw new InternWorkException.dataUpdateException();

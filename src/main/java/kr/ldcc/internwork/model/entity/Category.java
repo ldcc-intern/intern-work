@@ -68,4 +68,6 @@ public class Category extends BaseEntity {
     public void updateAuthInfo(String authInfo) {this.authInfo = authInfo;}
 
     public void updateUpdateUser(User updateUser) {this.updateUser = updateUser;}
+
+    public void updateOrderId(Integer orderId){ this.orderId = orderId;}
 }

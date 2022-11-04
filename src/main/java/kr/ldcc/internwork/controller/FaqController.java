@@ -9,6 +9,7 @@ import kr.ldcc.internwork.model.mapper.FaqMapper;
 import kr.ldcc.internwork.service.FaqService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -50,7 +51,7 @@ public class FaqController {
 
     @GetMapping("/faq")
     public Response searchFaqList(
-            Pageable pageable,
+            @PageableDefault(size=25) Pageable pageable,
             @RequestParam(required = false) @Enum(enumClass = FaqType.class) FaqType faqType,
             @RequestParam(required = false) String registerStart,
             @RequestParam(required = false) String registerEnd,
