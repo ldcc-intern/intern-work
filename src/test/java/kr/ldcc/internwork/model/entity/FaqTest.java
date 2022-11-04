@@ -54,7 +54,6 @@ class FaqTest {
         FaqRequest.RegisterFaqRequest registerFaqRequest = new FaqRequest.RegisterFaqRequest();
 
         registerFaqRequest.setFaqType(FaqType.RESERVE);
-        registerFaqRequest.setCategoryName("우리동네");
         registerFaqRequest.setFaqTitle("제목");
         registerFaqRequest.setContent("내용은");
         registerFaqRequest.setAuthInfo("인증");
