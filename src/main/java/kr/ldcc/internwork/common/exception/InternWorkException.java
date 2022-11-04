@@ -22,4 +22,8 @@ public class InternWorkException {
     public static class dataDuplicateException extends RuntimeException {
     }
 
+    @NoArgsConstructor
+    public static class canNotMoveException extends  RuntimeException{
+    }
+
 }

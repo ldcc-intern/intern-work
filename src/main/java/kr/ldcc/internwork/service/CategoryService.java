@@ -19,12 +19,8 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.validation.constraints.Null;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-
-import static kr.ldcc.internwork.model.entity.QFaq.faq;
 
 @Slf4j
 @Component
@@ -138,10 +134,11 @@ public class CategoryService {
         // orderId 순서 이동
         if (updateCategoryRequest.getUpDown()){ // up 일 경우 [1]
             if(category.getOrderId() == 0){
-                log.error("updateCategory Exception : [카테고리 위로 이동 불가]", ExceptionCode.DATA_NOT_FOUND_EXCEPTION) ;
-                throw new InternWorkException.dataUpdateException();
+                log.error("updateCategory Exception : [카테고리 위로 이동 불가]");
+                throw new InternWorkException.canNotMoveException();
             }
                 Category upCategory = categoryRepository.findByOrderId(category.getOrderId() - 1);
+                upCategory.updateUpdateUser(user);
                 upCategory.updateOrderId(category.getOrderId());
                 category.updateOrderId(category.getOrderId() - 1);
                 categoryRepository.save(upCategory);
@@ -149,10 +146,11 @@ public class CategoryService {
         }
         if (!updateCategoryRequest.getUpDown()) { // down 일 경우 [0]
             if(category.getOrderId() == categoryRepository.findAll().size() - 1){
-                log.error("updateCategory Exception : [카테고리 아래로 이동 불가]", ExceptionCode.DATA_NOT_FOUND_EXCEPTION) ;
-                throw new InternWorkException.dataUpdateException();
+                log.error("updateCategory Exception : [카테고리 아래로 이동 불가]");
+                throw new InternWorkException.canNotMoveException();
             }
                 Category downCategory = categoryRepository.findByOrderId(category.getOrderId() + 1);
+                downCategory.updateUpdateUser(user);
                 downCategory.updateOrderId(category.getOrderId());
                 category.updateOrderId(category.getOrderId() + 1);
                 categoryRepository.save(downCategory);
