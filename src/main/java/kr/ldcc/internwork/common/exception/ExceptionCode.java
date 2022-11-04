@@ -13,6 +13,7 @@ public enum ExceptionCode {
 
     DATA_DUPLICATE_EXCEPTION(305, "중복된 데이터가 있습니다.");
 
+
     private final int code;
     private final String message;
 }
