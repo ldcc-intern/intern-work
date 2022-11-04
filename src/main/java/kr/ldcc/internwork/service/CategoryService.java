@@ -7,6 +7,7 @@ import kr.ldcc.internwork.model.dto.CategoryDto;
 import kr.ldcc.internwork.model.dto.request.CategoryRequest;
 import kr.ldcc.internwork.model.dto.response.Response;
 import kr.ldcc.internwork.model.entity.Category;
+import kr.ldcc.internwork.model.entity.Faq;
 import kr.ldcc.internwork.model.entity.User;
 import kr.ldcc.internwork.model.mapper.CategoryMapper;
 import kr.ldcc.internwork.repository.CategoryRepository;
@@ -18,9 +19,12 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.validation.constraints.Null;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+
+import static kr.ldcc.internwork.model.entity.QFaq.faq;
 
 @Slf4j
 @Component
@@ -28,6 +32,8 @@ import java.util.Optional;
 public class CategoryService {
 
     private final CategoryRepository categoryRepository;
+
+    private final FaqRepository faqRepository;
 
     private final UserRepository userRepository;
 
@@ -167,6 +173,20 @@ public class CategoryService {
 
         if(category.isPresent()){
             try{
+                // 해당 카테고리 참조하는 Faq, null 처리 (참조 무결성)
+                List<Faq> faqs = faqRepository.findByCategoryId(categoryId);
+                faqs.forEach(nullFaq -> nullFaq.updateCategory(null));
+
+                // orderId 수정
+                if(categoryRepository.findAll().size() - 1 != category.get().getOrderId()){
+                    List<Category> categories = categoryRepository.findAll();
+                    for (Category changeOrderId : categories){
+                        if(changeOrderId.getOrderId() > category.get().getOrderId()){
+                            changeOrderId.updateOrderId(changeOrderId.getOrderId()-1);
+                        }
+                    }
+                }
+
                 categoryRepository.deleteById(categoryId);
             } catch (Exception e){
                 log.error("deleteCategory Exception : {}", e.getMessage());

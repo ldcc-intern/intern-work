@@ -47,12 +47,6 @@ public class Category extends BaseEntity {
         this.updateUser = updateUser;
     }
 
-    public void setCategoryName(String categoryName) {
-        this.categoryName = categoryName;
-    }
-
-    public void setUpdateUser(User updateUser) {this.updateUser = updateUser;}
-
 
     /** * * * * * * * * * * * * * * * * * *
      *                                    *
@@ -64,8 +58,6 @@ public class Category extends BaseEntity {
     public void updateCategoryName(String categoryName) {this.categoryName = categoryName;}
 
     public void updateCategoryType(CategoryType categoryType) {this.categoryType = categoryType;}
-
-    public void updateAuthInfo(String authInfo) {this.authInfo = authInfo;}
 
     public void updateUpdateUser(User updateUser) {this.updateUser = updateUser;}
 
