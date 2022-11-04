@@ -30,7 +30,7 @@ public class MenuRequest {
         @Enum(enumClass = MenuType.class)
         private MenuType state;
         private Long userId;
-        private Long parentId = 0L;
+        private Long parentId;
         private Integer orderId;
     }
 }
