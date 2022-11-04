@@ -18,11 +18,6 @@ import java.time.LocalDateTime;
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
 public class FaqDto {
 
-    private String Content;
-    private String updateReason;
-    private LocalDateTime noticeDate;
-    private FaqType faqType;
-    private String faqTitle;
 
     @Getter
     @Setter
@@ -49,13 +44,13 @@ public class FaqDto {
         private Long no;
         private String categoryName;
         private String faqTitle;
-        private LocalDateTime registerDate;
+        private String registerDate;
         private String registerUserName;
         private FaqType faqType;
-        private LocalDateTime noticeDate;
+        private String noticeDate;
 
         @Builder
-        public FaqListResponse(Long no, String categoryName, String faqTitle, LocalDateTime registerDate, LocalDateTime noticeDate, String registerUserName, FaqType faqType) {
+        public FaqListResponse(Long no, String categoryName, String faqTitle, String registerDate, String noticeDate, String registerUserName, FaqType faqType) {
             this.no = no;
             this.categoryName = categoryName;
             this.faqTitle = faqTitle;
@@ -99,9 +94,9 @@ public class FaqDto {
     @JsonInclude(value = JsonInclude.Include.NON_NULL)
     public static class UpdateFaqResponse {
         private Long id;
-        private LocalDateTime registerDate;
-        private LocalDateTime updateDate;
-        private LocalDateTime noticeDate;
+        private String registerDate;
+        private String updateDate;
+        private String noticeDate;
         private String content;
         private String updateReason;
         private FaqType faqType;

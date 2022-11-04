@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 
+import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
 public class CategoryRequest {
@@ -17,14 +18,16 @@ public class CategoryRequest {
     @JsonIgnoreProperties(ignoreUnknown = true)
     public static class CreateCategoryRequest {
 
+        @NotNull
         private String mainCategory; // 대분류
 
+        @NotNull
         private String categoryName; // 카테고리명
 
+        @NotNull
         private CategoryType categoryType; // 사용 여부
 
-        private Integer orderId; // 카테고리 순서
-
+        @NotNull
         private Long registerUserId; // 등록자
 
 
@@ -44,8 +47,6 @@ public class CategoryRequest {
         private String categoryName; // 카테고리명
 
         private CategoryType categoryType; // 사용 여부
-
-        private Integer orderId; // 카테고리 순서
 
         private Boolean upDown; // 순서이동
 

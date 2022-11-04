@@ -57,8 +57,8 @@ public class CategoryMapper {
                 .setCategoryType(category.getCategoryType())
                 .setUpdateUserName(category.getUpdateUser().getName())
                 .setRegisterUserName(category.getResisterUser().getName())
-                .setRegisterDate(category.getRegisterDate())
-                .setUpdateDate(category.getUpdateDate());
+                .setRegisterDate(category.getRegisterDate().format(DateTimeFormatter.ofPattern("yyyy/MM/dd hh:mm")))
+                .setUpdateDate(category.getUpdateDate().format(DateTimeFormatter.ofPattern("yyyy/MM/dd hh:mm")));
     }
 
     // category 삭제 Response
