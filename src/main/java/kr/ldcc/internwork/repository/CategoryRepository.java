@@ -7,12 +7,8 @@ import java.util.List;
 
 public interface CategoryRepository extends JpaRepository<Category, Long> {
 
-    List<Category> findAllById(Long categoryId);
-
     Category findByCategoryName(String categoryName);
 
     Category findByOrderId(Integer orderId);
-
-
 
 }

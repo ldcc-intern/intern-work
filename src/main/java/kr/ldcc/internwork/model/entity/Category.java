@@ -27,11 +27,11 @@ public class Category extends BaseEntity {
     private CategoryType categoryType; // 사용여부
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(updatable = false)
+    @JoinColumn(updatable = false, name = "register_user")
     private User resisterUser; // 등록자
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn
+    @JoinColumn(name = "update_user")
     private User updateUser; // 수정자
 
     private String authInfo;

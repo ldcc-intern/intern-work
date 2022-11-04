@@ -53,7 +53,7 @@ public class FaqRequest {
     @JsonIgnoreProperties(ignoreUnknown = true)
     public static class RegisterFaqRequest {
 
-        private String categoryName;
+        private Long categoryId;
 
         private String faqTitle;
 
@@ -84,7 +84,7 @@ public class FaqRequest {
     @JsonIgnoreProperties(ignoreUnknown = true)
     public static class UpdateFaqRequest {
 
-        private String categoryName;
+        private Long categoryId;
 
         private String faqTitle;
 
