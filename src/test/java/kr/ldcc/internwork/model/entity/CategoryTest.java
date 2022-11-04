@@ -67,7 +67,6 @@ class CategoryTest {
         createCategoryRequest.setCategoryName("카테고리명1");
         createCategoryRequest.setMainCategory("메인 카테고리");
         createCategoryRequest.setCategoryType(CategoryType.ON);
-        createCategoryRequest.setOrderId(2);
 
 
         Response category = categoryController.createCategory(createCategoryRequest);

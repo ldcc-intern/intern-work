@@ -70,6 +70,7 @@ public class FaqRequest {
         @NotNull
         private String content;
 
+        @NotNull
         private Long registerUserId;
 
     }
@@ -101,6 +102,7 @@ public class FaqRequest {
         @NotNull
         private String updateReason;
 
+        @NotNull
         private Long updateUserId;
     }
 }

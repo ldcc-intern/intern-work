@@ -25,6 +25,7 @@ class UserTest {
     @Autowired UserController userController;
 
 
+    /*
     @BeforeEach
     public void before() {
         User user = User.builder()
@@ -33,14 +34,14 @@ class UserTest {
         userRepository.save(user);
     }
 
+     */
+
     @Test
     public void 사용자등록() throws Exception {
         UserRequest.CreateUserRequest createUserRequest = new UserRequest.CreateUserRequest();
 
-        createUserRequest.setName("사용자1");
+        createUserRequest.setName("사용자3");
 
-
-        Response user = userController.createUser(createUserRequest);
 
     }
 

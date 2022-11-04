@@ -83,14 +83,13 @@ public class CategoryDto {
     public static class UpdateCategoryResponse { // 카테고리 업데이트
 
         private Long id;
-        private LocalDateTime noticeDate;
         private String mainCategory;
         private String categoryName;
         private CategoryType categoryType;
         private String registerUserName;
         private String updateUserName;
-        private LocalDateTime registerDate;
-        private LocalDateTime updateDate;
+        private String registerDate;
+        private String updateDate;
 
     }
 

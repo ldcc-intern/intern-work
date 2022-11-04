@@ -130,31 +130,34 @@ public class CategoryService {
             return new InternWorkException.dataNotFoundException();
         });
 
-        // orderId 순서 이동
-        if (updateCategoryRequest.getUpDown()){ // up 일 경우 [1]
-            if(category.getOrderId() == 0){
-                log.error("updateCategory Exception : [카테고리 위로 이동 불가]");
-                throw new InternWorkException.canNotMoveException();
-            }
+        if(updateCategoryRequest.getUpDown() != null){
+            // orderId 순서 이동
+            if (updateCategoryRequest.getUpDown()){ // up 일 경우 [1]
+                if(category.getOrderId() == 0){
+                    log.error("updateCategory Exception : [카테고리 위로 이동 불가]");
+                    throw new InternWorkException.canNotMoveException();
+                }
                 Category upCategory = categoryRepository.findByOrderId(category.getOrderId() - 1);
                 upCategory.updateUpdateUser(user);
                 upCategory.updateOrderId(category.getOrderId());
                 category.updateOrderId(category.getOrderId() - 1);
                 categoryRepository.save(upCategory);
 
-        }
-        if (!updateCategoryRequest.getUpDown()) { // down 일 경우 [0]
-            if(category.getOrderId() == categoryRepository.findAll().size() - 1){
-                log.error("updateCategory Exception : [카테고리 아래로 이동 불가]");
-                throw new InternWorkException.canNotMoveException();
             }
+            if (!updateCategoryRequest.getUpDown()) { // down 일 경우 [0]
+                if(category.getOrderId() == categoryRepository.findAll().size() - 1){
+                    log.error("updateCategory Exception : [카테고리 아래로 이동 불가]");
+                    throw new InternWorkException.canNotMoveException();
+                }
                 Category downCategory = categoryRepository.findByOrderId(category.getOrderId() + 1);
                 downCategory.updateUpdateUser(user);
                 downCategory.updateOrderId(category.getOrderId());
                 category.updateOrderId(category.getOrderId() + 1);
                 categoryRepository.save(downCategory);
 
+            }
         }
+
 
             // Null 이 아니면
         category.updateCategoryName(updateCategoryRequest.getCategoryName() != null ? updateCategoryRequest.getCategoryName():category.getCategoryName());

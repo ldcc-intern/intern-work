@@ -26,8 +26,8 @@ public class FaqMapper {
                         .registerUserName(faq.getRegisterUser().getName())
                         .faqType(faq.getFaqType())
                         .faqTitle(faq.getFaqTitle())
-                        .registerDate(faq.getRegisterDate())
-                        .noticeDate(faq.getNoticeDate())
+                        .registerDate(faq.getRegisterDate().format(DateTimeFormatter.ofPattern("yyyy.MM.dd")))
+                        .noticeDate(faq.getNoticeDate().format(DateTimeFormatter.ofPattern("yyyy.MM.dd")))
                         .build()
 
         );
@@ -56,10 +56,10 @@ public class FaqMapper {
                 .setCategoryName(faq.getCategory().getCategoryName())
                 .setFaqTitle(faq.getFaqTitle())
                 .setRegisterUserName(faq.getRegisterUser().getName())
-                .setRegisterDate(faq.getRegisterDate())
+                .setRegisterDate(faq.getRegisterDate().format(DateTimeFormatter.ofPattern("yyyy/MM/dd hh:mm")))
                 .setUpdateUserName(faq.getUpdateUser().getName())
-                .setUpdateDate(faq.getUpdateDate())
-                .setNoticeDate(faq.getNoticeDate())
+                .setUpdateDate(faq.getUpdateDate().format(DateTimeFormatter.ofPattern("yyyy/MM/dd hh:mm")))
+                .setNoticeDate(faq.getNoticeDate().format(DateTimeFormatter.ofPattern("yyyy/MM/dd hh:mm")))
                 .setFaqType(faq.getFaqType())
                 .setUpdateReason(faq.getUpdateReason())
                 .setContent(faq.getContent());
