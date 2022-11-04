@@ -53,16 +53,21 @@ public class FaqRequest {
     @JsonIgnoreProperties(ignoreUnknown = true)
     public static class RegisterFaqRequest {
 
+        @NotNull
         private Long categoryId;
 
+        @NotNull
         private String faqTitle;
 
+        @NotNull
         private String noticeDate;
 
+        @NotNull
         private String noticeTime;
 
         private FaqType faqType;
 
+        @NotNull
         private String content;
 
         private Long registerUserId;

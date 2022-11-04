@@ -95,6 +95,8 @@ public class FaqService {
             noticeEndDate = LocalDate.parse(noticeEnd, DateTimeFormatter.ISO_DATE);
         }
 
+
+
         return faqRepository.getFaqList(pageable, categoryName, registerStartDate, registerEndDate, noticeStartDate, noticeEndDate, faqType, registerUserName, faqTitle);
     }
 

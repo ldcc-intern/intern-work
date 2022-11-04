@@ -185,11 +185,14 @@ public class CategoryService {
     public Response deleteCategory(Long categoryId) {
         Optional<Category> category = categoryRepository.findById(categoryId);
 
+        // 해당 카테고리에 faq 존재시 삭제 불가
+        if(faqRepository.findByCategoryId(categoryId).isPresent()){
+            log.error("Delete Category Exception : [해당 카테고리에 faq 존재 -> 삭제 불가]");
+            throw new InternWorkException.referentialIntegrityException();
+        }
+
         if(category.isPresent()){
             try{
-                // 해당 카테고리 참조하는 Faq, null 처리 (참조 무결성)
-                List<Faq> faqs = faqRepository.findByCategoryId(categoryId);
-                faqs.forEach(nullFaq -> nullFaq.updateCategory(null));
 
                 // orderId 수정
                 if(categoryRepository.findAll().size() - 1 != category.get().getOrderId()){

@@ -80,9 +80,9 @@ public class FaqDto {
         private String faqTitle;
         private String registerUserName;
         private String updateUserName;
-        private LocalDateTime registerDate;
-        private LocalDateTime updateDate;
-        private LocalDateTime noticeDate;
+        private String registerDate;
+        private String updateDate;
+        private String noticeDate;
         private FaqType faqType;
         private String updateReason;
         private String content;

@@ -6,6 +6,7 @@ import kr.ldcc.internwork.model.entity.Category;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -41,10 +42,10 @@ public class CategoryMapper {
                 .setMainCategory(category.getMainCategory())
                 .setCategoryName(category.getCategoryName())
                 .setCategoryType(category.getCategoryType())
-                .setRegisterDate(category.getRegisterDate())
-                .setUpdateUserName(category.getUpdateUser().getName()  != null ? category.getUpdateUser().getName() : null)
-                .setRegisterUserName(category.getResisterUser().getName() != null ? category.getUpdateUser().getName() : null)
-                .setUpdateDate(category.getUpdateDate());
+                .setRegisterDate(category.getRegisterDate().format(DateTimeFormatter.ofPattern("yyyy/MM/dd hh:mm")))
+                .setUpdateUserName(category.getUpdateUser() != null ? category.getUpdateUser().getName() : null)
+                .setRegisterUserName(category.getResisterUser().getName())
+                .setUpdateDate(category.getUpdateDate().format(DateTimeFormatter.ofPattern("yyyy/MM/dd hh:mm")));
     }
 
     // category 수정 Response
