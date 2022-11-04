@@ -7,15 +7,21 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 
+import javax.validation.constraints.NotNull;
+
 public class NoticeRequest {
     @Getter
     @Setter
     @Accessors(chain = true)
     @JsonIgnoreProperties(ignoreUnknown = true)
     public static class CreateNoticeRequest {
+        @NotNull
         private String title;
+        @NotNull
         private String date;
+        @NotNull
         private String time;
+        @NotNull
         private String content;
         private Long userId;
     }
@@ -25,12 +31,17 @@ public class NoticeRequest {
     @Accessors(chain = true)
     @JsonIgnoreProperties(ignoreUnknown = true)
     public static class UpdateNoticeRequest {
+        @NotNull
         private String title;
         @Enum(enumClass = NoticeType.class)
         private NoticeType state;
+        @NotNull
         private String date;
+        @NotNull
         private String time;
+        @NotNull
         private String reason;
+        @NotNull
         private String content;
         private Long userId;
     }
