@@ -127,7 +127,7 @@ public class FaqService {
         String date = updateFaqRequest.getNoticeDate();
         String time = updateFaqRequest.getNoticeTime();
 
-        if(date!=null&&time!=null){
+        if(date != null && time != null){
             LocalDateTime noticeDate = LocalDateTime.parse(date +" "+ time, DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm"));
             faq.updateNoticeDate(noticeDate);
         }
