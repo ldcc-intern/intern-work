@@ -48,6 +48,8 @@ public class CategoryRequest {
 
         private Integer orderId; // 카테고리 순서
 
+        private Boolean upDown; // 순서이동
+
         private User registerUser; // 등록자
 
         private LocalDateTime registerDate; // 등록일
