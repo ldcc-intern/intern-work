@@ -7,6 +7,8 @@ import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import org.springframework.data.domain.Page;
 
+import java.time.format.DateTimeFormatter;
+
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class FaqMapper {
 
@@ -38,12 +40,12 @@ public class FaqMapper {
                 .setCategoryName(faq.getCategory().getCategoryName())
                 .setFaqTitle(faq.getFaqTitle())
                 .setRegisterUserName(faq.getRegisterUser().getName())
-                .setRegisterDate(faq.getRegisterDate())
-                .setUpdateUserName(faq.getUpdateUser().getName() != null ? faq.getUpdateUser().getName() : null)
-                .setUpdateDate(faq.getUpdateDate())
-                .setNoticeDate(faq.getNoticeDate())
+                .setRegisterDate(faq.getRegisterDate().format(DateTimeFormatter.ofPattern("yyyy/MM/dd hh:mm")))
+                .setUpdateUserName(faq.getUpdateUser() != null ? faq.getUpdateUser().getName() : null)
+                .setUpdateDate(faq.getUpdateDate().format(DateTimeFormatter.ofPattern("yyyy/MM/dd hh:mm")))
+                .setNoticeDate(faq.getNoticeDate().format(DateTimeFormatter.ofPattern("yyyy/MM/dd hh:mm")))
                 .setFaqType(faq.getFaqType())
-                .setUpdateReason(faq.getUpdateReason())
+                .setUpdateReason(faq.getUpdateReason()!= null ? faq.getUpdateReason() : null)
                 .setContent(faq.getContent());
     }
 
@@ -53,9 +55,9 @@ public class FaqMapper {
                 .setId(faq.getId())
                 .setCategoryName(faq.getCategory().getCategoryName())
                 .setFaqTitle(faq.getFaqTitle())
-                .setRegisterUserName(faq.getRegisterUser().getName() != null ? faq.getUpdateUser().getName() : null)
+                .setRegisterUserName(faq.getRegisterUser().getName())
                 .setRegisterDate(faq.getRegisterDate())
-                .setUpdateUserName(faq.getUpdateUser().getName() != null ? faq.getUpdateUser().getName() : null)
+                .setUpdateUserName(faq.getUpdateUser().getName())
                 .setUpdateDate(faq.getUpdateDate())
                 .setNoticeDate(faq.getNoticeDate())
                 .setFaqType(faq.getFaqType())

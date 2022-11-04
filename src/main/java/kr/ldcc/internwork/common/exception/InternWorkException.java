@@ -26,4 +26,8 @@ public class InternWorkException {
     public static class canNotMoveException extends  RuntimeException{
     }
 
+    @NoArgsConstructor
+    public static class referentialIntegrityException extends RuntimeException{
+    }
+
 }

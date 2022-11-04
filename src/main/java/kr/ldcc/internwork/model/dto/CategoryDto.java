@@ -69,8 +69,8 @@ public class CategoryDto {
         private CategoryType categoryType;
         private String registerUserName;
         private String updateUserName;
-        private LocalDateTime registerDate;
-        private LocalDateTime updateDate;
+        private String registerDate;
+        private String updateDate;
 
     }
 
