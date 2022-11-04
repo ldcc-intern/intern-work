@@ -53,7 +53,6 @@ class CategoryTest {
                 .categoryName("Test")
                 .mainCategory("Test")
                 .categoryType(CategoryType.ON)
-                .authInfo("Test")
                 .registerUser(userRepository.findByName("사용자1"))
                 .orderId(1)
                 .build();
@@ -68,13 +67,11 @@ class CategoryTest {
         createCategoryRequest.setCategoryName("카테고리명1");
         createCategoryRequest.setMainCategory("메인 카테고리");
         createCategoryRequest.setCategoryType(CategoryType.ON);
-        createCategoryRequest.setAuthInfo("인증12");
         createCategoryRequest.setOrderId(2);
 
 
         Response category = categoryController.createCategory(createCategoryRequest);
 
-        assertEquals(categoryRepository.findByCategoryName("카테고리명1").getAuthInfo(), "인증12");
 
     }
 

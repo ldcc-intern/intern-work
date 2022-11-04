@@ -27,7 +27,6 @@ public class CategoryRequest {
 
         private Long registerUserId; // 등록자
 
-        private String authInfo;
 
     }
 

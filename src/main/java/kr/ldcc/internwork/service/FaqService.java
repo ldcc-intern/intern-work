@@ -61,7 +61,6 @@ public class FaqService {
                 .faqTitle(registerFaqRequest.getFaqTitle())
                 .registerUser(registerUser)
                 .content(registerFaqRequest.getContent())
-                .authInfo(registerFaqRequest.getAuthInfo())
                 .noticeDate(noticeDate)
                 .build();
 
