@@ -21,8 +21,8 @@ public class UserService {
     private final UserRepository userRepository;
 
     @Transactional
-    public Long createUser(UserRequest.CreateUserRequest createUserRequest) {
-        User user = User.builder().name(createUserRequest.getName()).build();
+    public Long createUser(UserRequest.CreateUserRequest request) {
+        User user = User.builder().name(request.getName()).build();
         try {
             userRepository.save(user);
         } catch (Exception e) {
@@ -38,12 +38,12 @@ public class UserService {
     }
 
     @Transactional
-    public UserDto.UpdateUserResponse updateUser(Long userId, UserRequest.UpdateUserRequest updateUserRequest) {
+    public UserDto.UpdateUserResponse updateUser(Long userId, UserRequest.UpdateUserRequest request) {
         User user = userRepository.findById(userId).orElseThrow(() -> {
             log.error("updateUser Exception : [존재하지 않는 User ID]");
             return new InternWorkException.dataNotFoundException();
         });
-        user.updateUserName(updateUserRequest.getName() != null ? updateUserRequest.getName() : user.getName());
+        user.updateUserName(request.getName() != null ? request.getName() : user.getName());
         try {
             userRepository.save(user);
         } catch (Exception e) {
