@@ -19,9 +19,6 @@ public class CategoryRequest {
     public static class CreateCategoryRequest {
 
         @NotNull
-        private String mainCategory; // 대분류
-
-        @NotNull
         private String categoryName; // 카테고리명
 
         @NotNull
@@ -42,21 +39,15 @@ public class CategoryRequest {
 
         private Long categoryId; // 카테고리 ID
 
-        private String mainCategory; // 대분류
-
         private String categoryName; // 카테고리명
 
         private CategoryType categoryType; // 사용 여부
 
         private Boolean upDown; // 순서이동
 
-        private User registerUser; // 등록자
-
-        private LocalDateTime registerDate; // 등록일
-
+        @NotNull
         private Long updateUserId; // 수정자
 
-        private LocalDateTime updateDate; // 수정일
 
     }
 }

@@ -52,7 +52,6 @@ public class Category extends BaseEntity {
      *                                    *
      * * * * * * * * * * * * * * * * * * **/
 
-    public void updateMainCategory(String mainCategory) {this.mainCategory = mainCategory;}
     public void updateCategoryName(String categoryName) {this.categoryName = categoryName;}
 
     public void updateCategoryType(CategoryType categoryType) {this.categoryType = categoryType;}

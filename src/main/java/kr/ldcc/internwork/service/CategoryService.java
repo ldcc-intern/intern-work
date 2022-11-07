@@ -47,7 +47,7 @@ public class CategoryService {
         });
 
         Category category = Category.builder()
-                .mainCategory(createCategoryRequest.getMainCategory())
+                .mainCategory("FAQ 카테고리")
                 .categoryName(createCategoryRequest.getCategoryName())
                 .categoryType(createCategoryRequest.getCategoryType())
                 .registerUser(user)
@@ -162,7 +162,6 @@ public class CategoryService {
             // Null 이 아니면
         category.updateCategoryName(updateCategoryRequest.getCategoryName() != null ? updateCategoryRequest.getCategoryName():category.getCategoryName());
         category.updateCategoryType(updateCategoryRequest.getCategoryType() != null ? updateCategoryRequest.getCategoryType():category.getCategoryType());
-        category.updateMainCategory(updateCategoryRequest.getMainCategory() != null ? updateCategoryRequest.getMainCategory():category.getMainCategory());
         category.updateUpdateUser(user);
 
 
