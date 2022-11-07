@@ -5,6 +5,7 @@ import kr.ldcc.internwork.model.entity.Menu;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -33,8 +34,8 @@ public class MenuMapper {
                 .setState(menu.getState())
                 .setRegisterUser(menu.getRegisterUser().getName())
                 .setUpdateUser((menu.getUpdateUser() != null) ? menu.getUpdateUser().getName() : null)
-                .setRegisterDate(menu.getRegisterDate())
-                .setUpdateDate(menu.getUpdateDate() != menu.getRegisterDate() ? menu.getUpdateDate() : null);
+                .setRegisterDate(menu.getRegisterDate().format(DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm")))
+                .setUpdateDate(menu.getUpdateDate() != menu.getRegisterDate() ? menu.getUpdateDate().format(DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm")) : null);
     }
 
     public static MenuDto.UpdateMenuResponse toUpdateMenuResponse(Menu menu) {

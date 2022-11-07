@@ -6,7 +6,6 @@ import kr.ldcc.internwork.common.types.MenuType;
 import lombok.*;
 import lombok.experimental.Accessors;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 public class MenuDto {
@@ -49,8 +48,8 @@ public class MenuDto {
         private MenuType state;
         private String registerUser;
         private String updateUser;
-        private LocalDateTime registerDate;
-        private LocalDateTime updateDate;
+        private String registerDate;
+        private String updateDate;
     }
 
     @Getter
