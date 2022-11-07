@@ -46,6 +46,14 @@ public class CategoryService {
             return new InternWorkException.dataNotFoundException();
         });
 
+        // 중복 체크
+        Optional<Category> categoryCheck = Optional.ofNullable(categoryRepository.findByCategoryName(createCategoryRequest.getCategoryName()));
+        if(!categoryCheck.isPresent()){
+            log.error("createCategory Exception : [카테고리 이름 중복]", ExceptionCode.DATA_DUPLICATE_EXCEPTION) ;
+            return Response.dataDuplicateException();
+
+        }
+
         Category category = Category.builder()
                 .mainCategory("FAQ 카테고리")
                 .categoryName(createCategoryRequest.getCategoryName())
@@ -94,20 +102,7 @@ public class CategoryService {
     }
 
 
-    /** * * * * * * *  * * *
-     *                     *
-     *  category 중복 체크   *
-     *                     *
-     * * * * * * * * * * * */
-    public Response getDuplicateCategory(String categoryName) {
 
-        Optional<Category> byCategoryName = Optional.ofNullable(categoryRepository.findByCategoryName(categoryName));
-        if(byCategoryName.isPresent()) {
-            log.error("getDuplicateCctv Exception : {}", ExceptionCode.DATA_DUPLICATE_EXCEPTION);
-            return Response.ok().setData(new CategoryDto.CategoryDuplicateResponse().setResult(true));
-        }
-        return Response.ok().setData(new CategoryDto.CategoryDuplicateResponse().setResult(false));
-    }
 
 
 
@@ -159,7 +154,7 @@ public class CategoryService {
         }
 
 
-            // Null 이 아니면
+        // Null 이 아니면
         category.updateCategoryName(updateCategoryRequest.getCategoryName() != null ? updateCategoryRequest.getCategoryName():category.getCategoryName());
         category.updateCategoryType(updateCategoryRequest.getCategoryType() != null ? updateCategoryRequest.getCategoryType():category.getCategoryType());
         category.updateUpdateUser(user);

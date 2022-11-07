@@ -138,15 +138,18 @@ public class FaqService {
             return new InternWorkException.dataNotFoundException();
         });
 
-        Category category = categoryRepository.findById(updateFaqRequest.getCategoryId()).orElseThrow(() -> {
-            log.error("updateFaq Exception : [존재하지 않는 Category ID]", ExceptionCode.DATA_NOT_FOUND_EXCEPTION);
-            return new InternWorkException.dataNotFoundException();
-        });
+        if(updateFaqRequest.getCategoryId() != null){
+            Category category = categoryRepository.findById(updateFaqRequest.getCategoryId()).orElseThrow(() -> {
+                log.error("updateFaq Exception : [존재하지 않는 Category ID]", ExceptionCode.DATA_NOT_FOUND_EXCEPTION);
+                return new InternWorkException.dataNotFoundException();
+            });
+            faq.updateCategory(category);
+        }
 
         if (updateFaqRequest.getNoticeDate() != null && updateFaqRequest.getNoticeTime() != null){
             String date = updateFaqRequest.getNoticeDate();
             String time = updateFaqRequest.getNoticeTime();
-            LocalDateTime noticeDate = LocalDateTime.parse(date +" "+ time, DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm"));
+            LocalDateTime noticeDate = LocalDateTime.parse(date +" "+ time, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
             faq.updateNoticeDate(noticeDate);
         }
 
@@ -156,7 +159,6 @@ public class FaqService {
         faq.updateTitle(updateFaqRequest.getFaqTitle() != null ? updateFaqRequest.getFaqTitle() : faq.getFaqTitle());
         faq.updateUpdateReason(updateFaqRequest.getUpdateReason() != null ? updateFaqRequest.getUpdateReason() : faq.getUpdateReason());
         faq.updateUpdateUser(user);
-        faq.updateCategory(category);
 
         try {
             faqRepository.save(faq);
