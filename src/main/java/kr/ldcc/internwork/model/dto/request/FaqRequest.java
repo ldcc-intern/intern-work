@@ -12,36 +12,6 @@ import javax.validation.constraints.NotNull;
 
 public class FaqRequest {
 
-    @Getter
-    @Setter
-    @Accessors(chain = true)
-    @JsonIgnoreProperties(ignoreUnknown = true)
-    public static class SearchFaqRequest { // 사용 안됨
-
-        private Long faqId;
-
-        private String categoryName;
-
-        private String faqTitle;
-
-        private User registerUser;
-
-        private String noticeStart;
-
-        private String noticeEnd;
-
-        private FaqType faqType;
-
-        private Integer faqPage;
-
-        private Integer faqSort;
-
-        private Integer faqSize;
-
-
-    }
-
-
     /** * * * * * *
      *            *
      *  faq 등록   *
@@ -65,6 +35,7 @@ public class FaqRequest {
         @NotNull
         private String noticeTime;
 
+        @NotNull
         private FaqType faqType;
 
         @NotNull

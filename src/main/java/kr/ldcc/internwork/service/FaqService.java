@@ -53,7 +53,7 @@ public class FaqService {
             return new InternWorkException.dataNotFoundException();
         });
 
-        LocalDateTime noticeDate = LocalDateTime.parse(registerFaqRequest.getNoticeDate() + " " +registerFaqRequest.getNoticeTime(), DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm"));
+        LocalDateTime noticeDate = LocalDateTime.parse(registerFaqRequest.getNoticeDate() + " " +registerFaqRequest.getNoticeTime(), DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
 
         Faq faq = Faq.builder()
                 .category(category)
@@ -79,6 +79,8 @@ public class FaqService {
      * * * * * * * * * */
     @Transactional
     public Page<Faq> getFaqList(Pageable pageable, String registerStart, String registerEnd, FaqType faqType, String noticeStart, String noticeEnd, String categoryName, String registerUserName, String faqTitle) {
+
+
         LocalDate registerStartDate = null;
         LocalDate registerEndDate = null;
 
