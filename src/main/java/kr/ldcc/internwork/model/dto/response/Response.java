@@ -35,4 +35,12 @@ public class Response<T> {
         log.info("[dataNotFoundException] code : {}, message : {}", response.getCode(), response.getMessage());
         return response;
     }
+
+    public static <T> Response<T> dataDuplicateException() {
+        Response<T> response = new Response<>();
+        response.setCode(ExceptionCode.DATA_DUPLICATE_EXCEPTION.getCode());
+        response.setMessage(ExceptionCode.DATA_DUPLICATE_EXCEPTION.getMessage());
+        log.info("[dataDuplicateException] code : {}, message : {}", response.getCode(), response.getMessage());
+        return response;
+    }
 }

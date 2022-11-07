@@ -51,16 +51,6 @@ public class CategoryController {
         return Response.ok().setData(CategoryMapper.toGetCategoryDetailResponse(categoryService.getCategoryDetail(categoryId)));
     }
 
-    /** * * * * * * *  * * *
-     *                     *
-     *  category 중복 체크   *
-     *                     *
-     * * * * * * * * * * * */
-
-    @GetMapping("/category/{categoryName}/duplicate")
-    public Response getDuplicateCategory(@PathVariable("categoryName") String categoryName) {
-        return categoryService.getDuplicateCategory(categoryName);
-    }
 
     /** * * * * * * * * *
      *                  *
