@@ -7,6 +7,7 @@ import kr.ldcc.internwork.model.dto.response.Response;
 import kr.ldcc.internwork.service.NoticeService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -31,7 +32,7 @@ public class NoticeController {
             @RequestParam(required = false) String noticeEnd,
             @RequestParam(required = false) String user,
             @RequestParam(required = false) String title,
-            Pageable pageable
+            @PageableDefault(size = 25) Pageable pageable
     ) {
         return Response.ok().setData(noticeService.getNoticeList(regStart, regEnd, state, noticeStart, noticeEnd, user, title, pageable));
     }
