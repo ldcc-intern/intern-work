@@ -142,7 +142,7 @@ public class MenuService {
             menuRepository.deleteById(menuId);
             return;
         }
-        throw new InternWorkException.dataNotFoundException();
+        throw new InternWorkException.dataDeleteException();
     }
 
     @Transactional
