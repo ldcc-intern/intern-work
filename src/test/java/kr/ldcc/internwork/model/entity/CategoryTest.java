@@ -65,7 +65,6 @@ class CategoryTest {
         CategoryRequest.CreateCategoryRequest createCategoryRequest = new CategoryRequest.CreateCategoryRequest();
 
         createCategoryRequest.setCategoryName("카테고리명1");
-        createCategoryRequest.setMainCategory("메인 카테고리");
         createCategoryRequest.setCategoryType(CategoryType.ON);
 
 
@@ -118,7 +117,6 @@ class CategoryTest {
         CategoryRequest.UpdateCategoryRequest updateCategoryRequest = new CategoryRequest.UpdateCategoryRequest();
         updateCategoryRequest.setCategoryName("카테고리수정확인");
         updateCategoryRequest.setCategoryType(CategoryType.OFF);
-        updateCategoryRequest.setUpdateDate(LocalDateTime.now());
 
         categoryController.updateCategory(findCategory.getId(), updateCategoryRequest);
 

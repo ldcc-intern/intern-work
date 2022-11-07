@@ -25,16 +25,6 @@ class UserTest {
     @Autowired UserController userController;
 
 
-    /*
-    @BeforeEach
-    public void before() {
-        User user = User.builder()
-                .name("name")
-                .build();
-        userRepository.save(user);
-    }
-
-     */
 
     @Test
     public void 사용자등록() throws Exception {
