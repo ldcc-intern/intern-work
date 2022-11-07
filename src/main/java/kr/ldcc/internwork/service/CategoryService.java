@@ -2,12 +2,9 @@ package kr.ldcc.internwork.service;
 
 import kr.ldcc.internwork.common.exception.ExceptionCode;
 import kr.ldcc.internwork.common.exception.InternWorkException;
-import kr.ldcc.internwork.common.types.CategoryType;
-import kr.ldcc.internwork.model.dto.CategoryDto;
 import kr.ldcc.internwork.model.dto.request.CategoryRequest;
 import kr.ldcc.internwork.model.dto.response.Response;
 import kr.ldcc.internwork.model.entity.Category;
-import kr.ldcc.internwork.model.entity.Faq;
 import kr.ldcc.internwork.model.entity.User;
 import kr.ldcc.internwork.model.mapper.CategoryMapper;
 import kr.ldcc.internwork.repository.CategoryRepository;
@@ -46,9 +43,9 @@ public class CategoryService {
             return new InternWorkException.dataNotFoundException();
         });
 
-        // 중복 체크
+        // 카테고리 이름 중복 체크
         Optional<Category> categoryCheck = Optional.ofNullable(categoryRepository.findByCategoryName(createCategoryRequest.getCategoryName()));
-        if(!categoryCheck.isPresent()){
+        if(categoryCheck.isPresent()){
             log.error("createCategory Exception : [카테고리 이름 중복]", ExceptionCode.DATA_DUPLICATE_EXCEPTION) ;
             return Response.dataDuplicateException();
 
@@ -213,9 +210,4 @@ public class CategoryService {
 
     }
 
-    public Object getCategoryTypes() {
-        CategoryType[] categoryTypes = CategoryType.values();
-
-        return categoryTypes;
-    }
 }
