@@ -76,7 +76,7 @@ public class NoticeService {
             log.error("getDetailNotice Exception : [존재하지 않는 Notice ID]", ExceptionCode.DATA_NOT_FOUND_EXCEPTION);
             return new InternWorkException.dataNotFoundException();
         });
-        notice.updateView(noticeRepository.updateView(noticeId));
+        notice.updateView(notice.getView() != null ? notice.getView() : 1);
         return NoticeMapper.toGetDetailNoticeResponse(notice);
     }
 

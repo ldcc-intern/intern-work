@@ -46,11 +46,11 @@ public class NoticeDto {
     @JsonInclude(value = JsonInclude.Include.NON_NULL)
     public static class GetDetailNoticeResponse {
         private Long id;
-        private LocalDateTime registerDate;
-        private LocalDateTime updateDate;
+        private String registerDate;
+        private String updateDate;
         private String content;
         private String reason;
-        private LocalDateTime noticeDate;
+        private String noticeDate;
         private NoticeType state;
         private String title;
         private Integer view;
@@ -67,11 +67,11 @@ public class NoticeDto {
     @JsonInclude(value = JsonInclude.Include.NON_NULL)
     public static class UpdateNoticeResponse {
         private Long id;
-        private LocalDateTime registerDate;
-        private LocalDateTime updateDate;
+        private String registerDate;
+        private String updateDate;
         private String content;
         private String reason;
-        private LocalDateTime noticeDate;
+        private String noticeDate;
         private NoticeType state;
         private String title;
         private Integer view;
