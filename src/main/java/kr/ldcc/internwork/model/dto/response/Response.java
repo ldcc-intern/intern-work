@@ -3,11 +3,13 @@ package kr.ldcc.internwork.model.dto.response;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import kr.ldcc.internwork.common.exception.ExceptionCode;
+import kr.ldcc.internwork.common.exception.InternWorkException;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 
 @Getter
 @Setter
@@ -28,19 +30,27 @@ public class Response<T> {
         return response;
     }
 
+    public static <T> Response<T> dataUpdateException() {
+        return new Response<T>()
+                .setCode(HttpStatus.CONFLICT.value())
+                .setMessage(new InternWorkException.dataUpdateException().getMessage());
+    }
+
+    public static <T> Response<T> dataDeleteException() {
+        return new Response<T>()
+                .setCode(HttpStatus.CONFLICT.value())
+                .setMessage(new InternWorkException.dataDeleteException().getMessage());
+    }
+
     public static <T> Response<T> dataNotFoundException() {
-        Response<T> response = new Response<>();
-        response.setCode(ExceptionCode.DATA_NOT_FOUND_EXCEPTION.getCode());
-        response.setMessage(ExceptionCode.DATA_NOT_FOUND_EXCEPTION.getMessage());
-        log.info("[dataNotFoundException] code : {}, message : {}", response.getCode(), response.getMessage());
-        return response;
+        return new Response<T>()
+                .setCode(HttpStatus.NOT_FOUND.value())
+                .setMessage(new InternWorkException.dataNotFoundException().getMessage());
     }
 
     public static <T> Response<T> dataDuplicateException() {
-        Response<T> response = new Response<>();
-        response.setCode(ExceptionCode.DATA_DUPLICATE_EXCEPTION.getCode());
-        response.setMessage(ExceptionCode.DATA_DUPLICATE_EXCEPTION.getMessage());
-        log.info("[dataDuplicateException] code : {}, message : {}", response.getCode(), response.getMessage());
-        return response;
+        return new Response<T>()
+                .setCode(HttpStatus.CONFLICT.value())
+                .setMessage(new InternWorkException.dataDuplicateException().getMessage());
     }
 }
