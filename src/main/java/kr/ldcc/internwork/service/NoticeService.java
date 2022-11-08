@@ -72,12 +72,11 @@ public class NoticeService {
 
     @Transactional
     public NoticeDto getDetailNotice(Long noticeId) {
-        Notice notice = noticeRepository.findById(noticeId).orElseThrow(() -> {
-            throw new InternWorkException.dataNotFoundException(
-                    "getDetailNotice Exception | [존재하지 않는 Notice ID : "
-                            + noticeId + "] | "
-                            + ExceptionCode.DATA_NOT_FOUND_EXCEPTION.getMessage());
-        });
+        Notice notice = noticeRepository.findById(noticeId).orElseThrow(() ->
+                new InternWorkException.dataNotFoundException(
+                        "getDetailNotice Exception | [존재하지 않는 Notice ID : "
+                                + noticeId + "] | "
+                                + ExceptionCode.DATA_NOT_FOUND_EXCEPTION.getMessage()));
         notice.updateView(notice.getView() != null ? notice.getView() : 1);
         return NoticeMapper.toGetDetailNoticeResponse(notice);
     }

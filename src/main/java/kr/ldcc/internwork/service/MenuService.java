@@ -39,13 +39,6 @@ public class MenuService {
                             + request.getParentId() + "] | "
                             + ExceptionCode.DATA_NOT_FOUND_EXCEPTION.getMessage()));
         }
-        Optional<Menu> title = menuRepository.findByTitle(request.getTitle());
-        if (title.isPresent()) {
-            throw new InternWorkException.dataDuplicateException(
-                    "createMenu Exception | [존재하는 Menu Title : "
-                            + request.getTitle() + "] | "
-                            + ExceptionCode.DATA_DUPLICATE_EXCEPTION.getMessage());
-        }
         if (request.getOrderId() != null) {
             Integer orderId = request.getOrderId();
             Menu menu = Menu.builder()
