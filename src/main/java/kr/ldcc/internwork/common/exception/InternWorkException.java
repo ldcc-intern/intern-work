@@ -37,4 +37,8 @@ public class InternWorkException {
     public static class referentialIntegrityException extends RuntimeException {
     }
 
+    @NoArgsConstructor
+    public static class dataSaveException extends RuntimeException{
+    }
+
 }

@@ -63,7 +63,6 @@ public class CategoryService {
             // category 정보 저장
             categoryRepository.save(category);
         }
-        // categoryName 중복 체크
         catch(Exception e){
             log.error("createCategory Exception : {}", e.getMessage());
             throw new InternWorkException.dataDuplicateException();
