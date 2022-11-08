@@ -117,6 +117,13 @@ public class CategoryService {
             return new InternWorkException.dataNotFoundException();
         });
 
+        // 카테고리 이름 중복 체크
+        Optional<Category> categoryCheck = Optional.ofNullable(categoryRepository.findByCategoryName(updateCategoryRequest.getCategoryName()));
+        if(categoryCheck.isPresent()){
+            log.error("createCategory Exception : [카테고리 이름 중복]", ExceptionCode.DATA_DUPLICATE_EXCEPTION) ;
+            throw new InternWorkException.dataDuplicateException();
+        }
+
         if(updateCategoryRequest.getUpDown() != null){
             // orderId 순서 이동
             if (updateCategoryRequest.getUpDown()){ // up 일 경우 [1]
@@ -147,7 +154,7 @@ public class CategoryService {
 
 
         // Null 이 아니면
-        category.updateCategoryName(updateCategoryRequest.getCategoryName() != null ? updateCategoryRequest.getCategoryName():category.getCategoryName());
+        category.updateCategoryName(updateCategoryRequest.getCategoryName());
         category.updateCategoryType(updateCategoryRequest.getCategoryType() != null ? updateCategoryRequest.getCategoryType():category.getCategoryType());
         category.updateUpdateUser(user);
 
