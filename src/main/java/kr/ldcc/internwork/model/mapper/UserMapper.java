@@ -10,14 +10,14 @@ import java.util.stream.Collectors;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class UserMapper {
-    public static List<UserDto.GetUserListResponse> toGetUserListResponse(List<User> users) {
-        return users.stream().map(user -> UserDto.GetUserListResponse.builder()
+    public static List<UserDto> toGetUserListResponse(List<User> users) {
+        return users.stream().map(user -> UserDto.builder()
                 .id(user.getId())
                 .name(user.getName())
                 .build()).collect(Collectors.toList());
     }
 
-    public static UserDto.UpdateUserResponse toUpdateUserResponse(User user) {
-        return new UserDto.UpdateUserResponse().setId(user.getId()).setName(user.getName());
+    public static UserDto toUpdateUserResponse(User user) {
+        return new UserDto().setId(user.getId()).setName(user.getName());
     }
 }

@@ -15,8 +15,8 @@ public class UserController {
     private final UserService userService;
 
     @PostMapping("/user")
-    public Response createUser(@RequestBody @Valid UserRequest.CreateUserRequest createUserRequest) {
-        return Response.ok().setData(userService.createUser(createUserRequest));
+    public Response createUser(@RequestBody @Valid UserRequest request) {
+        return Response.ok().setData(userService.createUser(request));
     }
 
     @GetMapping("/user")
@@ -25,8 +25,8 @@ public class UserController {
     }
 
     @PutMapping("/user/{userId}")
-    public Response updateUser(@PathVariable("userId") Long userId, @RequestBody @Valid UserRequest.UpdateUserRequest updateUserRequest) {
-        return Response.ok().setData(userService.updateUser(userId, updateUserRequest));
+    public Response updateUser(@PathVariable("userId") Long userId, @RequestBody @Valid UserRequest request) {
+        return Response.ok().setData(userService.updateUser(userId, request));
     }
 
     @DeleteMapping("/user/{userId}")

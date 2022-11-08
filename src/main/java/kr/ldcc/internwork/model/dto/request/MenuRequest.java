@@ -7,30 +7,15 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 
+@Getter
+@Setter
+@Accessors(chain = true)
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class MenuRequest {
-    @Getter
-    @Setter
-    @Accessors(chain = true)
-    @JsonIgnoreProperties(ignoreUnknown = true)
-    public static class CreateMenuRequest {
-        private String title;
-        @Enum(enumClass = MenuType.class)
-        private MenuType state;
-        private Long userId;
-        private Long parentId;
-        private Integer orderId;
-    }
-
-    @Getter
-    @Setter
-    @Accessors(chain = true)
-    @JsonIgnoreProperties(ignoreUnknown = true)
-    public static class UpdateMenuRequest {
-        private String title;
-        @Enum(enumClass = MenuType.class)
-        private MenuType state;
-        private Long userId;
-        private Long parentId;
-        private Integer orderId;
-    }
+    private String title;
+    @Enum(enumClass = MenuType.class)
+    private MenuType state;
+    private Long userId;
+    private Long parentId;
+    private Integer orderId;
 }
