@@ -8,7 +8,24 @@ import lombok.experimental.Accessors;
 
 import java.util.List;
 
+@Getter
+@Setter
+@NoArgsConstructor
+@ToString
+@Accessors(chain = true)
+@JsonIgnoreProperties(ignoreUnknown = true)
+@JsonInclude(value = JsonInclude.Include.NON_NULL)
 public class MenuDto {
+    private Long id;
+    private Integer orderId;
+    private MenuType state;
+    private String title;
+    private String parent;
+    private String registerUser;
+    private String updateUser;
+    private String registerDate;
+    private String updateDate;
+
     @Getter
     @Setter
     @NoArgsConstructor

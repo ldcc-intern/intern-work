@@ -32,11 +32,10 @@ public class NoticeService {
 
     @Transactional
     public Long createNotice(NoticeRequest.CreateNoticeRequest request) {
-        User user = userRepository.findById(request.getUserId()).orElseThrow(() -> {
-            throw new InternWorkException.dataNotFoundException(
-                    "createNotice Exception : [존재하지 않는 User ID] : "
-                            + ExceptionCode.DATA_NOT_FOUND_EXCEPTION.getMessage());
-        });
+        User user = userRepository.findById(request.getUserId()).orElseThrow(() -> new InternWorkException.dataNotFoundException(
+                "createNotice Exception | [존재하지 않는 User ID : "
+                        + request.getUserId() + "] | "
+                        + ExceptionCode.DATA_NOT_FOUND_EXCEPTION.getMessage()));
         LocalDateTime noticeDate = LocalDate.parse(
                         request.getDate(), DateTimeFormatter.ISO_DATE
                 )
@@ -72,10 +71,11 @@ public class NoticeService {
     }
 
     @Transactional
-    public NoticeDto.GetDetailNoticeResponse getDetailNotice(Long noticeId) {
+    public NoticeDto getDetailNotice(Long noticeId) {
         Notice notice = noticeRepository.findById(noticeId).orElseThrow(() -> {
             throw new InternWorkException.dataNotFoundException(
-                    "getDetailNotice Exception : [존재하지 않는 Notice ID] : "
+                    "getDetailNotice Exception | [존재하지 않는 Notice ID : "
+                            + noticeId + "] | "
                             + ExceptionCode.DATA_NOT_FOUND_EXCEPTION.getMessage());
         });
         notice.updateView(notice.getView() != null ? notice.getView() : 1);
@@ -83,17 +83,15 @@ public class NoticeService {
     }
 
     @Transactional
-    public NoticeDto.UpdateNoticeResponse updateNotice(Long noticeId, NoticeRequest.UpdateNoticeRequest request) {
-        Notice notice = noticeRepository.findById(noticeId).orElseThrow(() -> {
-            throw new InternWorkException.dataNotFoundException(
-                    "updateNotice Exception : [존재하지 않는 Notice ID] : "
-                            + ExceptionCode.DATA_NOT_FOUND_EXCEPTION.getMessage());
-        });
-        User user = userRepository.findById(request.getUserId()).orElseThrow(() -> {
-            throw new InternWorkException.dataNotFoundException(
-                    "updateNotice Exception : [존재하지 않는 User ID] : "
-                            + ExceptionCode.DATA_NOT_FOUND_EXCEPTION.getMessage());
-        });
+    public NoticeDto updateNotice(Long noticeId, NoticeRequest.UpdateNoticeRequest request) {
+        Notice notice = noticeRepository.findById(noticeId).orElseThrow(() -> new InternWorkException.dataNotFoundException(
+                "updateNotice Exception | [존재하지 않는 Notice ID : "
+                        + noticeId + "] | "
+                        + ExceptionCode.DATA_NOT_FOUND_EXCEPTION.getMessage()));
+        User user = userRepository.findById(request.getUserId()).orElseThrow(() -> new InternWorkException.dataNotFoundException(
+                "updateNotice Exception | [존재하지 않는 User ID : "
+                        + request.getUserId() + "] | "
+                        + ExceptionCode.DATA_NOT_FOUND_EXCEPTION.getMessage()));
         LocalDateTime noticeDate = request.getDate() != null && request.getTime() != null ? LocalDate.parse(request.getDate(), DateTimeFormatter.ISO_DATE).atTime(LocalTime.parse(request.getTime(), DateTimeFormatter.ISO_TIME)) : notice.getNoticeDate();
         notice.updateTitle(request.getTitle() != null ? request.getTitle() : notice.getTitle());
         notice.updateState(request.getState() != null ? request.getState() : notice.getState());
@@ -105,8 +103,8 @@ public class NoticeService {
             noticeRepository.save(notice);
         } catch (Exception e) {
             throw new InternWorkException.dataDuplicateException(
-                    "updateNotice Exception : "
-                            + ExceptionCode.DATA_DUPLICATE_EXCEPTION.getMessage() + " : "
+                    "updateNotice Exception | "
+                            + ExceptionCode.DATA_DUPLICATE_EXCEPTION.getMessage() + " | "
                             + e.getMessage());
         }
         return NoticeMapper.toUpdateNoticeResponse(notice);
@@ -120,7 +118,8 @@ public class NoticeService {
             return;
         }
         throw new InternWorkException.dataDeleteException(
-                "deleteNotice Exception : [존재하지 않는 Notice ID] : "
+                "deleteNotice Exception | [존재하지 않는 Notice ID : "
+                        + noticeId + "] | "
                         + ExceptionCode.DATA_NOT_FOUND_EXCEPTION.getMessage());
     }
 }

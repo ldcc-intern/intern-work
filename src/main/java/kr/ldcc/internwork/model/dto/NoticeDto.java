@@ -8,7 +8,26 @@ import lombok.experimental.Accessors;
 
 import java.time.LocalDateTime;
 
+@Getter
+@Setter
+@NoArgsConstructor
+@ToString
+@Accessors(chain = true)
+@JsonIgnoreProperties(ignoreUnknown = true)
+@JsonInclude(value = JsonInclude.Include.NON_NULL)
 public class NoticeDto {
+    private Long id;
+    private String content;
+    private String noticeDate;
+    private String reason;
+    private NoticeType state;
+    private String title;
+    private Integer view;
+    private String registerUser;
+    private String updateUser;
+    private String registerDate;
+    private String updateDate;
+
     @Getter
     @Setter
     @NoArgsConstructor
@@ -35,47 +54,5 @@ public class NoticeDto {
             this.state = state;
             this.view = view;
         }
-    }
-
-    @Getter
-    @Setter
-    @NoArgsConstructor
-    @ToString
-    @Accessors(chain = true)
-    @JsonIgnoreProperties(ignoreUnknown = true)
-    @JsonInclude(value = JsonInclude.Include.NON_NULL)
-    public static class GetDetailNoticeResponse {
-        private Long id;
-        private String registerDate;
-        private String updateDate;
-        private String content;
-        private String reason;
-        private String noticeDate;
-        private NoticeType state;
-        private String title;
-        private Integer view;
-        private String registerUser;
-        private String updateUser;
-    }
-
-    @Getter
-    @Setter
-    @NoArgsConstructor
-    @ToString
-    @Accessors(chain = true)
-    @JsonIgnoreProperties(ignoreUnknown = true)
-    @JsonInclude(value = JsonInclude.Include.NON_NULL)
-    public static class UpdateNoticeResponse {
-        private Long id;
-        private String registerDate;
-        private String updateDate;
-        private String content;
-        private String reason;
-        private String noticeDate;
-        private NoticeType state;
-        private String title;
-        private Integer view;
-        private String registerUser;
-        private String updateUser;
     }
 }

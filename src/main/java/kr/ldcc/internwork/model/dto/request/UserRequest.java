@@ -5,20 +5,10 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 
+@Getter
+@Setter
+@Accessors(chain = true)
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class UserRequest {
-    @Getter
-    @Setter
-    @Accessors(chain = true)
-    @JsonIgnoreProperties(ignoreUnknown = true)
-    public static class CreateUserRequest {
-        private String name;
-    }
-
-    @Getter
-    @Setter
-    @Accessors(chain = true)
-    @JsonIgnoreProperties(ignoreUnknown = true)
-    public static class UpdateUserRequest {
-        private String name;
-    }
+    private String name;
 }

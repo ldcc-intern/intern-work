@@ -26,8 +26,8 @@ public class NoticeMapper {
         return null;
     }
 
-    public static NoticeDto.GetDetailNoticeResponse toGetDetailNoticeResponse(Notice notice) {
-        return new NoticeDto.GetDetailNoticeResponse()
+    public static NoticeDto toGetDetailNoticeResponse(Notice notice) {
+        return new NoticeDto()
                 .setId(notice.getId())
                 .setRegisterDate(notice.getRegisterDate().format(DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm")))
                 .setUpdateDate(notice.getUpdateDate().format(DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm")))
@@ -41,8 +41,8 @@ public class NoticeMapper {
                 .setUpdateUser(notice.getUpdateUser() != null ? notice.getUpdateUser().getName() : null);
     }
 
-    public static NoticeDto.UpdateNoticeResponse toUpdateNoticeResponse(Notice notice) {
-        return new NoticeDto.UpdateNoticeResponse()
+    public static NoticeDto toUpdateNoticeResponse(Notice notice) {
+        return new NoticeDto()
                 .setId(notice.getId())
                 .setRegisterDate(notice.getRegisterDate().format(DateTimeFormatter.ofPattern("yyyy/MM/dd hh:mm")))
                 .setUpdateDate(notice.getUpdateDate() != notice.getRegisterDate() ? notice.getUpdateDate().format(DateTimeFormatter.ofPattern("yyyy/MM/dd hh:mm")) : null)

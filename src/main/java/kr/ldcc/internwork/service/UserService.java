@@ -22,39 +22,37 @@ public class UserService {
     private final UserRepository userRepository;
 
     @Transactional
-    public Long createUser(UserRequest.CreateUserRequest request) {
+    public Long createUser(UserRequest request) {
         User user = User.builder().name(request.getName()).build();
         try {
             userRepository.save(user);
         } catch (Exception e) {
             throw new InternWorkException.dataDuplicateException(
-                    "createUser Exception : "
-                            + ExceptionCode.DATA_DUPLICATE_EXCEPTION.getMessage() + " : "
+                    "createUser Exception | "
+                            + ExceptionCode.DATA_DUPLICATE_EXCEPTION.getMessage() + " | "
                             + e.getMessage());
         }
         return user.getId();
     }
 
     @Transactional
-    public List<UserDto.GetUserListResponse> getUserList() {
+    public List<UserDto> getUserList() {
         return UserMapper.toGetUserListResponse(userRepository.findAll());
     }
 
     @Transactional
-    public UserDto.UpdateUserResponse updateUser(Long userId, UserRequest.UpdateUserRequest request) {
-        User user = userRepository.findById(userId).orElseThrow(() -> {
-            throw new InternWorkException.dataNotFoundException(
-                    "updateUser Exception : [존재하지 않는 User ID] : "
-                            + ExceptionCode.DATA_NOT_FOUND_EXCEPTION.getMessage()
-            );
-        });
+    public UserDto updateUser(Long userId, UserRequest request) {
+        User user = userRepository.findById(userId).orElseThrow(() -> new InternWorkException.dataNotFoundException(
+                "updateUser Exception | [존재하지 않는 User ID : "
+                        + userId + "] | "
+                        + ExceptionCode.DATA_NOT_FOUND_EXCEPTION.getMessage()));
         user.updateUserName(request.getName() != null ? request.getName() : user.getName());
         try {
             userRepository.save(user);
         } catch (Exception e) {
             throw new InternWorkException.dataUpdateException(
-                    "updateUser Exception : "
-                            + ExceptionCode.DATA_UPDATE_EXCEPTION.getMessage() + " : "
+                    "updateUser Exception | "
+                            + ExceptionCode.DATA_UPDATE_EXCEPTION.getMessage() + " | "
                             + e.getMessage());
         }
         return UserMapper.toUpdateUserResponse(user);
@@ -68,7 +66,8 @@ public class UserService {
             return;
         }
         throw new InternWorkException.dataDeleteException(
-                "deleteUser Exception : [존재하지 않는 User ID] : "
+                "deleteUser Exception | [존재하지 않는 User ID : "
+                        + userId + "] | "
                         + ExceptionCode.DATA_DELETE_EXCEPTION.getMessage());
     }
 }
