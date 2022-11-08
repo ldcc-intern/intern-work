@@ -27,4 +27,22 @@ public class ResponseEntityExceptionHandler {
     ResponseEntity handleDataDuplicateException(InternWorkException.dataDuplicateException exception) {
         return new ResponseEntity(Response.dataDuplicateException2(exception), HttpStatus.CONFLICT);
     }
+
+    @ExceptionHandler(InternWorkException.dataSaveException.class)
+    public final ResponseEntity handleDataSaveException() {
+        Response response = Response.dataSaveException();
+        return new ResponseEntity(response, HttpStatus.CONFLICT);
+    }
+
+    @ExceptionHandler(InternWorkException.canNotMoveException.class)
+    public final ResponseEntity handleCanNotMoveException() {
+        Response response = Response.canNotMoveException();
+        return new ResponseEntity(response, HttpStatus.CONFLICT);
+    }
+
+    @ExceptionHandler(InternWorkException.referentialException.class)
+    public final ResponseEntity handleReferentialException() {
+        Response response = Response.referentialException();
+        return new ResponseEntity(response, HttpStatus.CONFLICT);
+    }
 }
