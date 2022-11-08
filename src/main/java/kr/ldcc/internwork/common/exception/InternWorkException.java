@@ -5,42 +5,30 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class InternWorkException {
-    public static class dataUpdateException extends RuntimeException {
-        public dataUpdateException() {
-            super(ExceptionCode.DATA_UPDATE_EXCEPTION.getMessage());
-        }
-
-        public dataUpdateException(String message) {
+    @NoArgsConstructor
+    public static class dataDuplicateException extends RuntimeException {
+        public dataDuplicateException(String message) {
             super(message);
         }
     }
 
-    public static class dataDeleteException extends RuntimeException {
-        public dataDeleteException() {
-            super(ExceptionCode.DATA_DELETE_EXCEPTION.getMessage());
-        }
-
-        public dataDeleteException(String message) {
-            super(message);
-        }
-    }
-
+    @NoArgsConstructor
     public static class dataNotFoundException extends RuntimeException {
-        public dataNotFoundException() {
-            super(ExceptionCode.DATA_NOT_FOUND_EXCEPTION.getMessage());
-        }
-
         public dataNotFoundException(String message) {
             super(message);
         }
     }
 
-    public static class dataDuplicateException extends RuntimeException {
-        public dataDuplicateException() {
-            super(ExceptionCode.DATA_DUPLICATE_EXCEPTION.getMessage());
+    @NoArgsConstructor
+    public static class dataUpdateException extends RuntimeException {
+        public dataUpdateException(String message) {
+            super(message);
         }
+    }
 
-        public dataDuplicateException(String message) {
+    @NoArgsConstructor
+    public static class dataDeleteException extends RuntimeException {
+        public dataDeleteException(String message) {
             super(message);
         }
     }
