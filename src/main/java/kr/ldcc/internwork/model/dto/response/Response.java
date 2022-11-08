@@ -43,4 +43,13 @@ public class Response<T> {
         log.info("[dataDuplicateException] code : {}, message : {}", response.getCode(), response.getMessage());
         return response;
     }
+
+    public static <T> Response<T> dataSaveException() {
+        Response<T> response = new Response<>();
+        response.setCode(ExceptionCode.DATA_SAVE_EXCEPTION.getCode());
+        response.setMessage(ExceptionCode.DATA_SAVE_EXCEPTION.getMessage());
+        log.info("[dataDuplicateException] code : {}, message : {}", response.getCode(), response.getMessage());
+        return response;
+    }
+
 }

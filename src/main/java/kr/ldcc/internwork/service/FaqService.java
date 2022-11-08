@@ -65,8 +65,13 @@ public class FaqService {
                 .build();
 
         // faq 정보 저장
-        faqRepository.save(faq);
-
+        try{
+            faqRepository.save(faq);
+        }
+        catch (Exception e){
+            log.error("registerFaq Exception :{}", e.getMessage());
+            throw new InternWorkException.dataSaveException();
+        }
 
         return FaqMapper.toRegisterFaqResponse(faq);
     }
@@ -164,7 +169,7 @@ public class FaqService {
             faqRepository.save(faq);
         } catch (Exception e) {
             log.error("updateFaq Exception : {}", e.getMessage());
-            throw new InternWorkException.dataUpdateException();
+            throw new InternWorkException.dataSaveException();
         }
 
         return faq;
