@@ -171,11 +171,9 @@ public class MenuService {
         if (parentId == 0) {
             return null;
         }
-        return menuRepository.findById(parentId).orElseThrow(() -> {
-            throw new InternWorkException.dataNotFoundException(
-                    "findParent Exception | [존재하지 않는 Menu ID : "
-                            + parentId + "] | "
-                            + ExceptionCode.DATA_NOT_FOUND_EXCEPTION.getMessage());
-        });
+        return menuRepository.findById(parentId).orElseThrow(() -> new InternWorkException.dataNotFoundException(
+                "findParent Exception | [존재하지 않는 Menu ID : "
+                        + parentId + "] | "
+                        + ExceptionCode.DATA_NOT_FOUND_EXCEPTION.getMessage()));
     }
 }
