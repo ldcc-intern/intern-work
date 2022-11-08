@@ -55,12 +55,10 @@ public class FaqService {
             throw new InternWorkException.dataNotFoundException();
         }
 
-        Category category = categoryRepository.findByCategoryName(registerFaqRequest.getCategoryName());
-
         LocalDateTime noticeDate = LocalDateTime.parse(registerFaqRequest.getNoticeDate() + " " +registerFaqRequest.getNoticeTime(), DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
 
         Faq faq = Faq.builder()
-                .category(category)
+                .category(categoryRepository.findByCategoryName(registerFaqRequest.getCategoryName()))
                 .faqType(registerFaqRequest.getFaqType())
                 .faqTitle(registerFaqRequest.getFaqTitle())
                 .registerUser(registerUser)
@@ -153,8 +151,7 @@ public class FaqService {
                 log.error("updateFaq Exception : [존재하지 않는 Category ID]", ExceptionCode.DATA_NOT_FOUND_EXCEPTION);
                 throw new InternWorkException.dataNotFoundException();
             }
-            Category category = categoryRepository.findByCategoryName(updateFaqRequest.getCategoryName());
-            faq.updateCategory(category);
+            faq.updateCategory(categoryRepository.findByCategoryName(updateFaqRequest.getCategoryName()));
         }
 
         if (updateFaqRequest.getNoticeDate() != null && updateFaqRequest.getNoticeTime() != null){
