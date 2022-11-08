@@ -12,7 +12,14 @@ public enum ExceptionCode {
     DATA_NOT_FOUND_EXCEPTION(HttpStatus.NOT_FOUND.value(), "요정하신 데이터가 없습니다."),
     DATA_UPDATE_EXCEPTION(HttpStatus.CONFLICT.value(), "데이터 수정에 실패하였습니다."),
     DATA_DELETE_EXCEPTION(HttpStatus.CONFLICT.value(), "데이터 삭제에 실패하였습니다."),
-    DATA_DUPLICATE_EXCEPTION(305, "중복된 데이터가 있습니다.");
+    DATA_DUPLICATE_EXCEPTION(305, "중복된 데이터가 있습니다."),
+
+    REFERENTIAL_EXCEPTION(307, "참조하는 데이터가 있습니다."),
+
+    CAN_NOT_MOVE_EXCEPTION(302, "이동할 수 없습니다.");
+
+
+
     private final int code;
     private final String message;
 }

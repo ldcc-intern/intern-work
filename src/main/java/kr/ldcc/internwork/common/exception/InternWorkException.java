@@ -50,7 +50,7 @@ public class InternWorkException {
     }
 
     @NoArgsConstructor
-    public static class referentialIntegrityException extends RuntimeException {
+    public static class referentialException extends RuntimeException {
     }
 
     @NoArgsConstructor

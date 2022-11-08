@@ -10,7 +10,7 @@ public interface FaqRepository extends JpaRepository<Faq, Long>, FaqRepositorySu
 
     Faq findByFaqTitle(String faqTitle);
 
-    Optional<Faq> findByCategoryId(Long categoryId);
+    List<Faq> findByCategoryId(Long categoryId);
 
 
 

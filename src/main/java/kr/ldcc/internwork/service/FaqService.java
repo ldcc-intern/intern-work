@@ -135,7 +135,7 @@ public class FaqService {
         // Null 일 경우, ERROR 발생
         Faq faq = faqRepository.findById(faqId).orElseThrow(() -> {
             log.error("updateFaq Exception : [존재하지 않는 Faq ID]", ExceptionCode.DATA_NOT_FOUND_EXCEPTION);
-            return new InternWorkException.dataUpdateException();
+            return new InternWorkException.dataNotFoundException();
         });
 
         User user = userRepository.findById(updateFaqRequest.getUpdateUserId()).orElseThrow(() -> {
@@ -169,7 +169,7 @@ public class FaqService {
             faqRepository.save(faq);
         } catch (Exception e) {
             log.error("updateFaq Exception : {}", e.getMessage());
-            throw new InternWorkException.dataSaveException();
+            throw new InternWorkException.dataUpdateException();
         }
 
         return faq;

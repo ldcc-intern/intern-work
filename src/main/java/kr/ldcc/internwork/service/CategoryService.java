@@ -5,6 +5,7 @@ import kr.ldcc.internwork.common.exception.InternWorkException;
 import kr.ldcc.internwork.model.dto.request.CategoryRequest;
 import kr.ldcc.internwork.model.dto.response.Response;
 import kr.ldcc.internwork.model.entity.Category;
+import kr.ldcc.internwork.model.entity.Faq;
 import kr.ldcc.internwork.model.entity.User;
 import kr.ldcc.internwork.model.mapper.CategoryMapper;
 import kr.ldcc.internwork.repository.CategoryRepository;
@@ -39,7 +40,7 @@ public class CategoryService {
     public Response createCategory(CategoryRequest.CreateCategoryRequest createCategoryRequest) {
 
         User user = userRepository.findById(createCategoryRequest.getRegisterUserId()).orElseThrow(() -> {
-            log.error("createCategory Exception : [존재하지 않는 User ID]");
+            log.error("createCategory Exception : [존재하지 않는 User ID]", ExceptionCode.DATA_NOT_FOUND_EXCEPTION);
             return new InternWorkException.dataNotFoundException();
         });
 
@@ -47,7 +48,7 @@ public class CategoryService {
         Optional<Category> categoryCheck = Optional.ofNullable(categoryRepository.findByCategoryName(createCategoryRequest.getCategoryName()));
         if(categoryCheck.isPresent()){
             log.error("createCategory Exception : [카테고리 이름 중복]", ExceptionCode.DATA_DUPLICATE_EXCEPTION) ;
-            return Response.dataDuplicateException();
+            throw new InternWorkException.dataDuplicateException();
 
         }
 
@@ -63,9 +64,9 @@ public class CategoryService {
             // category 정보 저장
             categoryRepository.save(category);
         }
-        catch(Exception e){
+        catch(Exception e){ // 카테고리 정보 저장 실패
             log.error("createCategory Exception : {}", e.getMessage());
-            throw new InternWorkException.dataDuplicateException();
+            throw new InternWorkException.dataSaveException();
         }
 
         return Response.ok().setData(category.getId());
@@ -92,14 +93,10 @@ public class CategoryService {
     public Category getCategoryDetail(Long categoryId) {
         Category category = categoryRepository.findById(categoryId).orElseThrow(() ->{
             log.error("getDetailCategory Exception : [존재하지 않는 Category ID]", ExceptionCode.DATA_NOT_FOUND_EXCEPTION);
-            return new InternWorkException.dataDuplicateException();});
+            return new InternWorkException.dataNotFoundException();});
 
         return category;
     }
-
-
-
-
 
 
     /** * * * * * * * * *
@@ -113,7 +110,7 @@ public class CategoryService {
         // Null 일 경우 , ERROR  발생
         Category category = categoryRepository.findById(categoryId).orElseThrow(() -> {
             log.error("updateCategory Exception : [존재하지 않는 Category ID]", ExceptionCode.DATA_NOT_FOUND_EXCEPTION) ;
-            return new InternWorkException.dataUpdateException();
+            return new InternWorkException.dataNotFoundException();
         });
 
         User user = userRepository.findById(updateCategoryRequest.getUpdateUserId()).orElseThrow(() -> {
@@ -175,37 +172,34 @@ public class CategoryService {
      * * * * * * * * * */
     @Transactional
     public Response deleteCategory(Long categoryId) {
-        Optional<Category> category = categoryRepository.findById(categoryId);
+        Category category = categoryRepository.findById(categoryId).orElseThrow(() -> {
+            log.error("updateCategory Exception : [존재하지 않는 Category ID]", ExceptionCode.DATA_NOT_FOUND_EXCEPTION) ;
+            return new InternWorkException.dataNotFoundException();
+        });
 
         // 해당 카테고리에 faq 존재시 삭제 불가
-        if(faqRepository.findByCategoryId(categoryId).isPresent()){
+        List<Faq> faqs = faqRepository.findByCategoryId(categoryId);
+        if(faqs != null && !faqs.isEmpty()){
+            System.out.println(faqs);
             log.error("Delete Category Exception : [해당 카테고리에 faq 존재 -> 삭제 불가]");
-            throw new InternWorkException.referentialIntegrityException();
+            throw new InternWorkException.referentialException();
         }
 
-        if(category.isPresent()){
-            try{
-
-                // orderId 수정
-                if(categoryRepository.findAll().size() - 1 != category.get().getOrderId()){
-                    List<Category> categories = categoryRepository.findAll();
-                    for (Category changeOrderId : categories){
-                        if(changeOrderId.getOrderId() > category.get().getOrderId()){
-                            changeOrderId.updateOrderId(changeOrderId.getOrderId()-1);
-                        }
+        try{  // orderId 수정
+            if(categoryRepository.findAll().size() - 1 != category.getOrderId()){ // 맨 끝 OrderId 가 아닐경우
+                List<Category> categories = categoryRepository.findAll();
+                for (Category changeOrderId : categories){
+                    if(changeOrderId.getOrderId() > category.getOrderId()){
+                        changeOrderId.updateOrderId(changeOrderId.getOrderId()-1);
                     }
                 }
-
-                categoryRepository.deleteById(categoryId);
-            } catch (Exception e){
-                log.error("deleteCategory Exception : {}", e.getMessage());
-                throw new InternWorkException.dataDeleteException();
             }
-
-            return Response.ok();
+            categoryRepository.deleteById(categoryId);
+        } catch (Exception e){
+            log.error("deleteCategory Exception : {}", e.getMessage());
+            throw new InternWorkException.dataDeleteException();
         }
-        log.error("deleteCategory Exception : {}", ExceptionCode.DATA_NOT_FOUND_EXCEPTION);
-        throw new InternWorkException.dataNotFoundException();
+            return Response.ok();
 
     }
 

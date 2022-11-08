@@ -54,9 +54,9 @@ public class Response<T> {
     }
 
     public static <T> Response<T> dataDuplicateException() {
-        Response<T> response = new Response<T>()
-                .setCode(ExceptionCode.DATA_DUPLICATE_EXCEPTION.getCode())
-                .setMessage(ExceptionCode.DATA_DUPLICATE_EXCEPTION.getMessage());
+        Response<T> response = new Response<>();
+        response.setCode(ExceptionCode.DATA_DUPLICATE_EXCEPTION.getCode());
+        response.setMessage(ExceptionCode.DATA_DUPLICATE_EXCEPTION.getMessage());
         log.info("[dataDuplicateException] code : {}, message : {}", response.getCode(), response.getMessage());
         return response;
     }
@@ -65,7 +65,23 @@ public class Response<T> {
         Response<T> response = new Response<>();
         response.setCode(ExceptionCode.DATA_SAVE_EXCEPTION.getCode());
         response.setMessage(ExceptionCode.DATA_SAVE_EXCEPTION.getMessage());
-        log.info("[dataDuplicateException] code : {}, message : {}", response.getCode(), response.getMessage());
+        log.info("[dataSaveException] code : {}, message : {}", response.getCode(), response.getMessage());
+        return response;
+    }
+
+    public static <T> Response<T> canNotMoveException() {
+        Response<T> response = new Response<>();
+        response.setCode(ExceptionCode.CAN_NOT_MOVE_EXCEPTION.getCode());
+        response.setMessage(ExceptionCode.CAN_NOT_MOVE_EXCEPTION.getMessage());
+        log.info("[canNotMoveException] code : {}, message : {}", response.getCode(), response.getMessage());
+        return response;
+    }
+
+    public static <T> Response<T> referentialException() {
+        Response<T> response = new Response<>();
+        response.setCode(ExceptionCode.REFERENTIAL_EXCEPTION.getCode());
+        response.setMessage(ExceptionCode.REFERENTIAL_EXCEPTION.getMessage());
+        log.info("[referentialException] code : {}, message : {}", response.getCode(), response.getMessage());
         return response;
     }
 }
