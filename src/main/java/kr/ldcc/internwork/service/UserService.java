@@ -1,5 +1,6 @@
 package kr.ldcc.internwork.service;
 
+import kr.ldcc.internwork.common.exception.ExceptionCode;
 import kr.ldcc.internwork.common.exception.InternWorkException;
 import kr.ldcc.internwork.model.dto.UserDto;
 import kr.ldcc.internwork.model.dto.request.UserRequest;
@@ -26,8 +27,10 @@ public class UserService {
         try {
             userRepository.save(user);
         } catch (Exception e) {
-            log.error("createUser Exception : {}", e.getMessage());
-            throw new InternWorkException.dataDuplicateException();
+            throw new InternWorkException.dataDuplicateException(
+                    "createUser Exception : "
+                            + ExceptionCode.DATA_DUPLICATE_EXCEPTION.getMessage() + " : "
+                            + e.getMessage());
         }
         return user.getId();
     }
@@ -40,15 +43,19 @@ public class UserService {
     @Transactional
     public UserDto.UpdateUserResponse updateUser(Long userId, UserRequest.UpdateUserRequest request) {
         User user = userRepository.findById(userId).orElseThrow(() -> {
-            log.error("updateUser Exception : [존재하지 않는 User ID]");
-            return new InternWorkException.dataNotFoundException();
+            throw new InternWorkException.dataNotFoundException(
+                    "updateUser Exception : [존재하지 않는 User ID] : "
+                            + ExceptionCode.DATA_NOT_FOUND_EXCEPTION.getMessage()
+            );
         });
         user.updateUserName(request.getName() != null ? request.getName() : user.getName());
         try {
             userRepository.save(user);
         } catch (Exception e) {
-            log.error("updateUser Exception : {}", e.getMessage());
-            throw new InternWorkException.dataUpdateException();
+            throw new InternWorkException.dataUpdateException(
+                    "updateUser Exception : "
+                            + ExceptionCode.DATA_UPDATE_EXCEPTION.getMessage() + " : "
+                            + e.getMessage());
         }
         return UserMapper.toUpdateUserResponse(user);
     }
@@ -60,6 +67,8 @@ public class UserService {
             userRepository.deleteById(userId);
             return;
         }
-        throw new InternWorkException.dataNotFoundException();
+        throw new InternWorkException.dataDeleteException(
+                "deleteUser Exception : [존재하지 않는 User ID] : "
+                        + ExceptionCode.DATA_DELETE_EXCEPTION.getMessage());
     }
 }
