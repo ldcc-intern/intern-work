@@ -7,41 +7,41 @@ import org.springframework.stereotype.Component;
 public class InternWorkException {
     public static class dataUpdateException extends RuntimeException {
         public dataUpdateException() {
-            super("데이터 수정에 실패하였습니다.");
+            super(ExceptionCode.DATA_UPDATE_EXCEPTION.getMessage());
         }
 
         public dataUpdateException(String message) {
-            super(message + " 데이터 수정에 실패하였습니다.");
+            super(message);
         }
     }
 
     public static class dataDeleteException extends RuntimeException {
         public dataDeleteException() {
-            super("데이터 삭제에 실패하였습니다.");
+            super(ExceptionCode.DATA_DELETE_EXCEPTION.getMessage());
         }
 
         public dataDeleteException(String message) {
-            super(message + " 데이터 삭제에 실패하였습니다.");
+            super(message);
         }
     }
 
     public static class dataNotFoundException extends RuntimeException {
         public dataNotFoundException() {
-            super("요청하신 데이터가 없습니다.");
+            super(ExceptionCode.DATA_NOT_FOUND_EXCEPTION.getMessage());
         }
 
         public dataNotFoundException(String message) {
-            super(message + " 요청하신 데이터가 없습니다.");
+            super(message);
         }
     }
 
     public static class dataDuplicateException extends RuntimeException {
         public dataDuplicateException() {
-            super("중복된 데이터가 있습니다.");
+            super(ExceptionCode.DATA_DUPLICATE_EXCEPTION.getMessage());
         }
 
         public dataDuplicateException(String message) {
-            super(message + " 중복된 데이터가 있습니다.");
+            super(message);
         }
     }
 
@@ -54,7 +54,6 @@ public class InternWorkException {
     }
 
     @NoArgsConstructor
-    public static class dataSaveException extends RuntimeException{
+    public static class dataSaveException extends RuntimeException {
     }
-
 }

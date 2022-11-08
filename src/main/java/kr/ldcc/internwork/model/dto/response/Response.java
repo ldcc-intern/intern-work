@@ -24,34 +24,41 @@ public class Response<T> {
     private T data;
 
     public static <T> Response<T> ok() {
-        Response<T> response = new Response<>();
-        response.setCode(ExceptionCode.SUCCESS.getCode());
-        response.setMessage(ExceptionCode.SUCCESS.getMessage());
-        return response;
+        return new Response<T>()
+                .setCode(ExceptionCode.SUCCESS.getCode())
+                .setMessage(ExceptionCode.SUCCESS.getMessage());
     }
 
-    public static <T> Response<T> dataUpdateException() {
+    public static <T> Response<T> dataDuplicateException2(InternWorkException.dataDuplicateException exception) {
         return new Response<T>()
                 .setCode(HttpStatus.CONFLICT.value())
-                .setMessage(new InternWorkException.dataUpdateException().getMessage());
+                .setMessage(exception.getMessage());
     }
 
-    public static <T> Response<T> dataDeleteException() {
-        return new Response<T>()
-                .setCode(HttpStatus.CONFLICT.value())
-                .setMessage(new InternWorkException.dataDeleteException().getMessage());
-    }
-
-    public static <T> Response<T> dataNotFoundException() {
+    public static <T> Response<T> dataNotFoundException(InternWorkException.dataNotFoundException exception) {
         return new Response<T>()
                 .setCode(HttpStatus.NOT_FOUND.value())
-                .setMessage(new InternWorkException.dataNotFoundException().getMessage());
+                .setMessage(exception.getMessage());
+    }
+
+    public static <T> Response<T> dataUpdateException(InternWorkException.dataUpdateException exception) {
+        return new Response<T>()
+                .setCode(HttpStatus.CONFLICT.value())
+                .setMessage(exception.getMessage());
+    }
+
+    public static <T> Response<T> dataDeleteException(InternWorkException.dataDeleteException exception) {
+        return new Response<T>()
+                .setCode(HttpStatus.CONFLICT.value())
+                .setMessage(exception.getMessage());
     }
 
     public static <T> Response<T> dataDuplicateException() {
-        return new Response<T>()
-                .setCode(HttpStatus.CONFLICT.value())
-                .setMessage(new InternWorkException.dataDuplicateException().getMessage());
+        Response<T> response = new Response<T>()
+                .setCode(ExceptionCode.DATA_DUPLICATE_EXCEPTION.getCode())
+                .setMessage(ExceptionCode.DATA_DUPLICATE_EXCEPTION.getMessage());
+        log.info("[dataDuplicateException] code : {}, message : {}", response.getCode(), response.getMessage());
+        return response;
     }
 
     public static <T> Response<T> dataSaveException() {
@@ -61,5 +68,4 @@ public class Response<T> {
         log.info("[dataDuplicateException] code : {}, message : {}", response.getCode(), response.getMessage());
         return response;
     }
-
 }
