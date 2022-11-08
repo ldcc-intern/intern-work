@@ -49,7 +49,6 @@ public class CategoryService {
         if(categoryCheck.isPresent()){
             log.error("createCategory Exception : [카테고리 이름 중복]", ExceptionCode.DATA_DUPLICATE_EXCEPTION) ;
             throw new InternWorkException.dataDuplicateException();
-
         }
 
         Category category = Category.builder()

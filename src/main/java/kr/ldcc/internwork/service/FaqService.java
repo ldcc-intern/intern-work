@@ -48,10 +48,14 @@ public class FaqService {
             return new InternWorkException.dataNotFoundException();
         });
 
-        Category category = categoryRepository.findById(registerFaqRequest.getCategoryId()).orElseThrow(()->{
+        // 카테고리 이름으로 카테고리 있는지 찾기
+        Optional<Category> categoryCheck = Optional.ofNullable(categoryRepository.findByCategoryName(registerFaqRequest.getCategoryName()));
+        if(!categoryCheck.isPresent()){
             log.error("registerFaq Exception : [존재하지 않는 Category ID]", ExceptionCode.DATA_NOT_FOUND_EXCEPTION);
-            return new InternWorkException.dataNotFoundException();
-        });
+            throw new InternWorkException.dataNotFoundException();
+        }
+
+        Category category = categoryRepository.findByCategoryName(registerFaqRequest.getCategoryName());
 
         LocalDateTime noticeDate = LocalDateTime.parse(registerFaqRequest.getNoticeDate() + " " +registerFaqRequest.getNoticeTime(), DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
 
@@ -143,11 +147,13 @@ public class FaqService {
             return new InternWorkException.dataNotFoundException();
         });
 
-        if(updateFaqRequest.getCategoryId() != null){
-            Category category = categoryRepository.findById(updateFaqRequest.getCategoryId()).orElseThrow(() -> {
+        if(updateFaqRequest.getCategoryName() != null){
+            Optional<Category> categoryCheck = Optional.ofNullable(categoryRepository.findByCategoryName(updateFaqRequest.getCategoryName()));
+            if(!categoryCheck.isPresent()){
                 log.error("updateFaq Exception : [존재하지 않는 Category ID]", ExceptionCode.DATA_NOT_FOUND_EXCEPTION);
-                return new InternWorkException.dataNotFoundException();
-            });
+                throw new InternWorkException.dataNotFoundException();
+            }
+            Category category = categoryRepository.findByCategoryName(updateFaqRequest.getCategoryName());
             faq.updateCategory(category);
         }
 
