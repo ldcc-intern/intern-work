@@ -154,7 +154,7 @@ public class CategoryService {
 
 
         // Null 이 아니면
-        category.updateCategoryName(updateCategoryRequest.getCategoryName());
+        category.updateCategoryName(updateCategoryRequest.getCategoryName()!= null ? updateCategoryRequest.getCategoryName():category.getCategoryName());
         category.updateCategoryType(updateCategoryRequest.getCategoryType() != null ? updateCategoryRequest.getCategoryType():category.getCategoryType());
         category.updateUpdateUser(user);
 
