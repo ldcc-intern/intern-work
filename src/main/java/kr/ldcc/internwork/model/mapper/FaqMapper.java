@@ -65,6 +65,4 @@ public class FaqMapper {
                 .setContent(faq.getContent());
     }
 
-    // faq 삭제 Response
-    public static FaqDto toDeleteFaqResponse(Faq faq) {return ObjectMapperUtils.map(faq, FaqDto.class);}
 }

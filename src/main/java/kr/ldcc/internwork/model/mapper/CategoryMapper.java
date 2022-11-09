@@ -13,15 +13,6 @@ import java.util.List;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class CategoryMapper {
 
-    public static CategoryDto toCategoryDto(Category category) {
-        return ObjectMapperUtils.map(category, CategoryDto.class);
-    }
-
-    // category 생성 Response
-    public static Response toCreateCategoryResponse(Long id) {
-
-        return Response.ok().setData(new CategoryDto.CreateCategoryResponse().setId(id));
-    }
 
     // category 리스트 조회 Response
     public static Object toGetCategoryListResponse(List<Category> categories) {
@@ -61,8 +52,4 @@ public class CategoryMapper {
                 .setUpdateDate(category.getUpdateDate().format(DateTimeFormatter.ofPattern("yyyy/MM/dd hh:mm")));
     }
 
-    // category 삭제 Response
-    public static Response toDeleteCategoryResponse() {
-        return Response.ok();
-    }
 }
