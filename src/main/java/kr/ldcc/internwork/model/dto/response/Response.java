@@ -75,7 +75,7 @@ public class Response<T> {
         return response;
     }
 
-    public static <T> Response<T> httpMessageNotReadableException(String toString) {
+    public static <T> Response<T> dataValidationException(String toString) {
         Response<T> response = new Response<T>()
                 .setCode(ExceptionCode.DATA_VALIDATION_EXCEPTION.getCode())
                 .setMessage(toString);
