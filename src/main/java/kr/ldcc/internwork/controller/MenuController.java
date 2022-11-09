@@ -1,5 +1,6 @@
 package kr.ldcc.internwork.controller;
 
+import kr.ldcc.internwork.model.dto.MenuDto;
 import kr.ldcc.internwork.model.dto.request.MenuRequest;
 import kr.ldcc.internwork.model.dto.response.Response;
 import kr.ldcc.internwork.service.MenuService;
@@ -15,23 +16,23 @@ public class MenuController {
     private final MenuService menuService;
 
     @PostMapping("/menu")
-    public Response<Object> createMenu(@RequestBody @Valid MenuRequest request) {
-        return Response.ok().setData(menuService.createMenu(request));
+    public Response<Long> createMenu(@RequestBody @Valid MenuRequest request) {
+        return Response.<Long>ok().setData(menuService.createMenu(request));
     }
 
     @GetMapping("/menu")
-    public Response<Object> getMenuList() {
-        return Response.ok().setData(menuService.getMenuList());
+    public Response<MenuDto.GetMenuListResponse> getMenuList() {
+        return Response.<MenuDto.GetMenuListResponse>ok().setData(menuService.getMenuList());
     }
 
     @GetMapping("/menu/{menuId}")
-    public Response<Object> getDetailMenu(@PathVariable("menuId") Long menuId) {
-        return Response.ok().setData(menuService.getDetailMenu(menuId));
+    public Response<MenuDto.GetDetailMenuResponse> getDetailMenu(@PathVariable("menuId") Long menuId) {
+        return Response.<MenuDto.GetDetailMenuResponse>ok().setData(menuService.getDetailMenu(menuId));
     }
 
     @PutMapping("/menu/{menuId}")
-    public Response<Object> updateMenu(@PathVariable("menuId") Long menuId, @RequestBody @Valid MenuRequest request) {
-        return Response.ok().setData(menuService.updateMenu(menuId, request));
+    public Response<MenuDto.UpdateMenuResponse> updateMenu(@PathVariable("menuId") Long menuId, @RequestBody @Valid MenuRequest request) {
+        return Response.<MenuDto.UpdateMenuResponse>ok().setData(menuService.updateMenu(menuId, request));
     }
 
     @DeleteMapping("/menu/{menuId}")

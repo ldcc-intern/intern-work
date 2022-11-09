@@ -11,6 +11,8 @@ import java.util.Optional;
 public interface MenuRepository extends JpaRepository<Menu, Long> {
     Optional<Menu> findByTitle(String title);
 
+    Optional<Menu> findByParentAndOrderId(Menu parent, Integer orderId);
+
     List<Menu> findAllByParent(Menu parent);
 
     ArrayList<Menu> findAllByParent(Sort sort, Menu parent);

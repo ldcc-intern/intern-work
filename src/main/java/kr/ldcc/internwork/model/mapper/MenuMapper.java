@@ -19,7 +19,7 @@ public class MenuMapper {
                 .parentId(menu.getParent() != null ? menu.getParent().getId() : 0)
                 .title(menu.getTitle())
                 .build()
-        ).collect(Collectors.groupingBy(menuListResponse -> menuListResponse.getParentId()));
+        ).collect(Collectors.groupingBy(MenuDto.GetMenuListResponse::getParentId));
         MenuDto.GetMenuListResponse getMenuListResponse = MenuDto.GetMenuListResponse.builder().id(0L).build();
         addChildren(getMenuListResponse, groupingByParent);
         return getMenuListResponse;

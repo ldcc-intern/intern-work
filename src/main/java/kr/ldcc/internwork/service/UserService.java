@@ -1,5 +1,6 @@
 package kr.ldcc.internwork.service;
 
+import kr.ldcc.internwork.common.exception.ExceptionCode;
 import kr.ldcc.internwork.common.exception.InternWorkException;
 import kr.ldcc.internwork.model.dto.UserDto;
 import kr.ldcc.internwork.model.dto.request.UserRequest;
@@ -26,7 +27,7 @@ public class UserService {
         try {
             userRepository.save(user);
         } catch (Exception e) {
-            log.error("createUser Exception | " + e.getMessage());
+            log.error("createUser Exception", ExceptionCode.DATA_DUPLICATE_EXCEPTION, e.getMessage());
             throw new InternWorkException.dataDuplicateException();
         }
         return user.getId();
@@ -40,14 +41,14 @@ public class UserService {
     @Transactional
     public UserDto updateUser(Long userId, UserRequest request) {
         User user = userRepository.findById(userId).orElseThrow(() -> {
-            log.error("updateUser Exception | [존재하지 않는 User ID : " + userId + "]");
+            log.error("updateUser Exception | [존재하지 않는 User ID : " + userId + "]", ExceptionCode.DATA_NOT_FOUND_EXCEPTION);
             return new InternWorkException.dataNotFoundException();
         });
         user.updateUserName(request.getName() != null ? request.getName() : user.getName());
         try {
             userRepository.save(user);
         } catch (Exception e) {
-            log.error("updateUser Exception | " + e.getMessage());
+            log.error("updateUser Exception", ExceptionCode.DATA_UPDATE_EXCEPTION, e.getMessage());
             throw new InternWorkException.dataUpdateException();
         }
         return UserMapper.toUpdateUserResponse(user);
@@ -60,7 +61,7 @@ public class UserService {
             userRepository.deleteById(userId);
             return;
         }
-        log.error("deleteUser Exception | [존재하지 않는 User ID : " + userId + "]");
+        log.error("deleteUser Exception | [존재하지 않는 User ID : " + userId + "]", ExceptionCode.DATA_DELETE_EXCEPTION);
         throw new InternWorkException.dataDeleteException();
     }
 }
