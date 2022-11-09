@@ -15,22 +15,22 @@ public class UserController {
     private final UserService userService;
 
     @PostMapping("/user")
-    public Response createUser(@RequestBody @Valid UserRequest request) {
+    public Response<Object> createUser(@RequestBody @Valid UserRequest request) {
         return Response.ok().setData(userService.createUser(request));
     }
 
     @GetMapping("/user")
-    public Response getUserList() {
+    public Response<Object> getUserList() {
         return Response.ok().setData(userService.getUserList());
     }
 
     @PutMapping("/user/{userId}")
-    public Response updateUser(@PathVariable("userId") Long userId, @RequestBody @Valid UserRequest request) {
+    public Response<Object> updateUser(@PathVariable("userId") Long userId, @RequestBody @Valid UserRequest request) {
         return Response.ok().setData(userService.updateUser(userId, request));
     }
 
     @DeleteMapping("/user/{userId}")
-    public Response deleteUser(@PathVariable("userId") Long userId) {
+    public Response<Object> deleteUser(@PathVariable("userId") Long userId) {
         userService.deleteUser(userId);
         return Response.ok();
     }

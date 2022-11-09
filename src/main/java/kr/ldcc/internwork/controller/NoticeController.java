@@ -19,12 +19,12 @@ public class NoticeController {
     private final NoticeService noticeService;
 
     @PostMapping("/notice")
-    public Response createNotice(@RequestBody @Valid NoticeRequest.CreateNoticeRequest createNoticeRequest) {
+    public Response<Object> createNotice(@RequestBody @Valid NoticeRequest.CreateNoticeRequest createNoticeRequest) {
         return Response.ok().setData(noticeService.createNotice(createNoticeRequest));
     }
 
     @GetMapping("/notice")
-    public Response getNoticeList(
+    public Response<Object> getNoticeList(
             @RequestParam(required = false) @Enum(enumClass = NoticeType.class) NoticeType state,
             @RequestParam(required = false) String regStart,
             @RequestParam(required = false) String regEnd,
@@ -38,17 +38,17 @@ public class NoticeController {
     }
 
     @GetMapping("/notice/{noticeId}")
-    public Response getDetailNotice(@PathVariable("noticeId") Long noticeId) {
+    public Response<Object> getDetailNotice(@PathVariable("noticeId") Long noticeId) {
         return Response.ok().setData(noticeService.getDetailNotice(noticeId));
     }
 
     @PutMapping("/notice/{noticeId}")
-    public Response updateNotice(@PathVariable("noticeId") Long noticeId, @RequestBody @Valid NoticeRequest.UpdateNoticeRequest updateNoticeRequest) {
+    public Response<Object> updateNotice(@PathVariable("noticeId") Long noticeId, @RequestBody @Valid NoticeRequest.UpdateNoticeRequest updateNoticeRequest) {
         return Response.ok().setData(noticeService.updateNotice(noticeId, updateNoticeRequest));
     }
 
     @DeleteMapping("/notice/{noticeId}")
-    public Response deleteNotice(@PathVariable("noticeId") Long noticeId) {
+    public Response<Object> deleteNotice(@PathVariable("noticeId") Long noticeId) {
         noticeService.deleteNotice(noticeId);
         return Response.ok();
     }
