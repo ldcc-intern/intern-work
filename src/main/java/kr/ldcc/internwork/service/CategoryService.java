@@ -90,11 +90,9 @@ public class CategoryService {
      * * * * * * * * * * * */
     @Transactional
     public Category getCategoryDetail(Long categoryId) {
-        Category category = categoryRepository.findById(categoryId).orElseThrow(() ->{
+        return categoryRepository.findById(categoryId).orElseThrow(() ->{
             log.error("getDetailCategory Exception : [존재하지 않는 Category ID]", ExceptionCode.DATA_NOT_FOUND_EXCEPTION);
             return new InternWorkException.dataNotFoundException();});
-
-        return category;
     }
 
 
