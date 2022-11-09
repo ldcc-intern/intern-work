@@ -32,4 +32,12 @@ public class InternWorkException {
     @NoArgsConstructor
     public static class dataSaveException extends RuntimeException {
     }
+
+    @NoArgsConstructor
+    public static class dataOutOfBoundsException extends RuntimeException {
+    }
+
+    @NoArgsConstructor
+    public static class enumNullPointerException extends RuntimeException {
+    }
 }

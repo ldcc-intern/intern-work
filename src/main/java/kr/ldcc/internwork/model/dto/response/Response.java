@@ -59,6 +59,38 @@ public class Response<T> {
         return response;
     }
 
+    public static <T> Response<T> dataOutOfBoundsException() {
+        Response<T> response = new Response<T>()
+                .setCode(ExceptionCode.DATA_OUT_OF_BOUNDS_EXCEPTION.getCode())
+                .setMessage(ExceptionCode.DATA_OUT_OF_BOUNDS_EXCEPTION.getMessage());
+        log.info("[dataOutOfBoundsException] code : {}, message : {}", response.getCode(), response.getMessage());
+        return response;
+    }
+
+    public static <T> Response<T> enumNullPointerException() {
+        Response<T> response = new Response<T>()
+                .setCode(ExceptionCode.ENUM_NULL_POINTER_EXCEPTION.getCode())
+                .setMessage(ExceptionCode.ENUM_NULL_POINTER_EXCEPTION.getMessage());
+        log.info("[enumNullPointerException] code : {}, message : {}", response.getCode(), response.getMessage());
+        return response;
+    }
+
+    public static <T> Response<T> httpMessageNotReadableException(String toString) {
+        Response<T> response = new Response<T>()
+                .setCode(ExceptionCode.DATA_VALIDATION_EXCEPTION.getCode())
+                .setMessage(toString);
+        log.info("[httpMessageNotReadableException] code : {}, message : {}", response.getCode(), response.getMessage());
+        return response;
+    }
+
+    public static <T> Response<T> nullPointerException() {
+        Response<T> response = new Response<T>()
+                .setCode(ExceptionCode.NULL_POINTER_EXCEPTION.getCode())
+                .setMessage(ExceptionCode.NULL_POINTER_EXCEPTION.getMessage());
+        log.info("[nullPointerException] code : {}, message : {}", response.getCode(), response.getMessage());
+        return response;
+    }
+
     public static <T> Response<T> dataSaveException() {
         Response<T> response = new Response<>();
         response.setCode(ExceptionCode.DATA_SAVE_EXCEPTION.getCode());

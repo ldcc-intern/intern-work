@@ -3,6 +3,7 @@ package kr.ldcc.internwork.common.exception;
 import kr.ldcc.internwork.model.dto.response.Response;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
@@ -28,20 +29,40 @@ public class ResponseEntityExceptionHandler {
         return new ResponseEntity<>(Response.dataDeleteException(), HttpStatus.CONFLICT);
     }
 
+    @ExceptionHandler(InternWorkException.dataOutOfBoundsException.class)
+    public ResponseEntity<Response<Object>> handleDataOutOfBoundsException() {
+        return new ResponseEntity<>(Response.dataOutOfBoundsException(), HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @ExceptionHandler(InternWorkException.enumNullPointerException.class)
+    public ResponseEntity<Response<Object>> handleEnumNullPointerException() {
+        return new ResponseEntity<>(Response.enumNullPointerException(), HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    public ResponseEntity<Response<Object>> handleHttpMessageNotReadableException(HttpMessageNotReadableException e) {
+        return new ResponseEntity<>(Response.httpMessageNotReadableException(ExceptionCode.DATA_VALIDATION_EXCEPTION.getMessage() + e.getMessage()), HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(NullPointerException.class)
+    public ResponseEntity<Response<Object>> handleNullPointerException() {
+        return new ResponseEntity<>(Response.nullPointerException(), HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
     @ExceptionHandler(InternWorkException.dataSaveException.class)
-    public final ResponseEntity<Response<Object>> handleDataSaveException() {
+    public ResponseEntity<Response<Object>> handleDataSaveException() {
         Response<Object> response = Response.dataSaveException();
         return new ResponseEntity<>(response, HttpStatus.CONFLICT);
     }
 
     @ExceptionHandler(InternWorkException.canNotMoveException.class)
-    public final ResponseEntity<Response<Object>> handleCanNotMoveException() {
+    public ResponseEntity<Response<Object>> handleCanNotMoveException() {
         Response<Object> response = Response.canNotMoveException();
         return new ResponseEntity<>(response, HttpStatus.CONFLICT);
     }
 
     @ExceptionHandler(InternWorkException.referentialException.class)
-    public final ResponseEntity<Response<Object>> handleReferentialException() {
+    public ResponseEntity<Response<Object>> handleReferentialException() {
         Response<Object> response = Response.referentialException();
         return new ResponseEntity<>(response, HttpStatus.CONFLICT);
     }
