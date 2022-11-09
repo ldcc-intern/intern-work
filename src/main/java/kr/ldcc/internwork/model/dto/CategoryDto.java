@@ -91,15 +91,6 @@ public class CategoryDto {
 
     }
 
-    @Getter
-    @Setter
-    @NoArgsConstructor
-    @Accessors(chain = true)
-    @JsonIgnoreProperties(ignoreUnknown = true)
-    @JsonInclude(value = JsonInclude.Include.NON_NULL)
-    public static class CategoryDuplicateResponse{
-        private boolean result;
-    }
 
 
 }
