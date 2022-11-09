@@ -2,7 +2,6 @@ package kr.ldcc.internwork.controller;
 
 
 import kr.ldcc.internwork.common.types.FaqType;
-import kr.ldcc.internwork.common.types.validation.Enum;
 import kr.ldcc.internwork.model.dto.request.FaqRequest;
 import kr.ldcc.internwork.model.dto.response.Response;
 import kr.ldcc.internwork.model.mapper.FaqMapper;
@@ -52,7 +51,7 @@ public class FaqController {
     @GetMapping("/faq")
     public Response searchFaqList(
             @PageableDefault(size=25) Pageable pageable,
-            @RequestParam(required = false) @Enum(enumClass = FaqType.class) FaqType faqType,
+            @RequestParam(required = false) FaqType faqType,
             @RequestParam(required = false) String registerStart,
             @RequestParam(required = false) String registerEnd,
             @RequestParam(required = false) String noticeStart,

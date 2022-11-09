@@ -1,7 +1,6 @@
 package kr.ldcc.internwork.controller;
 
 import kr.ldcc.internwork.common.types.NoticeType;
-import kr.ldcc.internwork.common.types.validation.Enum;
 import kr.ldcc.internwork.model.dto.NoticeDto;
 import kr.ldcc.internwork.model.dto.request.NoticeRequest;
 import kr.ldcc.internwork.model.dto.response.Response;
@@ -27,7 +26,7 @@ public class NoticeController {
 
     @GetMapping("/notice")
     public Response<Page<NoticeDto.GetNoticeListResponse>> getNoticeList(
-            @RequestParam(required = false) @Enum(enumClass = NoticeType.class) NoticeType state,
+            @RequestParam(required = false) NoticeType state,
             @RequestParam(required = false) String regStart,
             @RequestParam(required = false) String regEnd,
             @RequestParam(required = false) String noticeStart,

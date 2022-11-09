@@ -2,7 +2,6 @@ package kr.ldcc.internwork.model.dto.request;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import kr.ldcc.internwork.common.types.NoticeType;
-import kr.ldcc.internwork.common.types.validation.Enum;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
@@ -33,7 +32,7 @@ public class NoticeRequest {
     public static class UpdateNoticeRequest {
         @NotNull
         private String title;
-        @Enum(enumClass = NoticeType.class)
+        @NotNull
         private NoticeType state;
         @NotNull
         private String date;
