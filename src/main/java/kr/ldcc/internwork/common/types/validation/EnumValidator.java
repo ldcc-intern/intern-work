@@ -3,7 +3,7 @@ package kr.ldcc.internwork.common.types.validation;
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
-public class EnumValidator implements ConstraintValidator<Enum, java.lang.Enum> {
+public class EnumValidator implements ConstraintValidator<Enum, Object> {
     private Enum annotation;
 
     @Override
@@ -12,7 +12,7 @@ public class EnumValidator implements ConstraintValidator<Enum, java.lang.Enum> 
     }
 
     @Override
-    public boolean isValid(java.lang.Enum value, ConstraintValidatorContext constraintValidatorContext) {
+    public boolean isValid(Object value, ConstraintValidatorContext constraintValidatorContext) {
         boolean result = false;
         Object[] enumValues = this.annotation.enumClass().getEnumConstants();
         if (enumValues != null) {

@@ -10,6 +10,7 @@ import kr.ldcc.internwork.model.mapper.NoticeMapper;
 import kr.ldcc.internwork.repository.NoticeRepository;
 import kr.ldcc.internwork.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -23,20 +24,19 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
+@Log4j2
 public class NoticeService {
     private final NoticeRepository noticeRepository;
     private final UserRepository userRepository;
 
     @Transactional
     public Long createNotice(NoticeRequest.CreateNoticeRequest request) {
-        User user = userRepository.findById(request.getUserId()).orElseThrow(() -> new InternWorkException.dataNotFoundException(
-                "createNotice Exception | [존재하지 않는 User ID : " + request.getUserId() + "]"));
-        LocalDateTime noticeDate = LocalDate.parse(
-                        request.getDate(), DateTimeFormatter.ISO_DATE
-                )
-                .atTime(
-                        LocalTime.parse(request.getTime(), DateTimeFormatter.ISO_TIME)
-                );
+        User user = userRepository.findById(request.getUserId()).orElseThrow(() -> {
+            log.error("createNotice Exception | [존재하지 않는 User ID : " + request.getUserId() + "]");
+            return new InternWorkException.dataNotFoundException();
+        });
+        LocalDateTime noticeDate = LocalDate.parse(request.getDate(), DateTimeFormatter.ISO_DATE)
+                .atTime(LocalTime.parse(request.getTime(), DateTimeFormatter.ISO_TIME));
         Notice notice = Notice.builder()
                 .title(request.getTitle())
                 .noticeDate(noticeDate)
@@ -67,19 +67,24 @@ public class NoticeService {
 
     @Transactional
     public NoticeDto getDetailNotice(Long noticeId) {
-        Notice notice = noticeRepository.findById(noticeId).orElseThrow(() ->
-                new InternWorkException.dataNotFoundException(
-                        "getDetailNotice Exception | [존재하지 않는 Notice ID : " + noticeId + "]"));
+        Notice notice = noticeRepository.findById(noticeId).orElseThrow(() -> {
+            log.error("getDetailNotice Exception | [존재하지 않는 Notice ID : " + noticeId + "]");
+            return new InternWorkException.dataNotFoundException();
+        });
         notice.updateView(notice.getView() != null ? notice.getView() : 1);
         return NoticeMapper.toGetDetailNoticeResponse(notice);
     }
 
     @Transactional
     public NoticeDto updateNotice(Long noticeId, NoticeRequest.UpdateNoticeRequest request) {
-        Notice notice = noticeRepository.findById(noticeId).orElseThrow(() -> new InternWorkException.dataNotFoundException(
-                "updateNotice Exception | [존재하지 않는 Notice ID : " + noticeId + "]"));
-        User user = userRepository.findById(request.getUserId()).orElseThrow(() -> new InternWorkException.dataNotFoundException(
-                "updateNotice Exception | [존재하지 않는 User ID : " + request.getUserId() + "]"));
+        Notice notice = noticeRepository.findById(noticeId).orElseThrow(() -> {
+            log.error("updateNotice Exception | [존재하지 않는 Notice ID : " + noticeId + "]");
+            return new InternWorkException.dataNotFoundException();
+        });
+        User user = userRepository.findById(request.getUserId()).orElseThrow(() -> {
+            log.error("updateNotice Exception | [존재하지 않는 User ID : " + request.getUserId() + "]");
+            return new InternWorkException.dataNotFoundException();
+        });
         LocalDateTime noticeDate = request.getDate() != null && request.getTime() != null ? LocalDate.parse(request.getDate(), DateTimeFormatter.ISO_DATE).atTime(LocalTime.parse(request.getTime(), DateTimeFormatter.ISO_TIME)) : notice.getNoticeDate();
         notice.updateTitle(request.getTitle() != null ? request.getTitle() : notice.getTitle());
         notice.updateState(request.getState() != null ? request.getState() : notice.getState());
@@ -90,8 +95,8 @@ public class NoticeService {
         try {
             noticeRepository.save(notice);
         } catch (Exception e) {
-            throw new InternWorkException.dataDuplicateException(
-                    "updateNotice Exception | " + e.getMessage());
+            log.error("updateNotice Exception | " + e.getMessage());
+            throw new InternWorkException.dataDuplicateException();
         }
         return NoticeMapper.toUpdateNoticeResponse(notice);
     }
@@ -103,7 +108,7 @@ public class NoticeService {
             noticeRepository.deleteById(noticeId);
             return;
         }
-        throw new InternWorkException.dataDeleteException(
-                "deleteNotice Exception | [존재하지 않는 Notice ID : " + noticeId + "]");
+        log.error("deleteNotice Exception | [존재하지 않는 Notice ID : " + noticeId + "]");
+        throw new InternWorkException.dataDeleteException();
     }
 }

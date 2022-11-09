@@ -7,30 +7,18 @@ import org.springframework.stereotype.Component;
 public class InternWorkException {
     @NoArgsConstructor
     public static class dataDuplicateException extends RuntimeException {
-        public dataDuplicateException(String message) {
-            super(message);
-        }
     }
 
     @NoArgsConstructor
     public static class dataNotFoundException extends RuntimeException {
-        public dataNotFoundException(String message) {
-            super(message);
-        }
     }
 
     @NoArgsConstructor
     public static class dataUpdateException extends RuntimeException {
-        public dataUpdateException(String message) {
-            super(message);
-        }
     }
 
     @NoArgsConstructor
     public static class dataDeleteException extends RuntimeException {
-        public dataDeleteException(String message) {
-            super(message);
-        }
     }
 
     @NoArgsConstructor
