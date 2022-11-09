@@ -116,13 +116,10 @@ public class FaqService {
      * * * * * * * **/
     @Transactional
     public Faq searchFaqDetail(Long faqId) {
-
-        Faq faq = faqRepository.findById(faqId).orElseThrow(() -> {
+        return faqRepository.findById(faqId).orElseThrow(() -> {
             log.error("searchFaqDetail Exception : [존재하지 않는 Faq ID]", ExceptionCode.DATA_NOT_FOUND_EXCEPTION);
             return new InternWorkException.dataNotFoundException();
         });
-
-        return faq;
     }
 
 
