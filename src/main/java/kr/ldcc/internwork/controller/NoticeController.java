@@ -1,12 +1,11 @@
 package kr.ldcc.internwork.controller;
 
 import kr.ldcc.internwork.common.types.NoticeType;
-import kr.ldcc.internwork.model.dto.NoticeDto;
 import kr.ldcc.internwork.model.dto.request.NoticeRequest;
 import kr.ldcc.internwork.model.dto.response.Response;
 import kr.ldcc.internwork.service.NoticeService;
-import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.*;
@@ -14,18 +13,21 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 
 @RestController
-@RequiredArgsConstructor
-@RequestMapping("/api")
+@RequestMapping("/api/notice")
+@Slf4j
 public class NoticeController {
-    private final NoticeService noticeService;
+    @Autowired
+    private NoticeService noticeService;
 
-    @PostMapping("/notice")
+    @PostMapping
     public Response<Long> createNotice(@RequestBody @Valid NoticeRequest.CreateNoticeRequest createNoticeRequest) {
-        return Response.<Long>ok().setData(noticeService.createNotice(createNoticeRequest));
+        log.info("[createNotice]");
+        noticeService.createNotice(createNoticeRequest);
+        return Response.ok();
     }
 
-    @GetMapping("/notice")
-    public Response<Page<NoticeDto.GetNoticeListResponse>> getNoticeList(
+    @GetMapping
+    public Response getNoticeList(
             @RequestParam(required = false) NoticeType state,
             @RequestParam(required = false) String regStart,
             @RequestParam(required = false) String regEnd,
@@ -35,21 +37,26 @@ public class NoticeController {
             @RequestParam(required = false) String title,
             @PageableDefault(size = 25) Pageable pageable
     ) {
-        return Response.<Page<NoticeDto.GetNoticeListResponse>>ok().setData(noticeService.getNoticeList(regStart, regEnd, state, noticeStart, noticeEnd, user, title, pageable));
+        log.info("[getNoticeList]");
+        return Response.ok().setData(noticeService.getNoticeList(regStart, regEnd, state, noticeStart, noticeEnd, user, title, pageable));
     }
 
-    @GetMapping("/notice/{noticeId}")
-    public Response<NoticeDto> getDetailNotice(@PathVariable("noticeId") Long noticeId) {
-        return Response.<NoticeDto>ok().setData(noticeService.getDetailNotice(noticeId));
+    @GetMapping("/{noticeId}")
+    public Response getDetailNotice(@PathVariable("noticeId") Long noticeId) {
+        log.info("[getDetailNotice]");
+        return Response.ok().setData(noticeService.getDetailNotice(noticeId));
     }
 
-    @PutMapping("/notice/{noticeId}")
-    public Response<NoticeDto> updateNotice(@PathVariable("noticeId") Long noticeId, @RequestBody @Valid NoticeRequest.UpdateNoticeRequest updateNoticeRequest) {
-        return Response.<NoticeDto>ok().setData(noticeService.updateNotice(noticeId, updateNoticeRequest));
+    @PutMapping("/{noticeId}")
+    public Response updateNotice(@PathVariable("noticeId") Long noticeId, @RequestBody @Valid NoticeRequest.UpdateNoticeRequest updateNoticeRequest) {
+        log.info("[updateNotice]");
+        noticeService.updateNotice(noticeId, updateNoticeRequest);
+        return Response.ok();
     }
 
-    @DeleteMapping("/notice/{noticeId}")
-    public Response<Object> deleteNotice(@PathVariable("noticeId") Long noticeId) {
+    @DeleteMapping("/{noticeId}")
+    public Response deleteNotice(@PathVariable("noticeId") Long noticeId) {
+        log.info("[deleteNotice]");
         noticeService.deleteNotice(noticeId);
         return Response.ok();
     }

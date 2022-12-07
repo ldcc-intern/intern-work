@@ -1,75 +1,88 @@
 package kr.ldcc.internwork.controller;
 
-
 import kr.ldcc.internwork.model.dto.request.CategoryRequest;
 import kr.ldcc.internwork.model.dto.response.Response;
-import kr.ldcc.internwork.model.mapper.CategoryMapper;
 import kr.ldcc.internwork.service.CategoryService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/category")
+@Slf4j
 public class CategoryController {
-
-    private final CategoryService categoryService;
-
     @Autowired
-    public CategoryController (CategoryService categoryService) {
-        this.categoryService = categoryService;
+    private CategoryService categoryService;
+
+    /**
+     * * * * * * *  *
+     * *
+     * category 등록   *
+     * *
+     * * * * * * * * *
+     */
+    @PostMapping
+    public Response createCategory(@RequestBody @Valid CategoryRequest.CreateCategoryRequest createCategoryRequest) {
+        log.info("[createCategory]");
+        categoryService.createCategory(createCategoryRequest);
+        return Response.ok();
     }
 
-    /** * * * * * * *  *
-     *                 *
-     *  category 등록   *
-     *                 *
-     * * * * * * * * * */
-    @PostMapping("/category")
-    public Response createCategory(@RequestBody @Valid CategoryRequest.CreateCategoryRequest createCategoryRequest){
-        return categoryService.createCategory(createCategoryRequest);
+    /**
+     * * * * * * *  * * * *
+     * *
+     * category 리스트 조회   *
+     * *
+     * * * * * * * * * * * *
+     */
+    @GetMapping
+    public Response getCategoryList() {
+        log.info("[getCategoryList]");
+        return Response.ok().setData(categoryService.getCategoryList());
     }
 
-    /** * * * * * * *  * * * *
-     *                       *
-     *  category 리스트 조회   *
-     *                       *
-     * * * * * * * * * * * * */
-    @GetMapping("/category")
-    public Object getCategoryList(){
-        return categoryService.getCategoryList();
-    }
-
-    /** * * * * * * *  * * *
-     *                     *
-     *  category 상세 조회   *
-     *                     *
-     * * * * * * * * * * * */
-    @GetMapping("/category/{categoryId}")
+    /**
+     * * * * * * *  * * *
+     * *
+     * category 상세 조회   *
+     * *
+     * * * * * * * * * * *
+     */
+    @GetMapping("/{categoryId}")
     public Response getDetailCategory(@PathVariable("categoryId") Long categoryId) {
-        return Response.ok().setData(CategoryMapper.toGetCategoryDetailResponse(categoryService.getCategoryDetail(categoryId)));
+        log.info("[getDetailCategory]");
+        return Response.ok().setData(categoryService.getCategoryDetail(categoryId));
     }
 
 
-    /** * * * * * * * * *
-     *                  *
-     *   category 수정   *
-     *                  *
-     * * * * * * * * * **/
-    @PutMapping("/category/{categoryId}")
+    /**
+     * * * * * * * * *
+     * *
+     * category 수정   *
+     * *
+     * * * * * * * * *
+     **/
+    @PutMapping("/{categoryId}")
     public Response updateCategory(@PathVariable("categoryId") Long categoryId,
-                                   @RequestBody @Valid CategoryRequest.UpdateCategoryRequest updateCategoryRequest){
-        return Response.ok().setData(CategoryMapper.toUpdateCategoryResponse(categoryService.updateCategory(categoryId, updateCategoryRequest)));
+                                   @RequestBody @Valid CategoryRequest.UpdateCategoryRequest updateCategoryRequest) {
+        log.info("[updateCategory]");
+        categoryService.updateCategory(categoryId, updateCategoryRequest);
+        return Response.ok();
     }
 
-    /** * * * * * * *  *
-     *                 *
-     *  category 삭제   *
-     *                 *
-     * * * * * * * * * */
-    @DeleteMapping("/category/{categoryId}")
+    /**
+     * * * * * * *  *
+     * *
+     * category 삭제   *
+     * *
+     * * * * * * * * *
+     */
+    @DeleteMapping("/{categoryId}")
     public Response deleteCategory(@PathVariable("categoryId") Long categoryId) {
-        return categoryService.deleteCategory(categoryId);
+        log.info("[deleteCategory]");
+        categoryService.deleteCategory(categoryId);
+        return Response.ok();
     }
 }
