@@ -1,112 +1,69 @@
 package kr.ldcc.internwork.model.dto;
 
-
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import kr.ldcc.internwork.common.types.FaqType;
-import lombok.*;
-import lombok.experimental.Accessors;
+import kr.ldcc.internwork.model.entity.Faq;
+import lombok.Getter;
+import org.springframework.data.domain.Page;
 
-import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
-@Getter
-@Setter
-@NoArgsConstructor
-@ToString
-@Accessors(chain = true)
-@JsonIgnoreProperties(ignoreUnknown = true)
-@JsonInclude(value = JsonInclude.Include.NON_NULL)
 public class FaqDto {
-
-
     @Getter
-    @Setter
-    @NoArgsConstructor
-    @ToString
-    @Accessors(chain = true)
-    @JsonIgnoreProperties(ignoreUnknown = true)
     @JsonInclude(value = JsonInclude.Include.NON_NULL)
-    public static class RegisterFaqResponse { // Faq 등록
+    public static class FaqList {
+        private final Long no;
+        private final String categoryName;
+        private final String faqTitle;
+        private final String registerDate;
+        private final String registerUserName;
+        private final FaqType faqType;
+        private final String noticeDate;
 
-        private Long id;
-
-    }
-
-    @Getter
-    @Setter
-    @NoArgsConstructor
-    @ToString
-    @Accessors(chain = true)
-    @JsonIgnoreProperties(ignoreUnknown = true)
-    @JsonInclude(value = JsonInclude.Include.NON_NULL)
-    public static class FaqListResponse {
-
-        private Long no;
-        private String categoryName;
-        private String faqTitle;
-        private String registerDate;
-        private String registerUserName;
-        private FaqType faqType;
-        private String noticeDate;
-
-        @Builder
-        public FaqListResponse(Long no, String categoryName, String faqTitle, String registerDate, String noticeDate, String registerUserName, FaqType faqType) {
-            this.no = no;
-            this.categoryName = categoryName;
-            this.faqTitle = faqTitle;
-            this.registerDate = registerDate;
-            this.noticeDate = noticeDate;
-            this.registerUserName = registerUserName;
-            this.faqType = faqType;
+        public FaqList(Faq faq) {
+            this.no = faq.getId();
+            this.categoryName = faq.getCategory().getCategoryName();
+            this.faqTitle = faq.getFaqTitle();
+            this.registerDate = faq.getRegisterDate().format(DateTimeFormatter.ofPattern("yyyy.MM.dd"));
+            this.registerUserName = faq.getRegisterUser().getName();
+            this.faqType = faq.getFaqType();
+            this.noticeDate = faq.getNoticeDate().format(DateTimeFormatter.ofPattern("yyyy.MM.dd"));
         }
-
     }
 
     @Getter
-    @Setter
-    @NoArgsConstructor
-    @ToString
-    @Accessors(chain = true)
-    @JsonIgnoreProperties(ignoreUnknown = true)
     @JsonInclude(value = JsonInclude.Include.NON_NULL)
-    public static class FaqDetailResponse { // faq 상세 조회
+    public static class FaqDetail { // faq 상세 조회
+        private final String categoryName;
+        private final String faqTitle;
+        private final String registerUserName;
+        private final String updateUserName;
+        private final String registerDate;
+        private final String updateDate;
+        private final String noticeDate;
+        private final FaqType faqType;
+        private final String updateReason;
+        private final String content;
 
-        private String categoryName;
-        private String faqTitle;
-        private String registerUserName;
-        private String updateUserName;
-        private String registerDate;
-        private String updateDate;
-        private String noticeDate;
-        private FaqType faqType;
-        private String updateReason;
-        private String content;
-
+        public FaqDetail(Faq faq) {
+            this.categoryName = faq.getCategory().getCategoryName();
+            this.faqTitle = faq.getFaqTitle();
+            this.registerUserName = faq.getRegisterUser().getName();
+            this.updateUserName = faq.getUpdateUser() != null ? faq.getUpdateUser().getName() : null;
+            this.registerDate = faq.getRegisterDate().format(DateTimeFormatter.ofPattern("yyyy/MM/dd hh:mm"));
+            this.updateDate = faq.getUpdateDate().format(DateTimeFormatter.ofPattern("yyyy/MM/dd hh:mm"));
+            this.noticeDate = faq.getNoticeDate().format(DateTimeFormatter.ofPattern("yyyy/MM/dd hh:mm"));
+            this.faqType = faq.getFaqType();
+            this.updateReason = faq.getUpdateReason() != null ? faq.getUpdateReason() : null;
+            this.content = faq.getContent();
+        }
     }
 
-
-    @Getter
-    @Setter
-    @NoArgsConstructor
-    @ToString
-    @Accessors(chain = true)
-    @JsonIgnoreProperties(ignoreUnknown = true)
-    @JsonInclude(value = JsonInclude.Include.NON_NULL)
-    public static class UpdateFaqResponse {
-        private Long id;
-        private String registerDate;
-        private String updateDate;
-        private String noticeDate;
-        private String content;
-        private String updateReason;
-        private FaqType faqType;
-        private String faqTitle;
-        private String registerUserName;
-        private String updateUserName;
-        private String categoryName;
-
+    public static Page<FaqList> buildFaqPage(Page<Faq> faqPage) {
+        return faqPage.map(FaqList::new);
     }
 
-
-
+    public static FaqDetail buildFaqDetail(Faq faq) {
+        return new FaqDetail(faq);
+    }
 }

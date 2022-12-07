@@ -1,11 +1,11 @@
 package kr.ldcc.internwork.common.exception;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 
-@RequiredArgsConstructor
 @Getter
+@AllArgsConstructor
 public enum ExceptionCode {
     SUCCESS(HttpStatus.OK.value(), "성공"),
     DATA_DUPLICATE_EXCEPTION(HttpStatus.CONFLICT.value(), "중복된 데이터가 있습니다."),

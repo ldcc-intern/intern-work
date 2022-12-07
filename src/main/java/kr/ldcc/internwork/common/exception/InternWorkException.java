@@ -1,43 +1,60 @@
 package kr.ldcc.internwork.common.exception;
 
-import lombok.NoArgsConstructor;
-import org.springframework.stereotype.Component;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 
-@Component
 public class InternWorkException {
-    @NoArgsConstructor
-    public static class dataDuplicateException extends RuntimeException {
+    @Getter
+    @AllArgsConstructor
+    public static class DataDuplicateException extends RuntimeException {
+        private final ExceptionCode exceptionCode;
     }
 
-    @NoArgsConstructor
-    public static class dataNotFoundException extends RuntimeException {
+    @Getter
+    @AllArgsConstructor
+    public static class DataNotFoundException extends RuntimeException {
+        private ExceptionCode exceptionCode;
     }
 
-    @NoArgsConstructor
-    public static class dataUpdateException extends RuntimeException {
+    @Getter
+    @AllArgsConstructor
+    public static class DataUpdateException extends RuntimeException {
+        private ExceptionCode exceptionCode;
     }
 
-    @NoArgsConstructor
-    public static class dataDeleteException extends RuntimeException {
+    @Getter
+    @AllArgsConstructor
+    public static class DataDeleteException extends RuntimeException {
+        private ExceptionCode exceptionCode;
     }
 
-    @NoArgsConstructor
-    public static class canNotMoveException extends RuntimeException {
+    @Getter
+    @AllArgsConstructor
+    public static class CanNotMoveException extends RuntimeException {
+        private ExceptionCode exceptionCode;
     }
 
-    @NoArgsConstructor
-    public static class referentialException extends RuntimeException {
+    @Getter
+    @AllArgsConstructor
+    public static class ReferentialException extends RuntimeException {
+        private ExceptionCode exceptionCode;
     }
 
-    @NoArgsConstructor
-    public static class dataSaveException extends RuntimeException {
+    @Getter
+    @AllArgsConstructor
+    public static class DataSaveException extends RuntimeException {
+        private ExceptionCode exceptionCode;
     }
 
-    @NoArgsConstructor
-    public static class dataOutOfBoundsException extends RuntimeException {
+    @Getter
+    @AllArgsConstructor
+    public static class DataOutOfBoundsException extends RuntimeException {
+        private ExceptionCode exceptionCode;
     }
 
-    @NoArgsConstructor
-    public static class enumNullPointerException extends RuntimeException {
+    @Getter
+    @AllArgsConstructor
+    public static class EnumNullPointerException extends RuntimeException {
+        private ExceptionCode exceptionCode;
     }
 }

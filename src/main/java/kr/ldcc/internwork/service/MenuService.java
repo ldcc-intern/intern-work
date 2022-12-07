@@ -1,16 +1,20 @@
 package kr.ldcc.internwork.service;
 
 import kr.ldcc.internwork.common.exception.ExceptionCode;
-import kr.ldcc.internwork.common.exception.InternWorkException;
+import kr.ldcc.internwork.common.exception.InternWorkException.DataDeleteException;
+import kr.ldcc.internwork.common.exception.InternWorkException.DataDuplicateException;
+import kr.ldcc.internwork.common.exception.InternWorkException.DataNotFoundException;
+import kr.ldcc.internwork.common.exception.InternWorkException.DataOutOfBoundsException;
 import kr.ldcc.internwork.model.dto.MenuDto;
+import kr.ldcc.internwork.model.dto.MenuDto.GetDetailMenuResponse;
+import kr.ldcc.internwork.model.dto.MenuDto.GetMenuListResponse;
 import kr.ldcc.internwork.model.dto.request.MenuRequest;
 import kr.ldcc.internwork.model.entity.Menu;
 import kr.ldcc.internwork.model.entity.User;
-import kr.ldcc.internwork.model.mapper.MenuMapper;
 import kr.ldcc.internwork.repository.MenuRepository;
 import kr.ldcc.internwork.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.log4j.Log4j2;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,27 +25,27 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
-@Log4j2
+@Transactional
+@Slf4j
 public class MenuService {
     private final MenuRepository menuRepository;
     private final UserRepository userRepository;
 
-    @Transactional
-    public Long createMenu(@RequestBody MenuRequest request) {
+    public void createMenu(@RequestBody MenuRequest request) {
         User registerUser = userRepository.findById(request.getUserId()).orElseThrow(() -> {
             log.error("createMenu Exception | [존재하지 않는 User ID : " + request.getUserId() + "]", ExceptionCode.DATA_NOT_FOUND_EXCEPTION);
-            return new InternWorkException.dataNotFoundException();
+            return new DataNotFoundException(ExceptionCode.DATA_NOT_FOUND_EXCEPTION);
         });
         Menu parent = null;
         if (request.getParentId() != null) {
             parent = menuRepository.findById(request.getParentId()).orElseThrow(() -> {
                 log.error("createMenu Exception | [존재하지 않는 Parent ID : " + request.getParentId() + "]", ExceptionCode.DATA_NOT_FOUND_EXCEPTION);
-                return new InternWorkException.dataNotFoundException();
+                return new DataNotFoundException(ExceptionCode.DATA_NOT_FOUND_EXCEPTION);
             });
         }
         if (menuRepository.findByTitle(request.getTitle()).isPresent()) {
             log.error("createMenu Exception | [존재하는 Menu Title : " + request.getTitle() + "]", ExceptionCode.DATA_DUPLICATE_EXCEPTION);
-            throw new InternWorkException.dataDuplicateException();
+            throw new DataDuplicateException(ExceptionCode.DATA_DUPLICATE_EXCEPTION);
         }
         if (request.getOrderId() != null) {
             Integer orderId = request.getOrderId();
@@ -57,16 +61,16 @@ public class MenuService {
                 order.add(orderId, menu);
             } catch (Exception e) {
                 log.error("createMenu Exception | [Max OrderId : " + menuRepository.findAllByParent(parent).size() + "]", ExceptionCode.DATA_OUT_OF_BOUNDS_EXCEPTION);
-                throw new InternWorkException.dataOutOfBoundsException();
+                throw new DataOutOfBoundsException(ExceptionCode.DATA_OUT_OF_BOUNDS_EXCEPTION);
             }
             order.forEach(menu1 -> menu1.updateMenuOrderId(order.indexOf(menu1)));
             try {
                 menuRepository.saveAll(order);
             } catch (Exception e) {
                 log.error("createMenu Exception", ExceptionCode.DATA_DUPLICATE_EXCEPTION);
-                throw new InternWorkException.dataDuplicateException();
+                throw new DataDuplicateException(ExceptionCode.DATA_DUPLICATE_EXCEPTION);
             }
-            return menu.getId();
+            return;
         }
         Integer orderId = menuRepository.findAllByParent(parent).size();
         Menu menu = Menu.builder()
@@ -80,33 +84,29 @@ public class MenuService {
             menuRepository.save(menu);
         } catch (Exception e) {
             log.error("createMenu Exception", ExceptionCode.DATA_DUPLICATE_EXCEPTION);
-            throw new InternWorkException.dataDuplicateException();
+            throw new DataDuplicateException(ExceptionCode.DATA_DUPLICATE_EXCEPTION);
         }
-        return menu.getId();
     }
 
-    @Transactional
-    public MenuDto.GetMenuListResponse getMenuList() {
-        return MenuMapper.toGetMenuListResponse(menuRepository.findAll(Sort.by("orderId")));
+    public GetMenuListResponse getMenuList() {
+        return MenuDto.buildGetMenuList(menuRepository.findAll(Sort.by("orderId")));
     }
 
-    @Transactional
-    public MenuDto.GetDetailMenuResponse getDetailMenu(Long menuId) {
-        return MenuMapper.toGetDetailMenuResponse(menuRepository.findById(menuId).orElseThrow(() -> {
+    public GetDetailMenuResponse getDetailMenu(Long menuId) {
+        return MenuDto.buildDetailMenu(menuRepository.findById(menuId).orElseThrow(() -> {
             log.error("getDetailMenu Exception | [존재하지 않는 Menu ID : " + menuId + "]", ExceptionCode.DATA_NOT_FOUND_EXCEPTION);
-            return new InternWorkException.dataNotFoundException();
+            return new DataNotFoundException(ExceptionCode.DATA_NOT_FOUND_EXCEPTION);
         }));
     }
 
-    @Transactional
-    public MenuDto.UpdateMenuResponse updateMenu(Long menuId, MenuRequest request) {
+    public void updateMenu(Long menuId, MenuRequest request) {
         User user = userRepository.findById(request.getUserId()).orElseThrow(() -> {
             log.error("updateMenu Exception | [존재하지 않는 User ID : " + request.getUserId() + "]", ExceptionCode.DATA_NOT_FOUND_EXCEPTION);
-            return new InternWorkException.dataNotFoundException();
+            return new DataNotFoundException(ExceptionCode.DATA_NOT_FOUND_EXCEPTION);
         });
         Menu menu = menuRepository.findById(menuId).orElseThrow(() -> {
             log.error("updateMenu Exception | [존재하지 않는 Menu ID " + menuId + "]", ExceptionCode.DATA_NOT_FOUND_EXCEPTION);
-            return new InternWorkException.dataNotFoundException();
+            return new DataNotFoundException(ExceptionCode.DATA_NOT_FOUND_EXCEPTION);
         });
         Menu parent = findParent(menu, request.getParentId());
         menu.updateMenuTitle(request.getTitle() != null ? request.getTitle() : menu.getTitle());
@@ -121,14 +121,14 @@ public class MenuService {
                 menuRepository.save(menu);
             } catch (Exception e) {
                 log.error("updateMenu Exception", ExceptionCode.DATA_DUPLICATE_EXCEPTION, e.getMessage());
-                throw new InternWorkException.dataDuplicateException();
+                throw new DataDuplicateException(ExceptionCode.DATA_DUPLICATE_EXCEPTION);
             }
-            return MenuMapper.toUpdateMenuResponse(menu);
+            return;
         }
         ArrayList<Menu> order = menuRepository.findAllByParent(Sort.by("orderId"), parent);
         if (request.getOrderId() > order.size()) {
             log.error("updateMenu Exception | [Max OrderId : " + order.size() + "]", ExceptionCode.DATA_OUT_OF_BOUNDS_EXCEPTION);
-            throw new InternWorkException.dataOutOfBoundsException();
+            throw new DataOutOfBoundsException(ExceptionCode.DATA_OUT_OF_BOUNDS_EXCEPTION);
         }
         if (parent == menu.getParent()) {
             order.remove(menu);
@@ -141,12 +141,10 @@ public class MenuService {
             menuRepository.saveAll(order);
         } catch (Exception e) {
             log.error("updateMenu Exception", ExceptionCode.DATA_DUPLICATE_EXCEPTION, e.getMessage());
-            throw new InternWorkException.dataDuplicateException();
+            throw new DataDuplicateException(ExceptionCode.DATA_DUPLICATE_EXCEPTION);
         }
-        return MenuMapper.toUpdateMenuResponse(menu);
     }
 
-    @Transactional
     public void deleteMenu(Long menuId) {
         Optional<Menu> menu = menuRepository.findById(menuId);
         if (menu.isPresent() && menuRepository.findAllByParent(menu.get()).size() == 0) {
@@ -154,10 +152,9 @@ public class MenuService {
             return;
         }
         log.error("deleteUser Exception | [존재하지 않는 Menu ID : " + menuId + "]", ExceptionCode.DATA_DELETE_EXCEPTION);
-        throw new InternWorkException.dataDeleteException();
+        throw new DataDeleteException(ExceptionCode.DATA_DELETE_EXCEPTION);
     }
 
-    @Transactional
     private Menu findParent(Menu menu, Long parentId) {
         if (parentId == null) {
             return menu.getParent();
@@ -167,7 +164,7 @@ public class MenuService {
         }
         return menuRepository.findById(parentId).orElseThrow(() -> {
             log.error("findParent Exception | [존재하지 않는 Menu ID : " + parentId + "]", ExceptionCode.DATA_NOT_FOUND_EXCEPTION);
-            return new InternWorkException.dataNotFoundException();
+            return new DataNotFoundException(ExceptionCode.DATA_NOT_FOUND_EXCEPTION);
         });
     }
 }

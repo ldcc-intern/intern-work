@@ -1,10 +1,8 @@
 package kr.ldcc.internwork.model.dto.response;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import kr.ldcc.internwork.common.exception.ExceptionCode;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 import lombok.extern.slf4j.Slf4j;
@@ -12,106 +10,74 @@ import lombok.extern.slf4j.Slf4j;
 @Getter
 @Setter
 @Accessors(chain = true)
-@NoArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
-@JsonIgnoreProperties(ignoreUnknown = true)
 @Slf4j
 public class Response<T> {
     private int code;
     private String message;
     private T data;
 
+    public Response(ExceptionCode exceptionCode) {
+        this.code = exceptionCode.getCode();
+        this.message = exceptionCode.getMessage();
+    }
+
     public static <T> Response<T> ok() {
-        return new Response<T>()
-                .setCode(ExceptionCode.SUCCESS.getCode())
-                .setMessage(ExceptionCode.SUCCESS.getMessage());
+        return new Response<T>(ExceptionCode.SUCCESS);
     }
 
-    public static <T> Response<T> dataDuplicateException() {
-        Response<T> response = new Response<T>()
-                .setCode(ExceptionCode.DATA_DUPLICATE_EXCEPTION.getCode())
-                .setMessage(ExceptionCode.DATA_DUPLICATE_EXCEPTION.getMessage());
-        log.info("[dataDuplicateException] code : {}, message : {}", response.getCode(), response.getMessage());
-        return response;
+    public static <T> Response<T> dataDuplicateException(ExceptionCode exceptionCode) {
+        log.info("[dataDuplicateException] code : {}, message : {}", exceptionCode.getCode(), exceptionCode.getMessage());
+        return new Response<T>(exceptionCode);
     }
 
-    public static <T> Response<T> dataNotFoundException() {
-        Response<T> response = new Response<T>()
-                .setCode(ExceptionCode.DATA_NOT_FOUND_EXCEPTION.getCode())
-                .setMessage(ExceptionCode.DATA_NOT_FOUND_EXCEPTION.getMessage());
-        log.info("[dataNotFoundException] code : {}, message : {}", response.getCode(), response.getMessage());
-        return response;
+    public static <T> Response<T> dataNotFoundException(ExceptionCode exceptionCode) {
+        log.info("[dataNotFoundException] code : {}, message : {}", exceptionCode.getCode(), exceptionCode.getMessage());
+        return new Response<T>(exceptionCode);
     }
 
-    public static <T> Response<T> dataUpdateException() {
-        Response<T> response = new Response<T>()
-                .setCode(ExceptionCode.DATA_UPDATE_EXCEPTION.getCode())
-                .setMessage(ExceptionCode.DATA_UPDATE_EXCEPTION.getMessage());
-        log.info("[dataUpdateException] code : {}, message : {}", response.getCode(), response.getMessage());
-        return response;
+    public static <T> Response<T> dataUpdateException(ExceptionCode exceptionCode) {
+        log.info("[dataUpdateException] code : {}, message : {}", exceptionCode.getCode(), exceptionCode.getMessage());
+        return new Response<T>(exceptionCode);
     }
 
-    public static <T> Response<T> dataDeleteException() {
-        Response<T> response = new Response<T>()
-                .setCode(ExceptionCode.DATA_DELETE_EXCEPTION.getCode())
-                .setMessage(ExceptionCode.DATA_DELETE_EXCEPTION.getMessage());
-        log.info("[dataDeleteException] code : {}, message : {}", response.getCode(), response.getMessage());
-        return response;
+    public static <T> Response<T> dataDeleteException(ExceptionCode exceptionCode) {
+        log.info("[dataDeleteException] code : {}, message : {}", exceptionCode.getCode(), exceptionCode.getMessage());
+        return new Response<T>(exceptionCode);
     }
 
-    public static <T> Response<T> dataOutOfBoundsException() {
-        Response<T> response = new Response<T>()
-                .setCode(ExceptionCode.DATA_OUT_OF_BOUNDS_EXCEPTION.getCode())
-                .setMessage(ExceptionCode.DATA_OUT_OF_BOUNDS_EXCEPTION.getMessage());
-        log.info("[dataOutOfBoundsException] code : {}, message : {}", response.getCode(), response.getMessage());
-        return response;
+    public static <T> Response<T> dataOutOfBoundsException(ExceptionCode exceptionCode) {
+        log.info("[dataOutOfBoundsException] code : {}, message : {}", exceptionCode.getCode(), exceptionCode.getMessage());
+        return new Response<T>(exceptionCode);
     }
 
-    public static <T> Response<T> enumNullPointerException() {
-        Response<T> response = new Response<T>()
-                .setCode(ExceptionCode.ENUM_NULL_POINTER_EXCEPTION.getCode())
-                .setMessage(ExceptionCode.ENUM_NULL_POINTER_EXCEPTION.getMessage());
-        log.info("[enumNullPointerException] code : {}, message : {}", response.getCode(), response.getMessage());
-        return response;
+    public static <T> Response<T> enumNullPointerException(ExceptionCode exceptionCode) {
+        log.info("[enumNullPointerException] code : {}, message : {}", exceptionCode.getCode(), exceptionCode.getMessage());
+        return new Response<T>(exceptionCode);
     }
 
-    public static <T> Response<T> dataValidationException(String toString) {
-        Response<T> response = new Response<T>()
-                .setCode(ExceptionCode.DATA_VALIDATION_EXCEPTION.getCode())
-                .setMessage(toString);
-        log.info("[httpMessageNotReadableException] code : {}, message : {}", response.getCode(), response.getMessage());
-        return response;
+    public static <T> Response<T> dataValidationException(ExceptionCode exceptionCode) {
+        log.info("[httpMessageNotReadableException] code : {}, message : {}", exceptionCode.getCode(), exceptionCode.getMessage());
+        return new Response<T>(ExceptionCode.DATA_VALIDATION_EXCEPTION);
     }
 
-    public static <T> Response<T> nullPointerException() {
-        Response<T> response = new Response<T>()
-                .setCode(ExceptionCode.NULL_POINTER_EXCEPTION.getCode())
-                .setMessage(ExceptionCode.NULL_POINTER_EXCEPTION.getMessage());
-        log.info("[nullPointerException] code : {}, message : {}", response.getCode(), response.getMessage());
-        return response;
+    public static <T> Response<T> nullPointerException(ExceptionCode exceptionCode) {
+        log.info("[nullPointerException] code : {}, message : {}", exceptionCode.getCode(), exceptionCode.getMessage());
+        return new Response<T>(exceptionCode);
     }
 
-    public static <T> Response<T> dataSaveException() {
-        Response<T> response = new Response<>();
-        response.setCode(ExceptionCode.DATA_SAVE_EXCEPTION.getCode());
-        response.setMessage(ExceptionCode.DATA_SAVE_EXCEPTION.getMessage());
-        log.info("[dataSaveException] code : {}, message : {}", response.getCode(), response.getMessage());
-        return response;
+    public static <T> Response<T> dataSaveException(ExceptionCode exceptionCode) {
+        log.info("[dataSaveException] code : {}, message : {}", exceptionCode.getCode(), exceptionCode.getMessage());
+        return new Response<>(exceptionCode);
     }
 
-    public static <T> Response<T> canNotMoveException() {
-        Response<T> response = new Response<>();
-        response.setCode(ExceptionCode.CAN_NOT_MOVE_EXCEPTION.getCode());
-        response.setMessage(ExceptionCode.CAN_NOT_MOVE_EXCEPTION.getMessage());
-        log.info("[canNotMoveException] code : {}, message : {}", response.getCode(), response.getMessage());
-        return response;
+    public static <T> Response<T> canNotMoveException(ExceptionCode exceptionCode) {
+        log.info("[canNotMoveException] code : {}, message : {}", exceptionCode.getCode(), exceptionCode.getMessage());
+        return new Response<>(exceptionCode);
     }
 
-    public static <T> Response<T> referentialException() {
-        Response<T> response = new Response<>();
-        response.setCode(ExceptionCode.REFERENTIAL_EXCEPTION.getCode());
-        response.setMessage(ExceptionCode.REFERENTIAL_EXCEPTION.getMessage());
-        log.info("[referentialException] code : {}, message : {}", response.getCode(), response.getMessage());
-        return response;
+    public static <T> Response<T> referentialException(ExceptionCode exceptionCode) {
+        log.info("[referentialException] code : {}, message : {}", exceptionCode.getCode(), exceptionCode.getMessage());
+        return new Response<>(exceptionCode);
     }
 }

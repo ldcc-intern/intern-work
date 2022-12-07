@@ -1,14 +1,16 @@
 package kr.ldcc.internwork.service;
 
 import kr.ldcc.internwork.common.exception.ExceptionCode;
-import kr.ldcc.internwork.common.exception.InternWorkException;
+import kr.ldcc.internwork.common.exception.InternWorkException.DataDeleteException;
+import kr.ldcc.internwork.common.exception.InternWorkException.DataDuplicateException;
+import kr.ldcc.internwork.common.exception.InternWorkException.DataNotFoundException;
+import kr.ldcc.internwork.common.exception.InternWorkException.DataUpdateException;
 import kr.ldcc.internwork.model.dto.UserDto;
 import kr.ldcc.internwork.model.dto.request.UserRequest;
 import kr.ldcc.internwork.model.entity.User;
-import kr.ldcc.internwork.model.mapper.UserMapper;
 import kr.ldcc.internwork.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.log4j.Log4j2;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,44 +19,39 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
-@Log4j2
+@Transactional
+@Slf4j
 public class UserService {
     private final UserRepository userRepository;
 
-    @Transactional
-    public Long createUser(UserRequest request) {
+    public void createUser(UserRequest request) {
         User user = User.builder().name(request.getName()).build();
         try {
             userRepository.save(user);
         } catch (Exception e) {
             log.error("createUser Exception", ExceptionCode.DATA_DUPLICATE_EXCEPTION, e.getMessage());
-            throw new InternWorkException.dataDuplicateException();
+            throw new DataDuplicateException(ExceptionCode.DATA_DUPLICATE_EXCEPTION);
         }
-        return user.getId();
     }
 
-    @Transactional
     public List<UserDto> getUserList() {
-        return UserMapper.toGetUserListResponse(userRepository.findAll());
+        return UserDto.buildUserList(userRepository.findAll());
     }
 
-    @Transactional
-    public UserDto updateUser(Long userId, UserRequest request) {
+    public void updateUser(Long userId, UserRequest request) {
         User user = userRepository.findById(userId).orElseThrow(() -> {
             log.error("updateUser Exception | [존재하지 않는 User ID : " + userId + "]", ExceptionCode.DATA_NOT_FOUND_EXCEPTION);
-            return new InternWorkException.dataNotFoundException();
+            return new DataNotFoundException(ExceptionCode.DATA_NOT_FOUND_EXCEPTION);
         });
         user.updateUserName(request.getName() != null ? request.getName() : user.getName());
         try {
             userRepository.save(user);
         } catch (Exception e) {
             log.error("updateUser Exception", ExceptionCode.DATA_UPDATE_EXCEPTION, e.getMessage());
-            throw new InternWorkException.dataUpdateException();
+            throw new DataUpdateException(ExceptionCode.DATA_UPDATE_EXCEPTION);
         }
-        return UserMapper.toUpdateUserResponse(user);
     }
 
-    @Transactional
     public void deleteUser(Long userId) {
         Optional<User> user = userRepository.findById(userId);
         if (user.isPresent()) {
@@ -62,6 +59,6 @@ public class UserService {
             return;
         }
         log.error("deleteUser Exception | [존재하지 않는 User ID : " + userId + "]", ExceptionCode.DATA_DELETE_EXCEPTION);
-        throw new InternWorkException.dataDeleteException();
+        throw new DataDeleteException(ExceptionCode.DATA_DELETE_EXCEPTION);
     }
 }

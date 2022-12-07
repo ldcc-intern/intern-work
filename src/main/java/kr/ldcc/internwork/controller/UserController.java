@@ -1,38 +1,44 @@
 package kr.ldcc.internwork.controller;
 
-import kr.ldcc.internwork.model.dto.UserDto;
 import kr.ldcc.internwork.model.dto.request.UserRequest;
 import kr.ldcc.internwork.model.dto.response.Response;
 import kr.ldcc.internwork.service.UserService;
-import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.List;
 
 @RestController
-@RequiredArgsConstructor
-@RequestMapping("/api")
+@RequestMapping("/api/user")
+@Slf4j
 public class UserController {
-    private final UserService userService;
+    @Autowired
+    private UserService userService;
 
-    @PostMapping("/user")
-    public Response<Long> createUser(@RequestBody @Valid UserRequest request) {
-        return Response.<Long>ok().setData(userService.createUser(request));
+    @PostMapping
+    public Response createUser(@RequestBody @Valid UserRequest request) {
+        log.info("[createUser]");
+        userService.createUser(request);
+        return Response.ok();
     }
 
-    @GetMapping("/user")
-    public Response<List<UserDto>> getUserList() {
-        return Response.<List<UserDto>>ok().setData(userService.getUserList());
+    @GetMapping
+    public Response getUserList() {
+        log.info("[getUserList]");
+        return Response.ok().setData(userService.getUserList());
     }
 
-    @PutMapping("/user/{userId}")
-    public Response<UserDto> updateUser(@PathVariable("userId") Long userId, @RequestBody @Valid UserRequest request) {
-        return Response.<UserDto>ok().setData(userService.updateUser(userId, request));
+    @PutMapping("/{userId}")
+    public Response updateUser(@PathVariable("userId") Long userId, @RequestBody @Valid UserRequest request) {
+        log.info("[updateUser]");
+        userService.updateUser(userId, request);
+        return Response.ok();
     }
 
-    @DeleteMapping("/user/{userId}")
-    public Response<Object> deleteUser(@PathVariable("userId") Long userId) {
+    @DeleteMapping("/{userId}")
+    public Response deleteUser(@PathVariable("userId") Long userId) {
+        log.info("[deleteUser]");
         userService.deleteUser(userId);
         return Response.ok();
     }

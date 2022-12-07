@@ -1,11 +1,10 @@
 package kr.ldcc.internwork.controller;
 
-
 import kr.ldcc.internwork.common.types.FaqType;
 import kr.ldcc.internwork.model.dto.request.FaqRequest;
 import kr.ldcc.internwork.model.dto.response.Response;
-import kr.ldcc.internwork.model.mapper.FaqMapper;
 import kr.ldcc.internwork.service.FaqService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
@@ -13,44 +12,39 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
-
-
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/faq")
+@Slf4j
 public class FaqController {
-
-    private final FaqService faqService;
-
     @Autowired
-    public FaqController(FaqService faqService) {
-        this.faqService = faqService;
+    private FaqService faqService;
 
-    }
-
-    /** * * * * * *
-     *            *
-     *  faq 등록   *
-     *            *
-     * * * * * * **/
-    @PostMapping("/faq")
+    /**
+     * * * * * *
+     * *
+     * faq 등록   *
+     * *
+     * * * * * *
+     **/
+    @PostMapping
     public Response registerFaq(@RequestBody @Valid FaqRequest.RegisterFaqRequest registerFaqRequest) {
-        return Response.ok().setData(faqService.registerFaq(registerFaqRequest));
-
+        log.info("[registerFaq]");
+        faqService.registerFaq(registerFaqRequest);
+        return Response.ok();
     }
 
-
-    /** * * * * * * * * * * *
-     *                      *
-     *  faq 리스트 조건 조회   *
-     *                      *
-     * * * * * * * * * * * */
-
+    /**
+     * * * * * * * * * * *
+     * *
+     * faq 리스트 조건 조회   *
+     * *
+     * * * * * * * * * * *
+     */
     // 검색조건
     // categoryName, registerStartDate, registerEndDate, noticeStartDate, noticeEndDate, faqType, registerUserName, faqTitle
-
-    @GetMapping("/faq")
+    @GetMapping
     public Response searchFaqList(
-            @PageableDefault(size=25) Pageable pageable,
+            @PageableDefault(size = 25) Pageable pageable,
             @RequestParam(required = false) FaqType faqType,
             @RequestParam(required = false) String registerStart,
             @RequestParam(required = false) String registerEnd,
@@ -59,34 +53,31 @@ public class FaqController {
             @RequestParam(required = false) String faqTitle,
             @RequestParam(required = false) String registerUserName,
             @RequestParam(required = false) String categoryName
-
-            ) {
-
-        return Response.ok().setData(FaqMapper.toSearchFaqListResponse(faqService.getFaqList(pageable, registerStart, registerEnd, faqType, noticeStart, noticeEnd, categoryName, registerUserName, faqTitle)));
-
+    ) {
+        log.info("[searchFaqList]");
+        return Response.ok().setData(faqService.getFaqList(pageable, registerStart, registerEnd, faqType, noticeStart, noticeEnd, categoryName, registerUserName, faqTitle));
     }
 
-
     // faq 상세 조회
-    @GetMapping("/faq/{faqId}")
+    @GetMapping("/{faqId}")
     public Response searchFaqDetail(@PathVariable("faqId") Long faqId) {
-
-        return Response.ok().setData(FaqMapper.toSearchFaqDetailResponse(faqService.searchFaqDetail(faqId)));
+        log.info("[searchFaqDetail]");
+        return Response.ok().setData(faqService.searchFaqDetail(faqId));
     }
 
     // faq 수정
-    @PutMapping("/faq/{faqId}")
+    @PutMapping("/{faqId}")
     public Response updateFaq(@PathVariable("faqId") Long faqId, @RequestBody @Valid FaqRequest.UpdateFaqRequest updateFaqRequest) {
-
-        return Response.ok().setData(FaqMapper.toUpdateFaqResponse(faqService.updateFaq(faqId, updateFaqRequest)));
+        log.info("[updateFaq]");
+        faqService.updateFaq(faqId, updateFaqRequest);
+        return Response.ok();
     }
 
     // faq 삭제
-    @DeleteMapping("/faq/{faqId}")
-    public Response deleteFaq(@PathVariable("faqId") Long faqId){
-        return faqService.deleteFaq(faqId);
+    @DeleteMapping("/{faqId}")
+    public Response deleteFaq(@PathVariable("faqId") Long faqId) {
+        log.info("[deleteFaq]");
+        faqService.deleteFaq(faqId);
+        return Response.ok();
     }
-
-
-
 }
