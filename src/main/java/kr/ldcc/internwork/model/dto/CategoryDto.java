@@ -47,7 +47,7 @@ public class CategoryDto {
     }
 
     public static List<CategoryList> buildCategoryList(List<Category> categoryList) {
-        return categoryList.stream().map(CategoryDto.CategoryList::new).collect(Collectors.toList());
+        return categoryList.stream().map(CategoryList::new).collect(Collectors.toList());
     }
 
     public static CategoryDetail buildCategoryDetail(Category category) {

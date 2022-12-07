@@ -6,8 +6,8 @@ import kr.ldcc.internwork.common.exception.InternWorkException.DataDuplicateExce
 import kr.ldcc.internwork.common.exception.InternWorkException.DataNotFoundException;
 import kr.ldcc.internwork.common.exception.InternWorkException.DataOutOfBoundsException;
 import kr.ldcc.internwork.model.dto.MenuDto;
-import kr.ldcc.internwork.model.dto.MenuDto.GetDetailMenuResponse;
-import kr.ldcc.internwork.model.dto.MenuDto.GetMenuListResponse;
+import kr.ldcc.internwork.model.dto.MenuDto.DetailMenu;
+import kr.ldcc.internwork.model.dto.MenuDto.MenuList;
 import kr.ldcc.internwork.model.dto.request.MenuRequest;
 import kr.ldcc.internwork.model.entity.Menu;
 import kr.ldcc.internwork.model.entity.User;
@@ -88,11 +88,11 @@ public class MenuService {
         }
     }
 
-    public GetMenuListResponse getMenuList() {
+    public MenuList getMenuList() {
         return MenuDto.buildGetMenuList(menuRepository.findAll(Sort.by("orderId")));
     }
 
-    public GetDetailMenuResponse getDetailMenu(Long menuId) {
+    public DetailMenu getDetailMenu(Long menuId) {
         return MenuDto.buildDetailMenu(menuRepository.findById(menuId).orElseThrow(() -> {
             log.error("getDetailMenu Exception | [존재하지 않는 Menu ID : " + menuId + "]", ExceptionCode.DATA_NOT_FOUND_EXCEPTION);
             return new DataNotFoundException(ExceptionCode.DATA_NOT_FOUND_EXCEPTION);
@@ -117,12 +117,6 @@ public class MenuService {
                 menu.updateMenuOrderId(menuRepository.findAllByParent(parent).size());
             }
             menu.updateMenuParent(parent);
-            try {
-                menuRepository.save(menu);
-            } catch (Exception e) {
-                log.error("updateMenu Exception", ExceptionCode.DATA_DUPLICATE_EXCEPTION, e.getMessage());
-                throw new DataDuplicateException(ExceptionCode.DATA_DUPLICATE_EXCEPTION);
-            }
             return;
         }
         ArrayList<Menu> order = menuRepository.findAllByParent(Sort.by("orderId"), parent);
@@ -137,12 +131,6 @@ public class MenuService {
         menu.updateMenuOrderId(request.getOrderId());
         order.add(menu);
         order.forEach(menu1 -> menu1.updateMenuOrderId(order.indexOf(menu1)));
-        try {
-            menuRepository.saveAll(order);
-        } catch (Exception e) {
-            log.error("updateMenu Exception", ExceptionCode.DATA_DUPLICATE_EXCEPTION, e.getMessage());
-            throw new DataDuplicateException(ExceptionCode.DATA_DUPLICATE_EXCEPTION);
-        }
     }
 
     public void deleteMenu(Long menuId) {

@@ -141,12 +141,6 @@ public class CategoryService {
         category.updateCategoryName(updateCategoryRequest.getCategoryName() != null ? updateCategoryRequest.getCategoryName() : category.getCategoryName());
         category.updateCategoryType(updateCategoryRequest.getCategoryType() != null ? updateCategoryRequest.getCategoryType() : category.getCategoryType());
         category.updateUpdateUser(user);
-        try {
-            categoryRepository.save(category);
-        } catch (Exception e) {
-            log.error("updateCategory Exception : {}", e.getMessage());
-            throw new DataUpdateException(ExceptionCode.DATA_UPDATE_EXCEPTION);
-        }
     }
 
     /**

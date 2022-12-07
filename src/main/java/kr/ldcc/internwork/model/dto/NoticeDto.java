@@ -1,38 +1,31 @@
 package kr.ldcc.internwork.model.dto;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import kr.ldcc.internwork.common.types.NoticeType;
+import kr.ldcc.internwork.model.dto.response.Response;
 import kr.ldcc.internwork.model.entity.Notice;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
-import lombok.experimental.Accessors;
 import org.springframework.data.domain.Page;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Getter
-@Setter
-@NoArgsConstructor
-@ToString
-@Accessors(chain = true)
-@JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
 public class NoticeDto {
-    private Long id;
-    private String content;
-    private String noticeDate;
-    private String reason;
-    private NoticeType state;
-    private String title;
-    private Integer view;
-    private String registerUser;
-    private String updateUser;
-    private String registerDate;
-    private String updateDate;
+    private final Long id;
+    private final String content;
+    private final String noticeDate;
+    private final String reason;
+    private final NoticeType state;
+    private final String title;
+    private final Integer view;
+    private final String registerUser;
+    private final String updateUser;
+    private final String registerDate;
+    private final String updateDate;
 
     public NoticeDto(Notice notice) {
         this.id = notice.getId();
@@ -50,7 +43,7 @@ public class NoticeDto {
 
     @Getter
     @JsonInclude(value = JsonInclude.Include.NON_NULL)
-    public static class GetNoticeList {
+    public static class NoticeList {
         private final Long id;
         private final String title;
         private final String registerUser;
@@ -59,7 +52,7 @@ public class NoticeDto {
         private final NoticeType state;
         private final Integer view;
 
-        public GetNoticeList(Notice notice) {
+        public NoticeList(Notice notice) {
             this.id = notice.getId();
             this.title = notice.getTitle();
             this.registerUser = notice.getRegisterUser().getName();
@@ -70,9 +63,21 @@ public class NoticeDto {
         }
     }
 
-    public static Page<GetNoticeList> buildNoticePage(Page<Notice> noticePage) {
+    @Getter
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    public static class NoticePage {
+        private final Response.Pagination pagination;
+        private final List<NoticeList> noticeList;
+
+        public NoticePage(Page<Notice> page) {
+            this.pagination = new Response.Pagination(page);
+            this.noticeList = page.getContent().stream().map(NoticeList::new).collect(Collectors.toList());
+        }
+    }
+
+    public static NoticePage buildNoticePage(Page<Notice> noticePage) {
         if (noticePage.hasContent()) {
-            return noticePage.map(GetNoticeList::new);
+            return new NoticePage(noticePage);
         }
         return null;
     }

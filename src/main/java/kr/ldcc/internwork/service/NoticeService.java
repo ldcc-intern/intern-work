@@ -2,11 +2,10 @@ package kr.ldcc.internwork.service;
 
 import kr.ldcc.internwork.common.exception.ExceptionCode;
 import kr.ldcc.internwork.common.exception.InternWorkException.DataDeleteException;
-import kr.ldcc.internwork.common.exception.InternWorkException.DataDuplicateException;
 import kr.ldcc.internwork.common.exception.InternWorkException.DataNotFoundException;
 import kr.ldcc.internwork.common.types.NoticeType;
 import kr.ldcc.internwork.model.dto.NoticeDto;
-import kr.ldcc.internwork.model.dto.NoticeDto.GetNoticeList;
+import kr.ldcc.internwork.model.dto.NoticeDto.NoticePage;
 import kr.ldcc.internwork.model.dto.request.NoticeRequest;
 import kr.ldcc.internwork.model.entity.Notice;
 import kr.ldcc.internwork.model.entity.User;
@@ -14,7 +13,6 @@ import kr.ldcc.internwork.repository.NoticeRepository;
 import kr.ldcc.internwork.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -50,7 +48,7 @@ public class NoticeService {
         noticeRepository.save(notice);
     }
 
-    public Page<GetNoticeList> getNoticeList(String registerStart, String registerEnd, NoticeType state, String noticeDateStart, String noticeDateEnd, String userName, String title, Pageable pageable) {
+    public NoticePage getNoticeList(String registerStart, String registerEnd, NoticeType state, String noticeDateStart, String noticeDateEnd, String userName, String title, Pageable pageable) {
         LocalDate registerStartDate = null;
         LocalDate registerEndDate = null;
         LocalDate noticeStartDate = null;
@@ -91,12 +89,6 @@ public class NoticeService {
         notice.updateReason(request.getReason() != null ? request.getReason() : notice.getReason());
         notice.updateContent(request.getContent() != null ? request.getContent() : notice.getContent());
         notice.updateUpdateUser(user);
-        try {
-            noticeRepository.save(notice);
-        } catch (Exception e) {
-            log.error("updateNotice Exception", ExceptionCode.DATA_DUPLICATE_EXCEPTION, e.getMessage());
-            throw new DataDuplicateException(ExceptionCode.DATA_DUPLICATE_EXCEPTION);
-        }
     }
 
     public void deleteNotice(Long noticeId) {

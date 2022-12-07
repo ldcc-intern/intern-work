@@ -4,11 +4,10 @@ import kr.ldcc.internwork.common.exception.ExceptionCode;
 import kr.ldcc.internwork.common.exception.InternWorkException.DataDeleteException;
 import kr.ldcc.internwork.common.exception.InternWorkException.DataNotFoundException;
 import kr.ldcc.internwork.common.exception.InternWorkException.DataSaveException;
-import kr.ldcc.internwork.common.exception.InternWorkException.DataUpdateException;
 import kr.ldcc.internwork.common.types.FaqType;
 import kr.ldcc.internwork.model.dto.FaqDto;
 import kr.ldcc.internwork.model.dto.FaqDto.FaqDetail;
-import kr.ldcc.internwork.model.dto.FaqDto.FaqList;
+import kr.ldcc.internwork.model.dto.FaqDto.FaqPage;
 import kr.ldcc.internwork.model.dto.request.FaqRequest;
 import kr.ldcc.internwork.model.entity.Category;
 import kr.ldcc.internwork.model.entity.Faq;
@@ -18,7 +17,6 @@ import kr.ldcc.internwork.repository.FaqRepository;
 import kr.ldcc.internwork.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -80,7 +78,7 @@ public class FaqService {
      * *
      * * * * * * * * *
      */
-    public Page<FaqList> getFaqList(Pageable pageable, String registerStart, String registerEnd, FaqType faqType, String noticeStart, String noticeEnd, String categoryName, String registerUserName, String faqTitle) {
+    public FaqPage getFaqList(Pageable pageable, String registerStart, String registerEnd, FaqType faqType, String noticeStart, String noticeEnd, String categoryName, String registerUserName, String faqTitle) {
         LocalDate registerStartDate = null;
         LocalDate registerEndDate = null;
         if (registerStart != null && registerEnd != null) {
@@ -147,12 +145,6 @@ public class FaqService {
         faq.updateTitle(updateFaqRequest.getFaqTitle() != null ? updateFaqRequest.getFaqTitle() : faq.getFaqTitle());
         faq.updateUpdateReason(updateFaqRequest.getUpdateReason() != null ? updateFaqRequest.getUpdateReason() : faq.getUpdateReason());
         faq.updateUpdateUser(user);
-        try {
-            faqRepository.save(faq);
-        } catch (Exception e) {
-            log.error("updateFaq Exception : {}", e.getMessage());
-            throw new DataUpdateException(ExceptionCode.DATA_UPDATE_EXCEPTION);
-        }
     }
 
     /**

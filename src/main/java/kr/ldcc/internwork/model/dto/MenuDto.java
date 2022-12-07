@@ -3,7 +3,6 @@ package kr.ldcc.internwork.model.dto;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import kr.ldcc.internwork.common.types.MenuType;
 import kr.ldcc.internwork.model.entity.Menu;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -16,33 +15,28 @@ public class MenuDto {
     @Getter
     @Setter
     @JsonInclude(value = JsonInclude.Include.NON_NULL)
-    public static class GetMenuListResponse {
+    public static class MenuList {
         private Long id;
         private Integer orderId;
         private Long parentId;
         private String title;
-        private List<GetMenuListResponse> children;
+        private List<MenuList> children;
 
-        public GetMenuListResponse(Menu menu) {
+        public MenuList(Menu menu) {
             this.id = menu.getId();
             this.orderId = menu.getOrderId();
             this.parentId = menu.getParent() != null ? menu.getParent().getId() : 0;
             this.title = menu.getTitle();
         }
 
-        @Builder
-        public GetMenuListResponse(Long id, Integer orderId, Long parentId, String title, List<GetMenuListResponse> children) {
+        public MenuList(Long id) {
             this.id = id;
-            this.orderId = orderId;
-            this.parentId = parentId;
-            this.title = title;
-            this.children = children;
         }
     }
 
     @Getter
     @JsonInclude(value = JsonInclude.Include.NON_NULL)
-    public static class GetDetailMenuResponse {
+    public static class DetailMenu {
         private final Long id;
         private final String main;
         private final String small;
@@ -53,7 +47,7 @@ public class MenuDto {
         private final String registerDate;
         private final String updateDate;
 
-        public GetDetailMenuResponse(Menu menu) {
+        public DetailMenu(Menu menu) {
             this.id = menu.getId();
             this.main = menu.getParent() != null ? (menu.getParent().getParent() != null ? menu.getParent().getParent().getTitle() : menu.getParent().getTitle()) : null;
             this.small = menu.getParent() != null ? (menu.getParent().getParent() != null ? menu.getParent().getTitle() : null) : null;
@@ -66,23 +60,23 @@ public class MenuDto {
         }
     }
 
-    public static GetDetailMenuResponse buildDetailMenu(Menu menu) {
-        return new GetDetailMenuResponse(menu);
+    public static DetailMenu buildDetailMenu(Menu menu) {
+        return new DetailMenu(menu);
     }
 
-    public static MenuDto.GetMenuListResponse buildGetMenuList(List<Menu> menuList) {
-        Map<Long, List<GetMenuListResponse>> groupingByParent = menuList.stream().map(MenuDto.GetMenuListResponse::new).collect(Collectors.groupingBy(MenuDto.GetMenuListResponse::getParentId));
-        MenuDto.GetMenuListResponse getMenuListResponse = MenuDto.GetMenuListResponse.builder().id(0L).build();
-        addChildren(getMenuListResponse, groupingByParent);
-        return getMenuListResponse;
+    public static MenuList buildGetMenuList(List<Menu> menuList) {
+        Map<Long, List<MenuList>> groupingByParent = menuList.stream().map(MenuList::new).collect(Collectors.groupingBy(MenuList::getParentId));
+        MenuList result = new MenuList(0L);
+        addChildren(result, groupingByParent);
+        return result;
     }
 
-    private static void addChildren(GetMenuListResponse parent, Map<Long, List<GetMenuListResponse>> groupingByParentId) {
-        List<GetMenuListResponse> children = groupingByParentId.get(parent.getId());
+    private static void addChildren(MenuList parent, Map<Long, List<MenuList>> groupingByParentId) {
+        List<MenuList> children = groupingByParentId.get(parent.getId());
         if (children == null) {
             return;
         }
         parent.setChildren(children);
-        children.forEach(menuListResponse -> addChildren(menuListResponse, groupingByParentId));
+        children.forEach(menuList -> addChildren(menuList, groupingByParentId));
     }
 }

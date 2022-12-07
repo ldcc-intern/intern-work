@@ -2,11 +2,14 @@ package kr.ldcc.internwork.model.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import kr.ldcc.internwork.common.types.FaqType;
+import kr.ldcc.internwork.model.dto.response.Response.Pagination;
 import kr.ldcc.internwork.model.entity.Faq;
 import lombok.Getter;
 import org.springframework.data.domain.Page;
 
 import java.time.format.DateTimeFormatter;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class FaqDto {
     @Getter
@@ -28,6 +31,17 @@ public class FaqDto {
             this.registerUserName = faq.getRegisterUser().getName();
             this.faqType = faq.getFaqType();
             this.noticeDate = faq.getNoticeDate().format(DateTimeFormatter.ofPattern("yyyy.MM.dd"));
+        }
+    }
+
+    @Getter
+    public static class FaqPage {
+        private final Pagination pagination;
+        private final List<FaqList> faqList;
+
+        public FaqPage(Page<Faq> faqPage) {
+            this.pagination = new Pagination(faqPage);
+            this.faqList = faqPage.getContent().stream().map(FaqList::new).collect(Collectors.toList());
         }
     }
 
@@ -59,8 +73,8 @@ public class FaqDto {
         }
     }
 
-    public static Page<FaqList> buildFaqPage(Page<Faq> faqPage) {
-        return faqPage.map(FaqList::new);
+    public static FaqPage buildFaqPage(Page<Faq> faqPage) {
+        return new FaqPage(faqPage);
     }
 
     public static FaqDetail buildFaqDetail(Faq faq) {
