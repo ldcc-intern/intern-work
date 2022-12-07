@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
 
 @Getter
 @Setter
@@ -20,6 +21,19 @@ public class Response<T> {
     public Response(ExceptionCode exceptionCode) {
         this.code = exceptionCode.getCode();
         this.message = exceptionCode.getMessage();
+    }
+
+    @Getter
+    public static class Pagination {
+        private final int totalPages;
+        private final long totalElements;
+        private final int page;
+
+        public Pagination(Page<?> page) {
+            this.totalPages = page.getTotalPages();
+            this.totalElements = page.getTotalElements();
+            this.page = page.getNumber();
+        }
     }
 
     public static <T> Response<T> ok() {

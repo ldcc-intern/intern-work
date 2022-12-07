@@ -4,7 +4,6 @@ import kr.ldcc.internwork.common.exception.ExceptionCode;
 import kr.ldcc.internwork.common.exception.InternWorkException.DataDeleteException;
 import kr.ldcc.internwork.common.exception.InternWorkException.DataDuplicateException;
 import kr.ldcc.internwork.common.exception.InternWorkException.DataNotFoundException;
-import kr.ldcc.internwork.common.exception.InternWorkException.DataUpdateException;
 import kr.ldcc.internwork.model.dto.UserDto;
 import kr.ldcc.internwork.model.dto.request.UserRequest;
 import kr.ldcc.internwork.model.entity.User;
@@ -44,12 +43,6 @@ public class UserService {
             return new DataNotFoundException(ExceptionCode.DATA_NOT_FOUND_EXCEPTION);
         });
         user.updateUserName(request.getName() != null ? request.getName() : user.getName());
-        try {
-            userRepository.save(user);
-        } catch (Exception e) {
-            log.error("updateUser Exception", ExceptionCode.DATA_UPDATE_EXCEPTION, e.getMessage());
-            throw new DataUpdateException(ExceptionCode.DATA_UPDATE_EXCEPTION);
-        }
     }
 
     public void deleteUser(Long userId) {
